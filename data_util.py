@@ -37,6 +37,29 @@ def _get_upper_lim(data_frame, col_name, stimulus_extent):
 def _import_data(tsv_filename):
     return pd.read_csv(tsv_filename, sep='\t')
 
+# Isolate data for a particular stimulus from the data frame
+def _get_data_frame_for_stimulus(data_frame, stimulus_file_name):
+
+    # Find index of stimulus_file_name
+    stimulus_series = data_frame[CONFIG.STIMULUS_COL_TITLE]
+    data_frame_num_rows = data_frame.shape[0]
+    for row_index in range(data_frame_num_rows):
+        if (str(stimulus_series[row_index]) not in CONFIG.EXCLUDE_STIMULI_LIST):
+            data_frame_start_index = row_index + 1
+
+    # Find end index of data related to this stimulus
+    data_frame_num_rows = data_frame.shape[0]
+    for row_index in range(data_frame_start_index, data_frame_num_rows):
+        if (str(stimulus_series[row_index]) not in CONFIG.EXCLUDE_STIMULI_LIST):
+            data_frame_end_index = row_index - 1
+        elif (row_index == data_frame_num_rows - 1):
+            data_frame_end_index = row_index
+
+    data_frame_for_stimulus = _filter_data(data_frame,
+                                           [CONFIG.X_GAZE_COL_TITLE,
+                                            CONFIG.Y_GAZE_COL_TITLE])
+    return data_frame_for_stimulus[data_frame_start_index : data_frame_end_index + 1]
+
 # Return a list of stimuli, where each stimulus corresponds to
 # a trial on a participant, from a specified data frame
 # and column title

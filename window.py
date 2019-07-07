@@ -144,9 +144,6 @@ class Window(QtWidgets.QMainWindow):
     # Processes a click on the plot
     def _process_plot_click(self, event):
         pass
-        # print('%s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
-        #      ('double' if event.dblclick else 'single', event.button,
-        #      event.x, event.y, event.xdata, event.ydata))
 
     # Initializes a blank plot
     def _init_blank_plot(self):
