@@ -134,12 +134,12 @@ class Window(QtWidgets.QMainWindow):
     def _process_file_selection_button_click(self):
         tsv_filename = self._file_selection_textbox.toPlainText()
         self._init_stimulus_selection_interface(tsv_filename)
+        self._init_matplotlib_configurations()
 
     # Processes the stimulus selection button click
     @QtCore.pyqtSlot()
     def _process_stimulus_selection_button_click(self):
         self._set_plot_from_data()
-        self._init_matplotlib_configurations()
 
     # Processes a click on the plot
     def _process_plot_click(self, event):
