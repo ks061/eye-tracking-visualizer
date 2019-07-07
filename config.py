@@ -12,8 +12,14 @@ X_GAZE_COL_TITLE = 'GazePointX (ADCSpx)'
 # paths as specified in the .tsv files
 Y_GAZE_COL_TITLE = 'GazePointY (ADCSpx)'
 
+# Name of the column of the X displacement of stimulus image
+STIMULUS_X_DISPLACEMENT_COL_TITLE = 'MediaPosX (ADCSpx)'
+
+# Name of the column of the Y displacement of stimulus image
+STIMULUS_Y_DISPLACEMENT_COL_TITLE = 'MediaPosY (ADCSpx)'
+
 # Name of the column with the stimuli names
-STIMULUS_COL_TITLE = 'StudioEventData'
+STIMULUS_COL_TITLE = 'MediaName'
 
 # Name of stimuli to exclude from the stimuli
 # that can be visualized.

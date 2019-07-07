@@ -43,9 +43,9 @@ def _get_gaze_plot(data_frame, stimulus_file_name, show_axes,
     # defining stimulus image extent in plot
     stimulus_image_x_max = len(stimulus_image[0])
     stimulus_image_y_max = len(stimulus_image)
-    stimulus_image_x_shift = 171
-    stimulus_image_y_shift = 0
-    
+    stimulus_image_x_shift = data_frame_for_stimulus[CONFIG.STIMULUS_X_DISPLACEMENT_COL_TITLE].iloc[0]
+    stimulus_image_y_shift = data_frame_for_stimulus[CONFIG.STIMULUS_Y_DISPLACEMENT_COL_TITLE].iloc[0]
+
     stimulus_extent = [0 + stimulus_image_x_shift,
                        stimulus_image_x_max + stimulus_image_x_shift,
                        0 + stimulus_image_y_shift,
