@@ -33,17 +33,41 @@ def _get_upper_lim(data_frame, col_name, stimulus_extent):
     if (max_value >= 0): return max_value * (1+CONFIG.EXTREMA_BUFFER_PCT)
     else: return max_value * (1-CONFIG.EXTREMA_BUFFER_PCT)
 
-# Return a data frame based on data from a specified .tsv file
-def _import_data(tsv_filename):
-    return pd.read_csv(tsv_filename, sep='\t')
+# Return a data frame based on data for a particular participant
+# from a specified .tsv file
+def _get_data_frame_one_participant(selected_participant_file_name):
+    return pd.read_csv(selected_participant_file_name, sep='\t')
 
 # Isolate data for a particular stimulus from the data frame
-def _get_data_frame_for_stimulus(data_frame, stimulus_file_name):
-    data_frame_for_stimulus = data_frame.loc[data_frame[CONFIG.STIMULUS_COL_TITLE] == stimulus_file_name]
-    data_frame_for_stimulus = _filter_data(data_frame_for_stimulus,
-                                           [CONFIG.X_GAZE_COL_TITLE,
-                                            CONFIG.Y_GAZE_COL_TITLE])
-    return data_frame_for_stimulus
+def _get_data_frame_one_participant_one_stimulus(selected_participant_file_name, stimulus_file_name):
+    data_frame_one_participant = _get_data_frame_one_participant(selected_participant_file_name)
+    data_frame_one_participant_one_stimulus = data_frame_one_participant.loc[\
+                                              data_frame_one_participant[CONFIG.STIMULUS_COL_TITLE]\
+                                              == stimulus_file_name]
+    data_frame_one_participant_one_stimulus = _filter_data(data_frame_one_participant_one_stimulus,
+                                              [CONFIG.X_GAZE_COL_TITLE,
+                                               CONFIG.Y_GAZE_COL_TITLE])
+    return data_frame_one_participant_one_stimulus
+
+# Return a data frame based on data for multiple participants
+# from multiple specified .tsv files within the
+# selected_participant_file_name_list array. Optional parameter
+# stimulus_file_name to filter by a particular stimulus.
+def _get_data_frame_multiple_participants(selected_participant_file_name_list, stimulus_file_name=None):
+    for i in range(len(selected_participant_file_name_list)):
+        selected_participant_file_name = selected_participant_file_name_list[i]
+        if (stimulus_file_name == None):
+            data_frame_one_participant = _get_data_frame_one_participant(selected_participant_file_name)
+        else:
+            data_frame_one_participant = _get_data_frame_one_participant_one_stimulus(
+                                        selected_participant_file_name,
+                                        stimulus_file_name)
+        data_frame_one_participant = data_frame_one_participant.assign(participant_identifier = selected_participant_file_name)
+        if (i == 0): data_frame_multiple_participants = data_frame_one_participant
+        else: data_frame_multiple_participants = pd.concat(\
+                                                [data_frame_multiple_participants,
+                                                 data_frame_one_participant])
+    return data_frame_multiple_participants
 
 # Return a list of stimuli, where each stimulus corresponds to
 # a trial on a participant, from a specified data frame

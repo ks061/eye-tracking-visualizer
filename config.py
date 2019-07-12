@@ -28,11 +28,11 @@ EXCLUDE_STIMULI_LIST = ['nan', 'Instruction Element']
 ## Figure configurations
 
 # Choose an integer value
-# from 1 through 4 (inclusive)
+# from 1 to higher integers
 # for the plot height. Higher
 # numbers correspond to a larger
 # plot height
-PLOT_HEIGHT = 4
+PLOT_HEIGHT = 7
 
 # Maximum and minimum values of each axis in a
 # figure will be set beyond the extrema values within
@@ -40,3 +40,11 @@ PLOT_HEIGHT = 4
 # be calculated as a percentage, namely
 # EXTREMA_BUFFER_PCT, of extrema values.
 EXTREMA_BUFFER_PCT = 0.05
+
+## Image Configurations
+
+# Relative directory location of images
+RELATIVE_STIMULUS_IMAGE_DIRECTORY = "Stimuli/"
+
+## Visual Configurations
+GAZE_SCATTER_PLOT_TITLE = "Gaze Data Scatter Plot"
