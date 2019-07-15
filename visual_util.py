@@ -47,7 +47,7 @@ def _get_gaze_plot(data_frame, stimulus_file_name, show_axes, show_only_data_on_
                                  legend = False)
 
     # add title to graph
-    facet_grid_obj.fig.suptitle(CONFIG.GAZE_SCATTER_PLOT_TITLE)
+    # facet_grid_obj.fig.suptitle(CONFIG.GAZE_SCATTER_PLOT_TITLE)
 
     # legend inspection -- remove later
     # print(len(dir(facet_grid_obj._legend)))
@@ -77,6 +77,7 @@ def _get_gaze_plot(data_frame, stimulus_file_name, show_axes, show_only_data_on_
     # handles, labels = ax.get_legend_handles_labels()
     # print(handles)
     # print(labels)
+    # ax.legend(prop={'size':6})
     # ax.legend(handles=handles[1:], labels=labels[1:])
     # ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), fancybox=True, shadow=True)
 
