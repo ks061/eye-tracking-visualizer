@@ -32,11 +32,8 @@ class GUI(QtWidgets.QMainWindow):
         self._participant_deselect_all_button.clicked.connect(self._process_participant_deselect_all_button_click)
         self._participant_selection_button.clicked.connect(self._process_participant_selection_button_click)
         self._stimulus_selection_menu.currentTextChanged.connect(self._process_stimulus_selection_button_click)
-        self._stimulus_selection_button.clicked.connect(self._process_stimulus_selection_button_click)
         self._data_type_selection_menu.currentTextChanged.connect(self._process_data_type_selection_button_click)
-        self._data_type_selection_button.clicked.connect(self._process_data_type_selection_button_click)
         self._analysis_type_selection_menu.currentTextChanged.connect(self._process_analysis_type_selection_button_click)
-        self._analysis_type_selection_button.clicked.connect(self._process_analysis_type_selection_button_click)
         self._axes_selection_check_box.stateChanged.connect(self._set_plot_from_data)
         self._only_data_on_stimulus_selection_check_box.stateChanged.connect(self._set_plot_from_data)
 
@@ -167,12 +164,10 @@ class GUI(QtWidgets.QMainWindow):
 
         # Enable interface
         self._stimulus_selection_menu.setEnabled(True)
-        self._stimulus_selection_button.setEnabled(True)
 
     def _disable_stimulus_selection_interface(self):
         # Disable interface
         self._stimulus_selection_menu.setEnabled(False)
-        self._stimulus_selection_button.setEnabled(False)
 
         # clear stimulus selection menu
         self._stimulus_selection_menu.clear()
@@ -182,12 +177,10 @@ class GUI(QtWidgets.QMainWindow):
 
         # Enable interface
         self._data_type_selection_menu.setEnabled(True)
-        self._data_type_selection_button.setEnabled(True)
 
     def _disable_data_type_selection_interface(self):
         # Disable interface
         self._data_type_selection_menu.setEnabled(False)
-        self._data_type_selection_button.setEnabled(False)
 
         # clear data type selection menu
         self._data_type_selection_menu.clear()
@@ -197,12 +190,10 @@ class GUI(QtWidgets.QMainWindow):
 
         # Enable interface
         self._analysis_type_selection_menu.setEnabled(True)
-        self._analysis_type_selection_button.setEnabled(True)
 
     def _disable_analysis_type_selection_interface(self):
         # Disable interface
         self._analysis_type_selection_menu.setEnabled(False)
-        self._analysis_type_selection_button.setEnabled(False)
 
         # clear analysis type selection menu
         self._analysis_type_selection_menu.clear()
@@ -269,13 +260,10 @@ class GUI(QtWidgets.QMainWindow):
         self._participant_selection_button.hide()
         # Stimulus selection
         self._stimulus_selection_menu.hide()
-        self._stimulus_selection_button.hide()
         # Data type selection
         self._data_type_selection_menu.hide()
-        self._data_type_selection_button.hide()
         # Analysis type selection
         self._analysis_type_selection_menu.hide()
-        self._analysis_type_selection_button.hide()
         # Matplotlib options
         self._axes_selection_check_box.hide()
         self._only_data_on_stimulus_selection_check_box.hide()
@@ -299,13 +287,10 @@ class GUI(QtWidgets.QMainWindow):
         self._participant_selection_button.show()
         # Stimulus selection
         self._stimulus_selection_menu.show()
-        self._stimulus_selection_button.show()
         # Data type selection
         self._data_type_selection_menu.show()
-        self._data_type_selection_button.show()
         # Analysis type selection
         self._analysis_type_selection_menu.show()
-        self._analysis_type_selection_button.show()
         # Matplotlib options
         self._axes_selection_check_box.show()
         self._only_data_on_stimulus_selection_check_box.show()

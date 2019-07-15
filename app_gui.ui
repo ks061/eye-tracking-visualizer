@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>768</height>
+    <width>1275</width>
+    <height>755</height>
    </rect>
   </property>
   <property name="font">
@@ -28,8 +28,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>1005</width>
-      <height>751</height>
+      <width>1251</width>
+      <height>731</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="_plotting_row">
@@ -61,7 +61,7 @@
             <x>0</x>
             <y>0</y>
             <width>323</width>
-            <height>44</height>
+            <height>52</height>
            </rect>
           </property>
           <widget class="QLabel" name="_error_message">
@@ -118,14 +118,14 @@
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer">
+        <spacer name="verticalSpacer_3">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>5</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
         </spacer>
@@ -282,6 +282,19 @@
          </property>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item alignment="Qt::AlignHCenter">
         <widget class="QComboBox" name="_stimulus_selection_menu">
          <property name="enabled">
@@ -298,28 +311,6 @@
            <width>200</width>
            <height>16777215</height>
           </size>
-         </property>
-        </widget>
-       </item>
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QPushButton" name="_stimulus_selection_button">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>200</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>200</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Select Stimulus</string>
          </property>
         </widget>
        </item>
@@ -343,28 +334,6 @@
         </widget>
        </item>
        <item alignment="Qt::AlignHCenter">
-        <widget class="QPushButton" name="_data_type_selection_button">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>200</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>200</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Select Data Type</string>
-         </property>
-        </widget>
-       </item>
-       <item alignment="Qt::AlignHCenter">
         <widget class="QComboBox" name="_analysis_type_selection_menu">
          <property name="enabled">
           <bool>false</bool>
@@ -380,28 +349,6 @@
            <width>200</width>
            <height>16777215</height>
           </size>
-         </property>
-        </widget>
-       </item>
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QPushButton" name="_analysis_type_selection_button">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>200</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>200</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Select Analysis Type</string>
          </property>
         </widget>
        </item>
@@ -489,7 +436,7 @@
         <widget class="QWidget" name="_plot_placeholder" native="true">
          <property name="minimumSize">
           <size>
-           <width>640</width>
+           <width>950</width>
            <height>0</height>
           </size>
          </property>
