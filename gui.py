@@ -1,5 +1,10 @@
 import os
 import glob
+from pathlib import Path
+from PIL import Image, ImageDraw
+
+# debugging
+# import traceback
 
 # Project libraries
 import data_util
@@ -18,9 +23,17 @@ import matplotlib.pyplot as plt
 from PyQt5 import uic
 
 class GUI(QtWidgets.QMainWindow):
+    # Dot parameters
+    WHITE_DOT_IMAGE_PATH = str(Path.cwd() / ('_images/white_dot.png'))
+    COLORED_DOT_IMAGE_PATH_PREFIX = str(Path.cwd() / '_images/colored_dots/colored_dot_')
+    DOT_SIZE = 19
+    DOT_PERCENT_INWARDS = 20
+    DOT_MARGIN_ADJUSTMENT = (DOT_PERCENT_INWARDS / 100.0) * DOT_SIZE
+
     # Constructor
     def __init__(self):
         super().__init__()
+
         uic.loadUi('app_gui.ui', self)
         self._connect_GUI_components_to_functions()
         self._init_blank_plot()
@@ -31,9 +44,9 @@ class GUI(QtWidgets.QMainWindow):
         self._participant_select_all_button.clicked.connect(self._process_participant_select_all_button_click)
         self._participant_deselect_all_button.clicked.connect(self._process_participant_deselect_all_button_click)
         self._participant_selection_button.clicked.connect(self._process_participant_selection_button_click)
-        self._stimulus_selection_menu.currentTextChanged.connect(self._process_stimulus_selection_button_click)
-        self._data_type_selection_menu.currentTextChanged.connect(self._process_data_type_selection_button_click)
-        self._analysis_type_selection_menu.currentTextChanged.connect(self._process_analysis_type_selection_button_click)
+        # stimulus connection happens in _init_stimulus_selection_interface()
+        self._data_type_selection_menu.currentTextChanged.connect(self._set_plot_from_data)
+        self._analysis_type_selection_menu.currentTextChanged.connect(self._set_plot_from_data)
         self._axes_selection_check_box.stateChanged.connect(self._set_plot_from_data)
         self._only_data_on_stimulus_selection_check_box.stateChanged.connect(self._set_plot_from_data)
 
@@ -47,7 +60,7 @@ class GUI(QtWidgets.QMainWindow):
         self._disable_matplotlib_configurations()
 
         try:
-            self._directory_path = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory"))
+            self._data_directory_path = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory"))
             self._init_participant_selection_interface()
         except FileNotFoundError:
             pass
@@ -64,52 +77,38 @@ class GUI(QtWidgets.QMainWindow):
 
     # Processes the participant selection button click
     def _process_participant_selection_button_click(self):
-        # disable/clear latter setup options
-        self._disable_stimulus_selection_interface()
-        self._disable_data_type_selection_interface()
-        self._disable_analysis_type_selection_interface()
-        self._disable_matplotlib_configurations()
-
-        # Gather list of file names of selected participants
-        self._selected_participant_file_name_list = []
+        # List of check boxes of selected participants
+        self._selected_participant_check_box_list = []
         for participant_selection_check_box in self._participant_selection_check_box_list:
             if (participant_selection_check_box.isChecked()):
-                self._selected_participant_file_name_list.append(participant_selection_check_box.text())
-        if (len(self._selected_participant_file_name_list) != 0):
-            self._init_stimulus_selection_interface()
+                self._selected_participant_check_box_list.append(participant_selection_check_box)
 
-    # Processes the stimulus selection button click
-    def _process_stimulus_selection_button_click(self):
-        # disable/clear latter setup options
-        self._disable_data_type_selection_interface()
-        self._disable_analysis_type_selection_interface()
-        self._disable_matplotlib_configurations()
+        # reset previous assignment of color palette
+        for check_box in self._participant_selection_check_box_list:
+            check_box.setStyleSheet("")
+        # generate color palette
+        self._color_palette = sns.color_palette(n_colors = len(self._participant_selection_check_box_list))
+        self._scaled_color_palette = visual_util._scale_palette(self._color_palette)
+        self._color_palette_dict = {}
+        # assigning color palette
+        for i in range(len(self._selected_participant_check_box_list)):
+            colored_dot_image_path = self._generate_colored_dot(self._scaled_color_palette[i], i)
+            selected_participant_check_box = self._selected_participant_check_box_list[i]
+            selected_participant_check_box.setStyleSheet("QCheckBox::indicator:unchecked {image: url(" + self.WHITE_DOT_IMAGE_PATH + ");}" +
+                                                         "QCheckBox::indicator:checked {image: url(" + colored_dot_image_path + ");}")
+            self._color_palette_dict[selected_participant_check_box.text()] = self._color_palette[i]
 
-        if (visual_util._stimulus_image_exists(self._stimulus_selection_menu.currentText())):
+        if (len(self._selected_participant_check_box_list) != 0):
             self._error_message.setText('')
-            self._data_frame = data_util._get_data_frame_multiple_participants(self._selected_participant_file_name_list,
-                                                                               stimulus_file_name = self._stimulus_selection_menu.currentText())
+            self._init_stimulus_selection_interface()
             self._init_data_type_selection_interface()
+            self._init_analysis_type_selection_interface()
+            self._init_matplotlib_configurations()
+            # print("coco")
+            self._set_plot_from_data()
         else:
-            self._error_message.setText('Stimulus image file ' +
-                                        self._stimulus_selection_menu.currentText() +
-                                        ' not found.')
+            self._error_message.setText('No participants selected. Please select at least one participant to refresh the plot area.')
 
-    # Processes the data type selection button click
-    def _process_data_type_selection_button_click(self):
-        # disable/clear latter setup options
-        self._disable_analysis_type_selection_interface()
-        self._disable_matplotlib_configurations()
-
-        self._init_analysis_type_selection_interface()
-
-    # Processes the analysis type selection button click
-    def _process_analysis_type_selection_button_click(self):
-        # disable/clear latter setup options
-        self._disable_matplotlib_configurations()
-
-        self._set_plot_from_data()
-        self._init_matplotlib_configurations()
 
     # Processes a click on the plot
     def _process_plot_click(self, event):
@@ -118,18 +117,24 @@ class GUI(QtWidgets.QMainWindow):
     # Initializes the check box selection area to select
     # the participants to view
     def _init_participant_selection_interface(self):
-        if (hasattr(self, '_participant_selection_layout')):
-            QtWidgets.QWidget().setLayout(self._participant_selection_layout)
-        self._participant_selection_layout = QtWidgets.QVBoxLayout()
-        self._participant_selection_widget_holder.setLayout(self._participant_selection_layout)
+        if (not hasattr(self, '_participant_selection_layout')):
+            self._participant_selection_layout = QtWidgets.QVBoxLayout()
+            self._participant_selection_widget_holder.setLayout(self._participant_selection_layout)
 
         # Import eligible .tsv files
-        os.chdir(self._directory_path)
+        saved_cwd = os.getcwd()
+        os.chdir(self._data_directory_path)
         participant_file_list = glob.glob('*.{}'.format('tsv'))
+        os.chdir(saved_cwd)
         self._participant_selection_check_box_list = []
-        for participant_file in participant_file_list:
+
+        # generate white dot
+        self._generate_white_dot()
+
+        # initialize check boxes for selected participants
+        for i in range(len(participant_file_list)):
             check_box_widget = QtWidgets.QCheckBox()
-            check_box_widget.setText(participant_file)
+            check_box_widget.setText(participant_file_list[i])
             self._participant_selection_layout.addWidget(check_box_widget)
             self._participant_selection_check_box_list.append(check_box_widget)
 
@@ -147,20 +152,36 @@ class GUI(QtWidgets.QMainWindow):
         self._participant_selection_button.setEnabled(False)
 
         if (hasattr(self, '_participant_selection_check_box_list')):
+            # print("participant selection menu count before: " + str(self._participant_selection_layout.count()))
+            # checkboxes_removed = 0
             for participant_selection_check_box in self._participant_selection_check_box_list:
+                # checkboxes_removed += 1
+                # print("removed checkboxes: " + str(checkboxes_removed))
                 self._participant_selection_layout.removeWidget(participant_selection_check_box)
+                participant_selection_check_box.hide() # necessary for removing checkboxes from
+                                                       # old participant list from display once
+                                                       # new directory is selected
+            # print("participant selection menu count after: " + str(self._participant_selection_layout.count()))
             self._participant_selection_check_box_list = []
 
     # Initializes the drop down menu to select the stimulus
     # based on stimuli available in the specified tsv file
     def _init_stimulus_selection_interface(self):
-        # store all data from multiple participants
-        self._data_frame = data_util._get_data_frame_multiple_participants(self._selected_participant_file_name_list)
+        # disconnect stimulus selection from plotting
+        try:
+            self._stimulus_selection_menu.currentTextChanged.disconnect()
+        except Exception:
+            pass
+
+        # clear stimulus selection menu
+        self._stimulus_selection_menu.clear()
 
         # initialize with stimulus options within specified tsv file
-        for stimulus in data_util._get_stimuli(self._data_frame):
-            if (str(stimulus) not in CONFIG.EXCLUDE_STIMULI_LIST):
-                self._stimulus_selection_menu.addItem(str(stimulus))
+        for stimulus in visual_util._get_found_stimuli(self._selected_participant_check_box_list, self._data_directory_path):
+            self._stimulus_selection_menu.addItem(str(stimulus))
+
+        # connect interface
+        self._stimulus_selection_menu.currentTextChanged.connect(self._set_plot_from_data)
 
         # Enable interface
         self._stimulus_selection_menu.setEnabled(True)
@@ -168,9 +189,6 @@ class GUI(QtWidgets.QMainWindow):
     def _disable_stimulus_selection_interface(self):
         # Disable interface
         self._stimulus_selection_menu.setEnabled(False)
-
-        # clear stimulus selection menu
-        self._stimulus_selection_menu.clear()
 
     def _init_data_type_selection_interface(self):
         self._data_type_selection_menu.addItem("Gaze")
@@ -234,17 +252,30 @@ class GUI(QtWidgets.QMainWindow):
 
     # Initializes the plot to be displayed
     def _set_plot_from_data(self):
+        # plotting
+        # print("stimulus menu current text: " + str(self._stimulus_selection_menu.currentText()))
+        self._stimulus_filtered_data_frame = data_util._get_data_frame_multiple_participants(list(map(visual_util._get_check_box_text, self._selected_participant_check_box_list)),
+                                                                                                                   self._data_directory_path,
+                                                                                                                   stimulus_file_name = self._stimulus_selection_menu.currentText())
+        # print("1: " + str("stimulus menu current text: " + str(self._stimulus_selection_menu.currentText())))
+        # print("START TRACE:")
+        # for line in traceback.format_stack():
+        #     print(line.strip())
+        # print("END TRACE:")
         try:
-            self._plot = visual_util._get_gaze_plot(self._data_frame,
+            self._plot = visual_util._get_gaze_plot(self._stimulus_filtered_data_frame,
+                                                    self._color_palette_dict,
                                                     self._stimulus_selection_menu.currentText(),
                                                     self._axes_selection_check_box.isChecked(),
                                                     self._only_data_on_stimulus_selection_check_box.isChecked())
+            # print("2: " + str("stimulus menu current text: " + str(self._stimulus_selection_menu.currentText())))
             self._error_message.setText('')
             self._set_canvas()
+            # print("3: " + str("stimulus menu current text: " + str(self._stimulus_selection_menu.currentText())))
         except FileNotFoundError:
             self._error_message.setText('Stimulus image file ' +
-                                    self._stimulus_selection_menu.currentText() +
-                                    ' not found.')
+                                        self._stimulus_selection_menu.currentText() +
+                                        ' not found.')
 
     # Hides all widgets
     def _hide_all_widgets(self):
@@ -299,3 +330,39 @@ class GUI(QtWidgets.QMainWindow):
         if (hasattr(self, '_previous_canvas')): # if this canvas is not the initial blank canvas
             self._previous_canvas.show()
         self._canvas.show()
+
+    def _generate_colored_dot(self, scaled_color, id_num):
+        COLORED_DOT_IMAGE_PATH = self.COLORED_DOT_IMAGE_PATH_PREFIX + (str(id_num) + '.png')
+        red_value = scaled_color[0]
+        green_value = scaled_color[1]
+        blue_value = scaled_color[2]
+        FILL_COLOR = (red_value, green_value, blue_value, 0)
+        OUTLINE_COLOR = (red_value, green_value, blue_value, 0)
+
+        window_color = self.palette().color(QtGui.QPalette.Background)
+        image = Image.new('RGB', (self.DOT_SIZE, self.DOT_SIZE), color=(window_color.red(), window_color.green(), window_color.blue(), 0))
+        drawing = ImageDraw.Draw(image)
+        drawing.ellipse((0 + self.DOT_MARGIN_ADJUSTMENT,
+                         0 + self.DOT_MARGIN_ADJUSTMENT,
+                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT,
+                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT),
+                         fill = FILL_COLOR,
+                         outline = OUTLINE_COLOR)
+        image.save(COLORED_DOT_IMAGE_PATH)
+
+        return COLORED_DOT_IMAGE_PATH
+
+    def _generate_white_dot(self):
+        FILL_COLOR = 'white'
+        OUTLINE_COLOR = 'white'
+
+        window_color = self.palette().color(QtGui.QPalette.Background)
+        image = Image.new('RGB', (self.DOT_SIZE, self.DOT_SIZE), color=(window_color.red(), window_color.green(), window_color.blue(), 0))
+        drawing = ImageDraw.Draw(image)
+        drawing.ellipse((0 + self.DOT_MARGIN_ADJUSTMENT,
+                         0 + self.DOT_MARGIN_ADJUSTMENT,
+                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT,
+                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT),
+                         fill = FILL_COLOR,
+                         outline = OUTLINE_COLOR)
+        image.save(self.WHITE_DOT_IMAGE_PATH)

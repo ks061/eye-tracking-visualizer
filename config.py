@@ -44,7 +44,7 @@ EXTREMA_BUFFER_PCT = 0.05
 ## Image Configurations
 
 # Relative directory location of images
-RELATIVE_STIMULUS_IMAGE_DIRECTORY = "Stimuli/"
+RELATIVE_STIMULUS_IMAGE_DIRECTORY = "Stimuli"
 
 ## Visual Configurations
 GAZE_SCATTER_PLOT_TITLE = "Gaze Data Scatter Plot"

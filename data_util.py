@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 # Project libraries
 import config as CONFIG
 
@@ -35,12 +38,12 @@ def _get_upper_lim(data_frame, col_name, stimulus_extent):
 
 # Return a data frame based on data for a particular participant
 # from a specified .tsv file
-def _get_data_frame_one_participant(selected_participant_file_name):
-    return pd.read_csv(selected_participant_file_name, sep='\t')
+def _get_data_frame_one_participant(selected_participant_file_path):
+    return pd.read_csv(selected_participant_file_path, sep='\t')
 
 # Isolate data for a particular stimulus from the data frame
-def _get_data_frame_one_participant_one_stimulus(selected_participant_file_name, stimulus_file_name):
-    data_frame_one_participant = _get_data_frame_one_participant(selected_participant_file_name)
+def _get_data_frame_one_participant_one_stimulus(selected_participant_file_path, stimulus_file_name):
+    data_frame_one_participant = _get_data_frame_one_participant(selected_participant_file_path)
     data_frame_one_participant_one_stimulus = data_frame_one_participant.loc[\
                                               data_frame_one_participant[CONFIG.STIMULUS_COL_TITLE]\
                                               == stimulus_file_name]
@@ -53,27 +56,24 @@ def _get_data_frame_one_participant_one_stimulus(selected_participant_file_name,
 # from multiple specified .tsv files within the
 # selected_participant_file_name_list array. Optional parameter
 # stimulus_file_name to filter by a particular stimulus.
-def _get_data_frame_multiple_participants(selected_participant_file_name_list, stimulus_file_name=None):
+def _get_data_frame_multiple_participants(selected_participant_file_name_list, data_directory_path, stimulus_file_name=None):
     for i in range(len(selected_participant_file_name_list)):
         selected_participant_file_name = selected_participant_file_name_list[i]
         if (stimulus_file_name == None):
-            data_frame_one_participant = _get_data_frame_one_participant(selected_participant_file_name)
+            data_frame_one_participant = _get_data_frame_one_participant(
+                                        str(Path(data_directory_path) / selected_participant_file_name)
+                                        )
         else:
             data_frame_one_participant = _get_data_frame_one_participant_one_stimulus(
-                                        selected_participant_file_name,
-                                        stimulus_file_name)
+                                        str(Path(data_directory_path) / selected_participant_file_name),
+                                        stimulus_file_name
+                                        )
         data_frame_one_participant = data_frame_one_participant.assign(participant_identifier = selected_participant_file_name)
         if (i == 0): data_frame_multiple_participants = data_frame_one_participant
         else: data_frame_multiple_participants = pd.concat(\
                                                 [data_frame_multiple_participants,
                                                  data_frame_one_participant])
     return data_frame_multiple_participants
-
-# Return a list of stimuli, where each stimulus corresponds to
-# a trial on a participant, from a specified data frame
-# and column title
-def _get_stimuli(data_frame, col_title = CONFIG.STIMULUS_COL_TITLE):
-    return data_frame[col_title].unique()
 
 # Filter out rows with empty values in any of the columns specified.
 def _filter_data(data_frame, arr_col_titles):
