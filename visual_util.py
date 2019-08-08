@@ -1,6 +1,10 @@
 import os
 from pathlib import Path
 import numpy as np
+import math
+from heatmap_image import Heatmap_Image
+from PIL import Image
+from matplotlib import image
 
 # Project libraries
 import config as CONFIG
@@ -34,13 +38,10 @@ def _get_blank_plot():
 
 
 # Returns a figure containing a scatter plot of
-# gaze path data as specified in data_frame
-def _get_gaze_plot(data_frame, color_palette, stimulus_file_name, show_axes, show_only_data_on_stimulus):
+# raw gaze data as specified in data_frame
+def _get_gaze_scatter_plot(data_frame, color_palette, stimulus_file_name, show_axes, show_only_data_on_stimulus):
     # close previous plot
     plt.close('all')
-
-    # turn off grid lines
-    # plt.grid(b=None)
 
     # font size
     plt.rcParams.update({'font.size': 5})
@@ -55,41 +56,6 @@ def _get_gaze_plot(data_frame, color_palette, stimulus_file_name, show_axes, sho
                                 height = CONFIG.PLOT_HEIGHT,
                                 legend = False,
                                 scatter_kws = {"s": 1})
-
-    # add title to graph
-    # facet_grid_obj.fig.suptitle(CONFIG.GAZE_SCATTER_PLOT_TITLE)
-
-    # legend inspection -- remove later
-    # print(len(dir(facet_grid_obj._legend)))
-    # for attr in dir(facet_grid_obj._legend):
-    #     print(str(type(getattr(facet_grid_obj._legend, attr))) + ": " + attr)
-
-    # manage legend for scatterplot
-    # axes = facet_grid_obj.axes
-    # ax = axes[0, 0]
-    # ax.set_position([ax.get_position().x0, ax.get_position().y0 +\
-    #                 ax.get_position().height * 0.2, ax.get_position().width,
-    #                 ax.get_position().height * 0.8])
-    # handles, labels = ax.get_legend_handles_labels()
-    # ax.legend(handles=handles[1:], labels=labels[1:])
-    # ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True)
-
-    # plot_legend = facet_grid_obj._legend
-    # plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), fancybox=True, shadow=True)
-    # plot_legend.set_bbox_to_anchor([0.5, -0.15])
-    # plot_legend._loc = 2
-
-    # custom legend configuration for 800 x 600 px display
-    # ax = plt.gca()
-    # ax.set_position([ax.get_position().x0, ax.get_position().y0 +\
-    #                 ax.get_position().height * 0.2, ax.get_position().width,
-    #                 ax.get_position().height * 0.8])
-    # handles, labels = ax.get_legend_handles_labels()
-    # print(handles)
-    # print(labels)
-    # ax.legend(prop={'size':6})
-    # ax.legend(handles=handles[1:], labels=labels[1:])
-    # ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), fancybox=True, shadow=True)
 
     # load in stimulus image
     stimulus_image = _import_stimulus_image(stimulus_file_name)
@@ -107,7 +73,7 @@ def _get_gaze_plot(data_frame, color_palette, stimulus_file_name, show_axes, sho
 
     data_frame.to_csv("output.csv")
 
-    if (show_only_data_on_stimulus):
+    if show_only_data_on_stimulus:
         plt.axis(stimulus_extent)
     else:
         plt.axis([data_util._get_lower_lim(data_frame, CONFIG.X_GAZE_COL_TITLE, stimulus_extent),
@@ -115,7 +81,7 @@ def _get_gaze_plot(data_frame, color_palette, stimulus_file_name, show_axes, sho
                   data_util._get_lower_lim(data_frame, CONFIG.Y_GAZE_COL_TITLE, stimulus_extent),
                   data_util._get_upper_lim(data_frame, CONFIG.Y_GAZE_COL_TITLE, stimulus_extent)])
 
-    if (show_axes):
+    if show_axes:
         plt.axis('on')
     else:
         plt.axis('off')
@@ -123,6 +89,384 @@ def _get_gaze_plot(data_frame, color_palette, stimulus_file_name, show_axes, sho
     plt.imshow(stimulus_image, extent = stimulus_extent)
 
     return plt.gcf()
+
+def _get_fixation_size_array(data_frame):
+    sizes = []
+
+    analyzing_fixation = False
+    current_fixation_x_coordinate = -1
+    current_fixation_y_coordinate = -1
+    prev_fixation_timestamp = 0
+    fixation_duration = 0
+    prev_participant_identifier = ''
+
+    for index in range(len(data_frame.index)):
+        x_fixation_column = pd.Series(data_frame[CONFIG.X_FIXATION_COL_TITLE])
+        y_fixation_column = pd.Series(data_frame[CONFIG.Y_FIXATION_COL_TITLE])
+        timestamp_column = pd.Series(data_frame[CONFIG.TIMESTAMP_COL_TITLE])
+        participant_identifier_column = pd.Series(data_frame['participant_identifier'])
+
+        print("col type: " + str(type(participant_identifier_column)))
+        print(participant_identifier_column[index])
+
+        if analyzing_fixation:
+            if (float(x_fixation_column[index]) == current_fixation_x_coordinate and
+                    float(y_fixation_column[index]) == current_fixation_y_coordinate and
+                    participant_identifier_column[index] == prev_participant_identifier):
+                fixation_duration += timestamp_column[index] - prev_fixation_timestamp
+            else:
+                if fixation_duration > 0:
+                    sizes.append(fixation_duration)
+                if (not math.isnan(float(x_fixation_column[index])) and
+                        not math.isnan(float(y_fixation_column[index]))):
+                    fixation_duration = 0
+
+                    current_fixation_x_coordinate = float(x_fixation_column[index])
+                    current_fixation_y_coordinate = float(y_fixation_column[index])
+                else:
+                    analyzing_fixation = False 
+        else:
+            # print(x_fixation_column)
+            # print(float(x_fixation_column[index]))
+            # print(math.isnan(float(x_fixation_column[index])))
+
+            if (not math.isnan(float(x_fixation_column[index])) and
+                    not math.isnan(float(y_fixation_column[index]))):
+                analyzing_fixation = True
+                fixation_duration = 0
+
+                current_fixation_x_coordinate = float(x_fixation_column[index])
+                current_fixation_y_coordinate = float(y_fixation_column[index])
+
+        prev_fixation_timestamp = timestamp_column[index]
+        prev_participant_identifier = participant_identifier_column[index]
+
+    maximum_size = max(sizes)
+    print(sizes)
+    for i in range(len(sizes)):
+        sizes[i] = (float(sizes[i])/float(maximum_size)) * CONFIG.MAX_FIXATION_POINT_SIZE
+
+    return sizes
+
+# Returns a figure containing a scatter plot of
+# fixation data as specified in data_frame
+def _get_fixation_scatter_plot(data_frame, color_palette, stimulus_file_name, show_axes, show_only_data_on_stimulus):
+    # close previous plot
+    plt.close('all')
+
+    # font size
+    plt.rcParams.update({'font.size': 5})
+
+    # Getting relative size for each fixation point
+    sizes = _get_fixation_size_array(data_frame)
+
+    print(sizes)
+
+    # create new scatter plot from data in data frame
+    facet_grid_obj = sns.lmplot(x = CONFIG.X_FIXATION_COL_TITLE,
+                                y = CONFIG.Y_FIXATION_COL_TITLE,
+                                data = data_frame,
+                                hue = 'participant_identifier',
+                                palette = color_palette,
+                                fit_reg = False,
+                                height = CONFIG.PLOT_HEIGHT,
+                                legend = False,
+                                scatter_kws = {"s": sizes})
+
+    # load in stimulus image
+    stimulus_image = _import_stimulus_image(stimulus_file_name)
+
+    # defining stimulus image extent in plot
+    stimulus_image_x_max = len(stimulus_image[0])
+    stimulus_image_y_max = len(stimulus_image)
+    stimulus_image_x_shift = data_frame[CONFIG.STIMULUS_X_DISPLACEMENT_COL_TITLE].iloc[0]
+    stimulus_image_y_shift = data_frame[CONFIG.STIMULUS_Y_DISPLACEMENT_COL_TITLE].iloc[0]
+
+    stimulus_extent = [0 + stimulus_image_x_shift,
+                       stimulus_image_x_max + stimulus_image_x_shift,
+                       0 + stimulus_image_y_shift,
+                       stimulus_image_y_max + stimulus_image_y_shift]
+
+    data_frame.to_csv("output.csv")
+
+    if show_only_data_on_stimulus:
+        plt.axis(stimulus_extent)
+    else:
+        plt.axis([data_util._get_lower_lim(data_frame, CONFIG.X_FIXATION_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.X_FIXATION_COL_TITLE, stimulus_extent),
+                  data_util._get_lower_lim(data_frame, CONFIG.Y_FIXATION_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.Y_FIXATION_COL_TITLE, stimulus_extent)])
+
+    if show_axes:
+        plt.axis('on')
+    else:
+        plt.axis('off')
+
+    plt.imshow(stimulus_image, extent = stimulus_extent)
+
+    return plt.gcf()
+
+def _get_gaze_line_plot(data_frame, color_palette, stimulus_file_name, show_axes, show_only_data_on_stimulus):
+    # close previous plot
+    plt.close('all')
+
+    # font size
+    plt.rcParams.update({'font.size': 5})
+
+    # create new scatter plot from data in data frame
+    facet_grid_obj = sns.lineplot(x = CONFIG.X_GAZE_COL_TITLE,
+                                  y = CONFIG.Y_GAZE_COL_TITLE,
+                                  data = data_frame,
+                                  hue = 'participant_identifier',
+                                  palette = color_palette,
+                                  legend = False,
+                                  sort = False,
+                                  ci = None)
+
+    # load in stimulus image
+    stimulus_image = _import_stimulus_image(stimulus_file_name)
+
+    # defining stimulus image extent in plot
+    stimulus_image_x_max = len(stimulus_image[0])
+    stimulus_image_y_max = len(stimulus_image)
+    stimulus_image_x_shift = data_frame[CONFIG.STIMULUS_X_DISPLACEMENT_COL_TITLE].iloc[0]
+    stimulus_image_y_shift = data_frame[CONFIG.STIMULUS_Y_DISPLACEMENT_COL_TITLE].iloc[0]
+
+    stimulus_extent = [0 + stimulus_image_x_shift,
+                       stimulus_image_x_max + stimulus_image_x_shift,
+                       0 + stimulus_image_y_shift,
+                       stimulus_image_y_max + stimulus_image_y_shift]
+
+    data_frame.to_csv("output.csv")
+
+    if show_only_data_on_stimulus:
+        plt.axis(stimulus_extent)
+    else:
+        plt.axis([data_util._get_lower_lim(data_frame, CONFIG.X_GAZE_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.X_GAZE_COL_TITLE, stimulus_extent),
+                  data_util._get_lower_lim(data_frame, CONFIG.Y_GAZE_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.Y_GAZE_COL_TITLE, stimulus_extent)])
+
+    if show_axes:
+        plt.axis('on')
+    else:
+        plt.axis('off')
+
+    plt.imshow(stimulus_image, extent = stimulus_extent)
+
+    return plt.gcf()
+
+def _get_fixation_line_plot(data_frame, color_palette, stimulus_file_name, show_axes, show_only_data_on_stimulus):
+    # close previous plot
+    plt.close('all')
+
+    # font size
+    plt.rcParams.update({'font.size': 5})
+
+    # create new scatter plot from data in data frame
+    facet_grid_obj = sns.lineplot(x = CONFIG.X_FIXATION_COL_TITLE,
+                                  y = CONFIG.Y_FIXATION_COL_TITLE,
+                                  data = data_frame,
+                                  hue = 'participant_identifier',
+                                  palette = color_palette,
+                                  legend = False,
+                                  sort = False,
+                                  ci = None)
+
+    # load in stimulus image
+    stimulus_image = _import_stimulus_image(stimulus_file_name)
+
+    # defining stimulus image extent in plot
+    stimulus_image_x_max = len(stimulus_image[0])
+    stimulus_image_y_max = len(stimulus_image)
+    stimulus_image_x_shift = data_frame[CONFIG.STIMULUS_X_DISPLACEMENT_COL_TITLE].iloc[0]
+    stimulus_image_y_shift = data_frame[CONFIG.STIMULUS_Y_DISPLACEMENT_COL_TITLE].iloc[0]
+
+    stimulus_extent = [0 + stimulus_image_x_shift,
+                       stimulus_image_x_max + stimulus_image_x_shift,
+                       0 + stimulus_image_y_shift,
+                       stimulus_image_y_max + stimulus_image_y_shift]
+
+    data_frame.to_csv("output.csv")
+
+    if show_only_data_on_stimulus:
+        plt.axis(stimulus_extent)
+    else:
+        plt.axis([data_util._get_lower_lim(data_frame, CONFIG.X_FIXATION_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.X_FIXATION_COL_TITLE, stimulus_extent),
+                  data_util._get_lower_lim(data_frame, CONFIG.Y_FIXATION_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.Y_FIXATION_COL_TITLE, stimulus_extent)])
+
+    if show_axes:
+        plt.axis('on')
+    else:
+        plt.axis('off')
+
+    plt.imshow(stimulus_image, extent = stimulus_extent)
+
+    return plt.gcf()
+
+def _get_gaze_heat_map(data_frame, color_palette, stimulus_file_name, show_axes, show_only_data_on_stimulus):
+    # close previous plot
+    plt.close('all')
+
+    # font size
+    plt.rcParams.update({'font.size': 5})
+
+    # im = Image.open(str(Path.cwd() / CONFIG.RELATIVE_STIMULUS_IMAGE_DIRECTORY / stimulus_file_name))
+    # heatmap_image = Heatmap_Image(im.size)
+
+    # create new scatter plot from data in data frame
+    # facet_grid_obj = sns.heatmap(data = data_frame[[CONFIG.X_GAZE_COL_TITLE, CONFIG.Y_GAZE_COL_TITLE]])
+
+    # load in stimulus image
+    stimulus_image = _import_stimulus_image(stimulus_file_name)
+
+    # defining stimulus image extent in plot
+    stimulus_image_x_max = len(stimulus_image[0])
+    stimulus_image_y_max = len(stimulus_image)
+    stimulus_image_x_shift = data_frame[CONFIG.STIMULUS_X_DISPLACEMENT_COL_TITLE].iloc[0]
+    stimulus_image_y_shift = data_frame[CONFIG.STIMULUS_Y_DISPLACEMENT_COL_TITLE].iloc[0]
+
+    stimulus_extent = [0 + stimulus_image_x_shift,
+                       stimulus_image_x_max + stimulus_image_x_shift,
+                       0 + stimulus_image_y_shift,
+                       stimulus_image_y_max + stimulus_image_y_shift]
+
+    data_frame.to_csv("output.csv")
+
+    if show_only_data_on_stimulus:
+        plt.axis(stimulus_extent)
+    else:
+        plt.axis([data_util._get_lower_lim(data_frame, CONFIG.X_GAZE_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.X_GAZE_COL_TITLE, stimulus_extent),
+                  data_util._get_lower_lim(data_frame, CONFIG.Y_GAZE_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.Y_GAZE_COL_TITLE, stimulus_extent)])
+
+    if show_axes:
+        plt.axis('on')
+    else:
+        plt.axis('off')
+
+    plt.imshow(stimulus_image, extent = stimulus_extent)
+
+    im = image.imread(str(Path.cwd() / CONFIG.RELATIVE_STIMULUS_IMAGE_DIRECTORY / stimulus_file_name))
+    heatmap_image = Heatmap_Image((len(im[0]), len(im)))
+
+    path = []
+
+    for index in range(len(data_frame)):
+        x_coordinate = data_frame[CONFIG.X_GAZE_COL_TITLE].iloc[index]
+        if not math.isnan(x_coordinate):
+            x_coordinate = int(data_frame[CONFIG.X_GAZE_COL_TITLE].iloc[index])
+
+        y_coordinate = data_frame[CONFIG.Y_GAZE_COL_TITLE].iloc[index]
+        if not math.isnan(y_coordinate):
+            y_coordinate = int(data_frame[CONFIG.Y_GAZE_COL_TITLE].iloc[index])
+
+        path.append((x_coordinate, y_coordinate))
+
+    heatmap_image.update_heatmap_array_with_trial(path)
+    heatmap_image.overlay_heatmap_on_Axes(plt.gca())
+
+    return plt.gcf()
+
+def _get_fixation_heat_map(data_frame, color_palette, stimulus_file_name, show_axes, show_only_data_on_stimulus):
+    # close previous plot
+    plt.close('all')
+
+    # font size
+    plt.rcParams.update({'font.size': 5})
+
+    # load in stimulus image
+    stimulus_image = _import_stimulus_image(stimulus_file_name)
+
+    # defining stimulus image extent in plot
+    stimulus_image_x_max = len(stimulus_image[0])
+    stimulus_image_y_max = len(stimulus_image)
+    stimulus_image_x_shift = data_frame[CONFIG.STIMULUS_X_DISPLACEMENT_COL_TITLE].iloc[0]
+    stimulus_image_y_shift = data_frame[CONFIG.STIMULUS_Y_DISPLACEMENT_COL_TITLE].iloc[0]
+
+    stimulus_extent = [0 + stimulus_image_x_shift,
+                       stimulus_image_x_max + stimulus_image_x_shift,
+                       0 + stimulus_image_y_shift,
+                       stimulus_image_y_max + stimulus_image_y_shift]
+
+    data_frame.to_csv("output.csv")
+
+    if show_only_data_on_stimulus:
+        plt.axis(stimulus_extent)
+    else:
+        plt.axis([data_util._get_lower_lim(data_frame, CONFIG.X_FIXATION_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.X_FIXATION_COL_TITLE, stimulus_extent),
+                  data_util._get_lower_lim(data_frame, CONFIG.Y_FIXATION_COL_TITLE, stimulus_extent),
+                  data_util._get_upper_lim(data_frame, CONFIG.Y_FIXATION_COL_TITLE, stimulus_extent)])
+
+    if show_axes:
+        plt.axis('on')
+    else:
+        plt.axis('off')
+
+    plt.imshow(stimulus_image, extent = stimulus_extent)
+
+    im = image.imread(str(Path.cwd() / CONFIG.RELATIVE_STIMULUS_IMAGE_DIRECTORY / stimulus_file_name))
+    heatmap_image = Heatmap_Image((len(im[0]), len(im)))
+
+    path = []
+
+    for index in range(len(data_frame)):
+        x_coordinate = data_frame[CONFIG.X_FIXATION_COL_TITLE].iloc[index]
+        if math.isnan(x_coordinate):
+            continue
+        else:
+            x_coordinate = int(data_frame[CONFIG.X_FIXATION_COL_TITLE].iloc[index])
+
+        y_coordinate = -data_frame[CONFIG.Y_FIXATION_COL_TITLE].iloc[index]
+        if math.isnan(y_coordinate):
+            continue
+        else:
+            y_coordinate = int(data_frame[CONFIG.Y_FIXATION_COL_TITLE].iloc[index])
+
+        path.append((x_coordinate, y_coordinate))
+
+    heatmap_image.update_heatmap_array_with_trial(path)
+    heatmap_image.overlay_heatmap_on_Axes(plt.gca())
+
+    return plt.gcf()
+
+    # create new scatter plot from data in data frame
+    # facet_grid_obj = sns.heatmap(data=data_frame[[CONFIG.X_FIXATION_COL_TITLE, CONFIG.Y_FIXATION_COL_TITLE]])
+
+    # # load in stimulus image
+    # stimulus_image = _import_stimulus_image(stimulus_file_name)
+    #
+    # # defining stimulus image extent in plot
+    # stimulus_image_x_max = len(stimulus_image[0])
+    # stimulus_image_y_max = len(stimulus_image)
+    # stimulus_image_x_shift = data_frame[CONFIG.STIMULUS_X_DISPLACEMENT_COL_TITLE].iloc[0]
+    # stimulus_image_y_shift = data_frame[CONFIG.STIMULUS_Y_DISPLACEMENT_COL_TITLE].iloc[0]
+    #
+    # stimulus_extent = [0 + stimulus_image_x_shift,
+    #                    stimulus_image_x_max + stimulus_image_x_shift,
+    #                    0 + stimulus_image_y_shift,
+    #                    stimulus_image_y_max + stimulus_image_y_shift]
+    #
+    # data_frame.to_csv("output.csv")
+    #
+    # if show_only_data_on_stimulus:
+    #     plt.axis(stimulus_extent)
+    # else:
+    #     plt.axis([data_util._get_lower_lim(data_frame, CONFIG.X_FIXATION_COL_TITLE, stimulus_extent),
+    #               data_util._get_upper_lim(data_frame, CONFIG.X_FIXATION_COL_TITLE, stimulus_extent),
+    #               data_util._get_lower_lim(data_frame, CONFIG.Y_FIXATION_COL_TITLE, stimulus_extent),
+    #               data_util._get_upper_lim(data_frame, CONFIG.Y_FIXATION_COL_TITLE, stimulus_extent)])
+    #
+    # if show_axes:
+    #     plt.axis('on')
+    # else:
+    #     plt.axis('off')
+    #
+    # plt.imshow(stimulus_image, extent = stimulus_extent)
 
 # Round the RGB values in the palette
 def _scale_palette(color_palette):
@@ -153,8 +497,8 @@ def _get_stimuli(selected_participant_check_box_list, data_directory_path, col_t
 def _get_found_stimuli(selected_participant_check_box_list, data_directory_path, col_title = CONFIG.STIMULUS_COL_TITLE):
     stimuli_list = _get_stimuli(selected_participant_check_box_list, data_directory_path, col_title)
     for stimulus in stimuli_list:
-        if (str(stimulus) in CONFIG.EXCLUDE_STIMULI_LIST):
+        if str(stimulus) in CONFIG.EXCLUDE_STIMULI_LIST:
             stimuli_list = np.delete(stimuli_list, np.argwhere(stimulus))
-        elif (not _stimulus_image_exists(str(stimulus))):
+        elif not _stimulus_image_exists(str(stimulus)):
             stimuli_list = np.delete(stimuli_list, np.argwhere(stimulus))
     return stimuli_list

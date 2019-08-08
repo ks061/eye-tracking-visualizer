@@ -80,7 +80,7 @@ class GUI(QtWidgets.QMainWindow):
         # List of check boxes of selected participants
         self._selected_participant_check_box_list = []
         for participant_selection_check_box in self._participant_selection_check_box_list:
-            if (participant_selection_check_box.isChecked()):
+            if participant_selection_check_box.isChecked():
                 self._selected_participant_check_box_list.append(participant_selection_check_box)
 
         # reset previous assignment of color palette
@@ -98,13 +98,14 @@ class GUI(QtWidgets.QMainWindow):
                                                          "QCheckBox::indicator:checked {image: url(" + colored_dot_image_path + ");}")
             self._color_palette_dict[selected_participant_check_box.text()] = self._color_palette[i]
 
-        if (len(self._selected_participant_check_box_list) != 0):
+        if len(self._selected_participant_check_box_list) != 0:
             self._error_message.setText('')
+
             self._init_stimulus_selection_interface()
             self._init_data_type_selection_interface()
             self._init_analysis_type_selection_interface()
             self._init_matplotlib_configurations()
-            # print("coco")
+
             self._set_plot_from_data()
         else:
             self._error_message.setText('No participants selected. Please select at least one participant to refresh the plot area.')
@@ -117,7 +118,7 @@ class GUI(QtWidgets.QMainWindow):
     # Initializes the check box selection area to select
     # the participants to view
     def _init_participant_selection_interface(self):
-        if (not hasattr(self, '_participant_selection_layout')):
+        if not hasattr(self, '_participant_selection_layout'):
             self._participant_selection_layout = QtWidgets.QVBoxLayout()
             self._participant_selection_widget_holder.setLayout(self._participant_selection_layout)
 
@@ -151,17 +152,12 @@ class GUI(QtWidgets.QMainWindow):
         self._participant_selection_menu.setEnabled(False)
         self._participant_selection_button.setEnabled(False)
 
-        if (hasattr(self, '_participant_selection_check_box_list')):
-            # print("participant selection menu count before: " + str(self._participant_selection_layout.count()))
-            # checkboxes_removed = 0
+        if hasattr(self, '_participant_selection_check_box_list'):
             for participant_selection_check_box in self._participant_selection_check_box_list:
-                # checkboxes_removed += 1
-                # print("removed checkboxes: " + str(checkboxes_removed))
                 self._participant_selection_layout.removeWidget(participant_selection_check_box)
                 participant_selection_check_box.hide() # necessary for removing checkboxes from
                                                        # old participant list from display once
                                                        # new directory is selected
-            # print("participant selection menu count after: " + str(self._participant_selection_layout.count()))
             self._participant_selection_check_box_list = []
 
     # Initializes the drop down menu to select the stimulus
@@ -191,7 +187,10 @@ class GUI(QtWidgets.QMainWindow):
         self._stimulus_selection_menu.setEnabled(False)
 
     def _init_data_type_selection_interface(self):
-        self._data_type_selection_menu.addItem("Gaze")
+        if self._data_type_selection_menu.findText("Gaze Data") == -1:
+            self._data_type_selection_menu.addItem("Gaze Data")
+        if self._data_type_selection_menu.findText("Fixation Data") == -1:
+            self._data_type_selection_menu.addItem("Fixation Data")
 
         # Enable interface
         self._data_type_selection_menu.setEnabled(True)
@@ -204,7 +203,12 @@ class GUI(QtWidgets.QMainWindow):
         self._data_type_selection_menu.clear()
 
     def _init_analysis_type_selection_interface(self):
-        self._analysis_type_selection_menu.addItem("Scatter Plot")
+        if self._analysis_type_selection_menu.findText("Scatter Plot") == -1:
+            self._analysis_type_selection_menu.addItem("Scatter Plot")
+        if self._analysis_type_selection_menu.findText("Line Plot") == -1:
+            self._analysis_type_selection_menu.addItem("Line Plot")
+        if self._analysis_type_selection_menu.findText("Heat Map") == -1:
+            self._analysis_type_selection_menu.addItem("Heat Map")
 
         # Enable interface
         self._analysis_type_selection_menu.setEnabled(True)
@@ -236,16 +240,16 @@ class GUI(QtWidgets.QMainWindow):
     # Sets and displays a new canvas
     # based upon self._plot
     def _set_canvas(self):
-        if (hasattr(self, '_canvas')): # if this canvas is not the initial blank canvas
+        if hasattr(self, '_canvas'): # if this canvas is not the initial blank canvas
             self._previous_canvas = self._canvas
 
         self._canvas = PyQt5MPLCanvas(self._plot)
         self._canvas.mpl_connect('button_press_event', self._process_plot_click)
 
         self._hide_all_widgets()
-        if (self._plotting_row_plot.indexOf(self._plot_placeholder) != -1): # if the plot placeholder is still on the display
+        if self._plotting_row_plot.indexOf(self._plot_placeholder) != -1: # if the plot placeholder is still on the display
             self._plotting_row_plot.removeWidget(self._plot_placeholder)
-        elif (hasattr(self, '_previous_canvas')): # if this canvas is not the initial blank canvas
+        elif hasattr(self, '_previous_canvas'): # if this canvas is not the initial blank canvas
             self._plotting_row_plot.removeWidget(self._previous_canvas)
         self._plotting_row_plot.addWidget(self._canvas)
         self._show_all_widgets()
@@ -253,25 +257,54 @@ class GUI(QtWidgets.QMainWindow):
     # Initializes the plot to be displayed
     def _set_plot_from_data(self):
         # plotting
-        # print("stimulus menu current text: " + str(self._stimulus_selection_menu.currentText()))
         self._stimulus_filtered_data_frame = data_util._get_data_frame_multiple_participants(list(map(visual_util._get_check_box_text, self._selected_participant_check_box_list)),
                                                                                                                    self._data_directory_path,
                                                                                                                    stimulus_file_name = self._stimulus_selection_menu.currentText())
-        # print("1: " + str("stimulus menu current text: " + str(self._stimulus_selection_menu.currentText())))
-        # print("START TRACE:")
-        # for line in traceback.format_stack():
-        #     print(line.strip())
-        # print("END TRACE:")
         try:
-            self._plot = visual_util._get_gaze_plot(self._stimulus_filtered_data_frame,
-                                                    self._color_palette_dict,
-                                                    self._stimulus_selection_menu.currentText(),
-                                                    self._axes_selection_check_box.isChecked(),
-                                                    self._only_data_on_stimulus_selection_check_box.isChecked())
-            # print("2: " + str("stimulus menu current text: " + str(self._stimulus_selection_menu.currentText())))
+            if (self._data_type_selection_menu.currentText() == "Gaze Data" and
+               self._analysis_type_selection_menu.currentText() == "Scatter Plot"):
+                self._plot = visual_util._get_gaze_scatter_plot(self._stimulus_filtered_data_frame,
+                                                                self._color_palette_dict,
+                                                                self._stimulus_selection_menu.currentText(),
+                                                                self._axes_selection_check_box.isChecked(),
+                                                                self._only_data_on_stimulus_selection_check_box.isChecked())
+            elif (self._data_type_selection_menu.currentText() == "Fixation Data" and
+                 self._analysis_type_selection_menu.currentText() == "Scatter Plot"):
+                self._plot = visual_util._get_fixation_scatter_plot(self._stimulus_filtered_data_frame,
+                                                                 self._color_palette_dict,
+                                                                 self._stimulus_selection_menu.currentText(),
+                                                                 self._axes_selection_check_box.isChecked(),
+                                                                 self._only_data_on_stimulus_selection_check_box.isChecked())
+            elif (self._data_type_selection_menu.currentText() == "Gaze Data" and
+                 self._analysis_type_selection_menu.currentText() == "Line Plot"):
+                self._plot = visual_util._get_gaze_line_plot(self._stimulus_filtered_data_frame,
+                                                                    self._color_palette_dict,
+                                                                    self._stimulus_selection_menu.currentText(),
+                                                                    self._axes_selection_check_box.isChecked(),
+                                                                    self._only_data_on_stimulus_selection_check_box.isChecked())
+            elif (self._data_type_selection_menu.currentText() == "Fixation Data" and
+                 self._analysis_type_selection_menu.currentText() == "Line Plot"):
+                self._plot = visual_util._get_fixation_line_plot(self._stimulus_filtered_data_frame,
+                                                                 self._color_palette_dict,
+                                                                 self._stimulus_selection_menu.currentText(),
+                                                                 self._axes_selection_check_box.isChecked(),
+                                                                 self._only_data_on_stimulus_selection_check_box.isChecked())
+            elif (self._data_type_selection_menu.currentText() == "Gaze Data" and
+                 self._analysis_type_selection_menu.currentText() == "Heat Map"):
+                self._plot = visual_util._get_gaze_heat_map(self._stimulus_filtered_data_frame,
+                                                                 self._color_palette_dict,
+                                                                 self._stimulus_selection_menu.currentText(),
+                                                                 self._axes_selection_check_box.isChecked(),
+                                                                 self._only_data_on_stimulus_selection_check_box.isChecked())
+            elif (self._data_type_selection_menu.currentText() == "Fixation Data" and
+                 self._analysis_type_selection_menu.currentText() == "Heat Map"):
+                self._plot = visual_util._get_fixation_heat_map(self._stimulus_filtered_data_frame,
+                                                                 self._color_palette_dict,
+                                                                 self._stimulus_selection_menu.currentText(),
+                                                                 self._axes_selection_check_box.isChecked(),
+                                                                 self._only_data_on_stimulus_selection_check_box.isChecked())
             self._error_message.setText('')
             self._set_canvas()
-            # print("3: " + str("stimulus menu current text: " + str(self._stimulus_selection_menu.currentText())))
         except FileNotFoundError:
             self._error_message.setText('Stimulus image file ' +
                                         self._stimulus_selection_menu.currentText() +
@@ -300,7 +333,7 @@ class GUI(QtWidgets.QMainWindow):
         self._only_data_on_stimulus_selection_check_box.hide()
         # Plot
         self._plot_placeholder.hide()
-        if (hasattr(self, '_previous_canvas')): # if this canvas is not the initial blank canvas
+        if hasattr(self, '_previous_canvas'): # if this canvas is not the initial blank canvas
             self._previous_canvas.hide()
         self._canvas.hide()
 
@@ -327,42 +360,46 @@ class GUI(QtWidgets.QMainWindow):
         self._only_data_on_stimulus_selection_check_box.show()
         # Plot
         self._plot_placeholder.show()
-        if (hasattr(self, '_previous_canvas')): # if this canvas is not the initial blank canvas
+        if hasattr(self, '_previous_canvas'): # if this canvas is not the initial blank canvas
             self._previous_canvas.show()
         self._canvas.show()
 
+    # Generates an image of a dot with a particular fill and outline color
+    # and saves it at the specified image path
+    def _generate_dot(self, fill_color, outline_color, image_path):
+        window_color = self.palette().color(QtGui.QPalette.Background)
+        image = Image.new('RGB', (self.DOT_SIZE, self.DOT_SIZE),
+                          color=(window_color.red(), window_color.green(), window_color.blue(), 0))
+        drawing = ImageDraw.Draw(image)
+        drawing.ellipse((0 + self.DOT_MARGIN_ADJUSTMENT,
+                         0 + self.DOT_MARGIN_ADJUSTMENT,
+                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT,
+                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT),
+                        fill=fill_color,
+                        outline=outline_color)
+        image.save(image_path)
+
+    # Generates an image of a dot with a particular RBG color and saves it
+    # at the specified image path that has a unique ID id_num
     def _generate_colored_dot(self, scaled_color, id_num):
-        COLORED_DOT_IMAGE_PATH = self.COLORED_DOT_IMAGE_PATH_PREFIX + (str(id_num) + '.png')
         red_value = scaled_color[0]
         green_value = scaled_color[1]
         blue_value = scaled_color[2]
-        FILL_COLOR = (red_value, green_value, blue_value, 0)
-        OUTLINE_COLOR = (red_value, green_value, blue_value, 0)
 
-        window_color = self.palette().color(QtGui.QPalette.Background)
-        image = Image.new('RGB', (self.DOT_SIZE, self.DOT_SIZE), color=(window_color.red(), window_color.green(), window_color.blue(), 0))
-        drawing = ImageDraw.Draw(image)
-        drawing.ellipse((0 + self.DOT_MARGIN_ADJUSTMENT,
-                         0 + self.DOT_MARGIN_ADJUSTMENT,
-                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT,
-                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT),
-                         fill = FILL_COLOR,
-                         outline = OUTLINE_COLOR)
-        image.save(COLORED_DOT_IMAGE_PATH)
+        fill_color = (red_value, green_value, blue_value, 0)
+        outline_color = (red_value, green_value, blue_value, 0)
 
-        return COLORED_DOT_IMAGE_PATH
+        colored_dot_image_path = self.COLORED_DOT_IMAGE_PATH_PREFIX + (str(id_num) + '.png')
 
+        self._generate_dot(fill_color, outline_color, colored_dot_image_path)
+
+        return colored_dot_image_path
+
+    # Generates an image of a white dot at its image path as specified by self.WHITE_DOT_IMAGE_PATH
     def _generate_white_dot(self):
-        FILL_COLOR = 'white'
-        OUTLINE_COLOR = 'white'
+        fill_color = 'white'
+        outline_color = 'white'
 
-        window_color = self.palette().color(QtGui.QPalette.Background)
-        image = Image.new('RGB', (self.DOT_SIZE, self.DOT_SIZE), color=(window_color.red(), window_color.green(), window_color.blue(), 0))
-        drawing = ImageDraw.Draw(image)
-        drawing.ellipse((0 + self.DOT_MARGIN_ADJUSTMENT,
-                         0 + self.DOT_MARGIN_ADJUSTMENT,
-                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT,
-                         self.DOT_SIZE - self.DOT_MARGIN_ADJUSTMENT),
-                         fill = FILL_COLOR,
-                         outline = OUTLINE_COLOR)
-        image.save(self.WHITE_DOT_IMAGE_PATH)
+        self._generate_dot(fill_color, outline_color, self.WHITE_DOT_IMAGE_PATH)
+
+

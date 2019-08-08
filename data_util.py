@@ -70,9 +70,9 @@ def _get_data_frame_multiple_participants(selected_participant_file_name_list, d
                                         )
         data_frame_one_participant = data_frame_one_participant.assign(participant_identifier = selected_participant_file_name)
         if (i == 0): data_frame_multiple_participants = data_frame_one_participant
-        else: data_frame_multiple_participants = pd.concat(\
-                                                [data_frame_multiple_participants,
-                                                 data_frame_one_participant])
+        else: data_frame_multiple_participants = pd.concat([data_frame_multiple_participants, data_frame_one_participant])
+
+    data_frame_multiple_participants.reset_index(inplace=True)
     return data_frame_multiple_participants
 
 # Filter out rows with empty values in any of the columns specified.
