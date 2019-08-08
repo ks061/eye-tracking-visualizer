@@ -1,6 +1,11 @@
+'''
+Credits to Professor Brian R. King, Bucknell University
+'''
+
 from matplotlib import cm
 from matplotlib.axes import Axes
 import numpy as np
+from scipy import ndimage
 
 class Heatmap_Image:
     def __init__(self, dim, cmap = cm.jet):
