@@ -15,6 +15,7 @@ import seaborn as sns
 # whichever is lower, and an additional percentage of this value
 # See EXTREMA_BUFFER_PCT constant in config.py.
 def _get_lower_lim(data_frame, col_name, stimulus_extent):
+    """Test."""
     if (col_name == CONFIG.X_GAZE_COL_TITLE):
         min_value = min(data_frame[col_name].min(), stimulus_extent[0])
     elif (col_name == CONFIG.Y_GAZE_COL_TITLE):
