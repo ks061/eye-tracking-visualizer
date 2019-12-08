@@ -44,20 +44,18 @@ class GUI(QtWidgets.QMainWindow):
         self._participant_select_all_button.clicked.connect(self._process_participant_select_all_button_click)
         self._participant_deselect_all_button.clicked.connect(self._process_participant_deselect_all_button_click)
         self._participant_selection_button.clicked.connect(self._process_participant_selection_button_click)
-        # stimulus connection happens in _init_stimulus_selection_interface()
-        self._data_type_selection_menu.currentTextChanged.connect(self._set_plot_from_data)
-        self._analysis_type_selection_menu.currentTextChanged.connect(self._set_plot_from_data)
-        self._axes_selection_check_box.stateChanged.connect(self._set_plot_from_data)
-        self._only_data_on_stimulus_selection_check_box.stateChanged.connect(self._set_plot_from_data)
+
+        self._init_data_type_selection_interface()
+        self._init_analysis_type_selection_interface()
+        self._init_matplotlib_configurations()
+
+        self._plot_button.clicked.connect(self._set_plot_from_data)
 
     # Processes the directory selection button click
     def _process_directory_selection_button_click(self):
         # disable/clear latter setup options
         self._disable_participant_selection_interface()
         self._disable_stimulus_selection_interface()
-        self._disable_data_type_selection_interface()
-        self._disable_analysis_type_selection_interface()
-        self._disable_matplotlib_configurations()
 
         try:
             self._data_directory_path = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory"))
@@ -75,6 +73,10 @@ class GUI(QtWidgets.QMainWindow):
         for participant_selection_check_box in self._participant_selection_check_box_list:
             participant_selection_check_box.setChecked(False)
 
+    def _reset_participant_checkboxes(self):
+        for check_box in self._participant_selection_check_box_list:
+            check_box.setStyleSheet("")
+
     # Processes the participant selection button click
     def _process_participant_selection_button_click(self):
         # List of check boxes of selected participants
@@ -84,8 +86,7 @@ class GUI(QtWidgets.QMainWindow):
                 self._selected_participant_check_box_list.append(participant_selection_check_box)
 
         # reset previous assignment of color palette
-        for check_box in self._participant_selection_check_box_list:
-            check_box.setStyleSheet("")
+        self._reset_participant_checkboxes();
         # generate color palette
         self._color_palette = sns.color_palette(n_colors = len(self._participant_selection_check_box_list))
         self._scaled_color_palette = visual_util._scale_palette(self._color_palette)
@@ -94,19 +95,13 @@ class GUI(QtWidgets.QMainWindow):
         for i in range(len(self._selected_participant_check_box_list)):
             colored_dot_image_path = self._generate_colored_dot(self._scaled_color_palette[i], i)
             selected_participant_check_box = self._selected_participant_check_box_list[i]
-            selected_participant_check_box.setStyleSheet("QCheckBox::indicator:unchecked {image: url(" + self.WHITE_DOT_IMAGE_PATH + ");}" +
-                                                         "QCheckBox::indicator:checked {image: url(" + colored_dot_image_path + ");}")
+            selected_participant_check_box.setStyleSheet("QCheckBox::indicator:checked {image: url(" + colored_dot_image_path + ");}")
             self._color_palette_dict[selected_participant_check_box.text()] = self._color_palette[i]
 
         if len(self._selected_participant_check_box_list) != 0:
             self._error_message.setText('')
 
             self._init_stimulus_selection_interface()
-            self._init_data_type_selection_interface()
-            self._init_analysis_type_selection_interface()
-            self._init_matplotlib_configurations()
-
-            self._set_plot_from_data()
         else:
             self._error_message.setText('No participants selected. Please select at least one participant to refresh the plot area.')
 
@@ -176,9 +171,6 @@ class GUI(QtWidgets.QMainWindow):
         for stimulus in visual_util._get_found_stimuli(self._selected_participant_check_box_list, self._data_directory_path):
             self._stimulus_selection_menu.addItem(str(stimulus))
 
-        # connect interface
-        self._stimulus_selection_menu.currentTextChanged.connect(self._set_plot_from_data)
-
         # Enable interface
         self._stimulus_selection_menu.setEnabled(True)
 
@@ -209,6 +201,8 @@ class GUI(QtWidgets.QMainWindow):
             self._analysis_type_selection_menu.addItem("Line Plot")
         if self._analysis_type_selection_menu.findText("Heat Map") == -1:
             self._analysis_type_selection_menu.addItem("Heat Map")
+        if self._analysis_type_selection_menu.findText("Cluster") == -1:
+            self._analysis_type_selection_menu.addItem("Cluster")
 
         # Enable interface
         self._analysis_type_selection_menu.setEnabled(True)
@@ -258,11 +252,16 @@ class GUI(QtWidgets.QMainWindow):
     def _set_plot_from_data(self):
         # plotting
         self._stimulus_filtered_data_frame = data_util._get_data_frame_multiple_participants(list(map(visual_util._get_check_box_text, self._selected_participant_check_box_list)),
-                                                                                                                   self._data_directory_path,
-                                                                                                                   stimulus_file_name = self._stimulus_selection_menu.currentText())
+                                                                                             self._data_directory_path,
+                                                                                             stimulus_file_name = self._stimulus_selection_menu.currentText())
         try:
             if (self._data_type_selection_menu.currentText() == "Gaze Data" and
                self._analysis_type_selection_menu.currentText() == "Scatter Plot"):
+                self._plot = visual_util._get_gaze_cluster_plot(self._stimulus_filtered_data_frame,
+                                                                self._color_palette_dict,
+                                                                self._stimulus_selection_menu.currentText(),
+                                                                self._axes_selection_check_box.isChecked(),
+                                                                self._only_data_on_stimulus_selection_check_box.isChecked())
                 self._plot = visual_util._get_gaze_scatter_plot(self._stimulus_filtered_data_frame,
                                                                 self._color_palette_dict,
                                                                 self._stimulus_selection_menu.currentText(),
@@ -271,17 +270,17 @@ class GUI(QtWidgets.QMainWindow):
             elif (self._data_type_selection_menu.currentText() == "Fixation Data" and
                  self._analysis_type_selection_menu.currentText() == "Scatter Plot"):
                 self._plot = visual_util._get_fixation_scatter_plot(self._stimulus_filtered_data_frame,
-                                                                 self._color_palette_dict,
-                                                                 self._stimulus_selection_menu.currentText(),
-                                                                 self._axes_selection_check_box.isChecked(),
-                                                                 self._only_data_on_stimulus_selection_check_box.isChecked())
-            elif (self._data_type_selection_menu.currentText() == "Gaze Data" and
-                 self._analysis_type_selection_menu.currentText() == "Line Plot"):
-                self._plot = visual_util._get_gaze_line_plot(self._stimulus_filtered_data_frame,
                                                                     self._color_palette_dict,
                                                                     self._stimulus_selection_menu.currentText(),
                                                                     self._axes_selection_check_box.isChecked(),
                                                                     self._only_data_on_stimulus_selection_check_box.isChecked())
+            elif (self._data_type_selection_menu.currentText() == "Gaze Data" and
+                 self._analysis_type_selection_menu.currentText() == "Line Plot"):
+                self._plot = visual_util._get_gaze_line_plot(self._stimulus_filtered_data_frame,
+                                                             self._color_palette_dict,
+                                                             self._stimulus_selection_menu.currentText(),
+                                                             self._axes_selection_check_box.isChecked(),
+                                                             self._only_data_on_stimulus_selection_check_box.isChecked())
             elif (self._data_type_selection_menu.currentText() == "Fixation Data" and
                  self._analysis_type_selection_menu.currentText() == "Line Plot"):
                 self._plot = visual_util._get_fixation_line_plot(self._stimulus_filtered_data_frame,
@@ -292,17 +291,33 @@ class GUI(QtWidgets.QMainWindow):
             elif (self._data_type_selection_menu.currentText() == "Gaze Data" and
                  self._analysis_type_selection_menu.currentText() == "Heat Map"):
                 self._plot = visual_util._get_gaze_heat_map(self._stimulus_filtered_data_frame,
-                                                                 self._color_palette_dict,
-                                                                 self._stimulus_selection_menu.currentText(),
-                                                                 self._axes_selection_check_box.isChecked(),
-                                                                 self._only_data_on_stimulus_selection_check_box.isChecked())
+                                                            self._color_palette_dict,
+                                                            self._stimulus_selection_menu.currentText(),
+                                                            self._axes_selection_check_box.isChecked(),
+                                                            self._only_data_on_stimulus_selection_check_box.isChecked())
             elif (self._data_type_selection_menu.currentText() == "Fixation Data" and
                  self._analysis_type_selection_menu.currentText() == "Heat Map"):
                 self._plot = visual_util._get_fixation_heat_map(self._stimulus_filtered_data_frame,
-                                                                 self._color_palette_dict,
-                                                                 self._stimulus_selection_menu.currentText(),
-                                                                 self._axes_selection_check_box.isChecked(),
-                                                                 self._only_data_on_stimulus_selection_check_box.isChecked())
+                                                                self._color_palette_dict,
+                                                                self._stimulus_selection_menu.currentText(),
+                                                                self._axes_selection_check_box.isChecked(),
+                                                                self._only_data_on_stimulus_selection_check_box.isChecked())
+            elif (self._data_type_selection_menu.currentText() == "Gaze Data" and
+                 self._analysis_type_selection_menu.currentText() == "Cluster"):
+                self._plot = visual_util._get_gaze_cluster_plot(self._stimulus_filtered_data_frame,
+                                                                self._color_palette_dict,
+                                                                self._stimulus_selection_menu.currentText(),
+                                                                self._axes_selection_check_box.isChecked(),
+                                                                self._only_data_on_stimulus_selection_check_box.isChecked())
+            elif (self._data_type_selection_menu.currentText() == "Fixation Data" and
+                 self._analysis_type_selection_menu.currentText() == "Cluster"):
+                self._plot = visual_util._get_fixation_cluster_plot(self._stimulus_filtered_data_frame,
+                                                                self._color_palette_dict,
+                                                                self._stimulus_selection_menu.currentText(),
+                                                                self._axes_selection_check_box.isChecked(),
+                                                                self._only_data_on_stimulus_selection_check_box.isChecked())
+
+
             self._error_message.setText('')
             self._set_canvas()
         except FileNotFoundError:

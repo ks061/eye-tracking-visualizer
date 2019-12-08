@@ -43,7 +43,7 @@ EXCLUDE_STIMULI_LIST = ['nan', 'Instruction Element']
 # for the plot height. Higher
 # numbers correspond to a larger
 # plot height
-PLOT_HEIGHT = 5
+PLOT_HEIGHT = 7
 
 # Maximum and minimum values of each axis in a
 # figure will be set beyond the extrema values within

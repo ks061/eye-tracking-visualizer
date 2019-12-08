@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1273</width>
+    <width>1200</width>
     <height>755</height>
    </rect>
   </property>
@@ -28,8 +28,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>1251</width>
-      <height>731</height>
+      <width>1065</width>
+      <height>753</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="_plotting_row">
@@ -49,7 +49,7 @@
          <property name="maximumSize">
           <size>
            <width>325</width>
-           <height>16777215</height>
+           <height>46</height>
           </size>
          </property>
          <property name="widgetResizable">
@@ -82,7 +82,7 @@
            <property name="maximumSize">
             <size>
              <width>325</width>
-             <height>16777215</height>
+             <height>46</height>
             </size>
            </property>
            <property name="text">
@@ -115,7 +115,7 @@
          <property name="maximumSize">
           <size>
            <width>200</width>
-           <height>16777215</height>
+           <height>23</height>
           </size>
          </property>
          <property name="text">
@@ -124,14 +124,14 @@
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_3">
+        <spacer name="_vertical_spacer_directory">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>40</height>
+           <height>20</height>
           </size>
          </property>
         </spacer>
@@ -151,14 +151,14 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>80</width>
-             <height>14</height>
+             <width>70</width>
+             <height>21</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>70</width>
-             <height>16777215</height>
+             <height>21</height>
             </size>
            </property>
            <property name="font">
@@ -175,7 +175,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_2">
+          <spacer name="_horizontal_spacer_select_deselect_all">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -201,13 +201,13 @@
            <property name="minimumSize">
             <size>
              <width>82</width>
-             <height>14</height>
+             <height>21</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>82</width>
-             <height>16777215</height>
+             <height>21</height>
             </size>
            </property>
            <property name="font">
@@ -239,7 +239,7 @@
          <property name="maximumSize">
           <size>
            <width>325</width>
-           <height>16777215</height>
+           <height>350</height>
           </size>
          </property>
          <property name="frameShape">
@@ -268,9 +268,6 @@
        </item>
        <item alignment="Qt::AlignHCenter">
         <widget class="QPushButton" name="_participant_selection_button">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
          <property name="minimumSize">
           <size>
            <width>200</width>
@@ -280,7 +277,7 @@
          <property name="maximumSize">
           <size>
            <width>200</width>
-           <height>16777215</height>
+           <height>23</height>
           </size>
          </property>
          <property name="text">
@@ -289,26 +286,19 @@
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="_stimulus_horizontal_layout">
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="_stimulus_label">
+           <property name="minimumSize">
+            <size>
+             <width>90</width>
+             <height>23</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>100</width>
-             <height>16777215</height>
+             <width>90</width>
+             <height>23</height>
             </size>
            </property>
            <property name="text">
@@ -330,7 +320,7 @@
            <property name="maximumSize">
             <size>
              <width>200</width>
-             <height>16777215</height>
+             <height>23</height>
             </size>
            </property>
           </widget>
@@ -338,13 +328,19 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="_data_type_horizontal_layout">
          <item>
-          <widget class="QLabel" name="label_2">
+          <widget class="QLabel" name="_data_type_label">
+           <property name="minimumSize">
+            <size>
+             <width>90</width>
+             <height>23</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>100</width>
-             <height>16777215</height>
+             <width>90</width>
+             <height>23</height>
             </size>
            </property>
            <property name="text">
@@ -366,7 +362,7 @@
            <property name="maximumSize">
             <size>
              <width>200</width>
-             <height>16777215</height>
+             <height>23</height>
             </size>
            </property>
           </widget>
@@ -374,13 +370,19 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="_analysis_type_horizontal_menu">
          <item>
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="_analysis_type_label">
+           <property name="minimumSize">
+            <size>
+             <width>90</width>
+             <height>23</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>100</width>
-             <height>16777215</height>
+             <width>90</width>
+             <height>23</height>
             </size>
            </property>
            <property name="text">
@@ -402,32 +404,12 @@
            <property name="maximumSize">
             <size>
              <width>200</width>
-             <height>16777215</height>
+             <height>23</height>
             </size>
            </property>
           </widget>
          </item>
         </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Plot Options</string>
-         </property>
-        </widget>
        </item>
        <item>
         <widget class="QCheckBox" name="_axes_selection_check_box">
@@ -443,7 +425,7 @@
          <property name="maximumSize">
           <size>
            <width>200</width>
-           <height>16777215</height>
+           <height>23</height>
           </size>
          </property>
          <property name="autoFillBackground">
@@ -474,7 +456,7 @@
          <property name="maximumSize">
           <size>
            <width>200</width>
-           <height>16777215</height>
+           <height>23</height>
           </size>
          </property>
          <property name="text">
@@ -484,6 +466,38 @@
           <bool>true</bool>
          </property>
         </widget>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QPushButton" name="_plot_button">
+         <property name="minimumSize">
+          <size>
+           <width>75</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>75</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Plot</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="_vertical_spacer_bottom">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
@@ -509,8 +523,14 @@
         <widget class="QWidget" name="_plot_placeholder" native="true">
          <property name="minimumSize">
           <size>
-           <width>950</width>
+           <width>700</width>
            <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>700</width>
+           <height>16777215</height>
           </size>
          </property>
         </widget>
