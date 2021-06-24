@@ -2,7 +2,10 @@ import os
 
 from PyQt5 import QtWidgets
 
+from src.model.model_participant_selection import ModelParticipantSelection
 from src.view.utils import visual_util
+from src.view.view_directory_selection import ViewDirectorySelection
+from src.view.view_participant_selection import ViewParticipantSelection
 
 
 class ViewStimulusSelection:
@@ -21,15 +24,10 @@ class ViewStimulusSelection:
 
     selection = None
 
-    view_directory_selection = None
-    view_participant_selection = None
-
     def __init__(self,
                  hbox,
                  label,
-                 menu,
-                 view_directory_selection,
-                 view_participant_selection):
+                 menu):
         super().__init__()
         if ViewStimulusSelection.__instance is not None:
             raise Exception("ViewStimulusSelection should be treated as a singleton class.")
@@ -38,9 +36,6 @@ class ViewStimulusSelection:
         self.hbox = hbox
         self.label = label
         self.menu = menu
-
-        self.view_directory_selection = view_directory_selection
-        self.view_participant_selection = view_participant_selection
 
     @staticmethod
     def get_instance():
@@ -73,7 +68,9 @@ class ViewStimulusSelection:
     def setup(self):
         # initialize with stimulus options within specified tsv file
         for stimulus in visual_util.get_found_stimuli(
-                self.view_participant_selection.get_selected_check_box_list_text(), self.view_directory_selection.path):
+                ModelParticipantSelection.get_instance().get_selected_participants(),
+                ViewDirectorySelection.get_instance().path
+        ):
             self.menu.addItem(str(stimulus))
 
     def disable(self):

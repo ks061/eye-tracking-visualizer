@@ -23,17 +23,6 @@ class Delegator(QMainWindow):
     # singleton instance
     __instance = None
 
-    # View objects
-    view_main = None
-    view_error = None
-    view_directory_selection = None
-    view_participant_selection = None
-    view_stimulus_selection = None
-    view_data_type_selection = None
-    view_analysis_type_selection = None
-    view_plot_config_selection = None
-    view_plot = None
-
     # ViewMain components
     main_window = None
     central_widget = None
@@ -98,7 +87,7 @@ class Delegator(QMainWindow):
         # creating view objects with UI components
         self.create_view_objects()
         # creating controller
-        Controller(self)
+        Controller()
         # show main window
         self.show()
 
@@ -132,60 +121,48 @@ class Delegator(QMainWindow):
             plotting_row_vspacer=self.plotting_row_vspacer
         )
         # Encapsulating the error displaying UI section
-        self.view_error = ViewError(
+        ViewError(
             scroll_area=self.error_scroll_area,
             scroll_area_widget_contents=self.scroll_area_widget_contents,
             message=self.error_message
         )
         # Encapsulating the directory selection UI functionality
-        self.view_directory_selection = ViewDirectorySelection(
+        ViewDirectorySelection(
             button=self.directory_button
         )
         # Encapsulating the participation selection UI functionality
-        self.view_participant_selection = ViewParticipantSelection(
+        ViewParticipantSelection(
             hbox=self.participant_select_deselect_all_button_hbox,
             select_all_button=self.participant_select_all_button,
             deselect_all_button=self.participant_deselect_all_button,
             select_deselect_all_hspacer=self.participant_select_deselect_all_hspacer,
             menu=self.participant_selection_menu,
             widget_holder=self.participant_selection_widget_holder,
-            selection_button=self.participant_selection_button,
-            view_directory_selection=self.view_directory_selection,
-            delegator=self
+            selection_button=self.participant_selection_button
         )
         # Encapsulating the stimulus selection UI functionality
-        self.view_stimulus_selection = ViewStimulusSelection(
+        ViewStimulusSelection(
             hbox=self.stimulus_hbox,
             label=self.stimulus_label,
-            menu=self.stimulus_menu,
-            view_directory_selection=self.view_directory_selection,
-            view_participant_selection=self.view_participant_selection
+            menu=self.stimulus_menu
         )
         # Encapsulating the data type selection UI functionality
-        self.view_data_type_selection = ViewDataTypeSelection(
+        ViewDataTypeSelection(
             hbox=self.data_type_hbox,
             label=self.data_type_label,
             menu=self.data_type_menu
         )
         # Encapsulating the analysis type selection UI functionality
-        self.view_analysis_type_selection = ViewAnalysisTypeSelection(
+        ViewAnalysisTypeSelection(
             hbox=self.analysis_type_hbox,
             label=self.analysis_type_label,
             menu=self.analysis_type_menu
         )
         # Encapsulating the plotting config UI functionality
-        self.view_plot_config_selection = ViewPlotConfigSelection(
+        ViewPlotConfigSelection(
             vbox=self.plot_config_selection_vbox,
             axes_selection_check_box=self.axes_selection_check_box,
             only_data_on_stimulus_selection_check_box=self.only_data_on_stimulus_selection_check_box
         )
         # Encapsulating the plot to be displayed in the UI
-        self.view_plot = ViewPlot(
-            placeholder=self.plot_placeholder,
-            view_directory_selection=self.view_directory_selection,
-            view_participant_selection=self.view_participant_selection,
-            view_stimulus_selection=self.view_stimulus_selection,
-            view_data_type_selection=self.view_data_type_selection,
-            view_analysis_type_selection=self.view_analysis_type_selection,
-            view_plot_config_selection=self.view_plot_config_selection
-        )
+        ViewPlot(placeholder=self.plot_placeholder)

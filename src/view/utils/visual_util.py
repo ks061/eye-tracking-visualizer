@@ -17,8 +17,8 @@ import matplotlib.pyplot as plt
 import src.main.config as config
 import src.model.utils.data_util as data_util
 import src.view.utils.heatmap_image as heatmapimage
+import src.controller.delegator as delegator
 
-# Dot parameters
 WHITE_DOT_IMAGE_PATH = str(Path.cwd() / '../../_images/white_dot.png')
 COLORED_DOT_IMAGE_PATH_PREFIX = str(Path.cwd() / '../../_images/colored_dots/colored_dot_')
 DOT_SIZE = 19
@@ -429,44 +429,3 @@ def get_found_stimuli(selected_participant_check_box_list_text, data_directory_p
         elif not _stimulus_image_exists(str(stimulus)):
             stimuli_list = np.delete(stimuli_list, np.argwhere(stimulus))
     return stimuli_list
-
-
-# Generates an image of a dot with a particular fill and outline color
-# and saves it at the specified image path
-def generate_dot(fill_color, outline_color, image_path, qmainwindow):
-    window_color = qmainwindow.palette().color(QtGui.QPalette.Background)
-    image = Image.new('RGB', (DOT_SIZE, DOT_SIZE),
-                      color=(window_color.red(), window_color.green(), window_color.blue(), 0))
-    drawing = ImageDraw.Draw(image)
-    drawing.ellipse((0 + DOT_MARGIN_ADJUSTMENT,
-                     0 + DOT_MARGIN_ADJUSTMENT,
-                     DOT_SIZE - DOT_MARGIN_ADJUSTMENT,
-                     DOT_SIZE - DOT_MARGIN_ADJUSTMENT),
-                    fill=fill_color,
-                    outline=outline_color)
-    image.save(image_path)
-
-
-# Generates an image of a dot with a particular RBG color and saves it
-# at the specified image path that has a unique ID id_num
-def generate_colored_dot(scaled_color, id_num, qmainwindow):
-    red_value = scaled_color[0]
-    green_value = scaled_color[1]
-    blue_value = scaled_color[2]
-
-    fill_color = (red_value, green_value, blue_value, 0)
-    outline_color = (red_value, green_value, blue_value, 0)
-
-    colored_dot_image_path = COLORED_DOT_IMAGE_PATH_PREFIX + (str(id_num) + '.png')
-
-    generate_dot(fill_color, outline_color, colored_dot_image_path, qmainwindow)
-
-    return colored_dot_image_path
-
-
-# Generates an image of a white dot at its image path as specified by self.WHITE_DOT_IMAGE_PATH
-def generate_white_dot(qmainwindow):
-    fill_color = 'white'
-    outline_color = 'white'
-
-    generate_dot(fill_color, outline_color, WHITE_DOT_IMAGE_PATH, qmainwindow)

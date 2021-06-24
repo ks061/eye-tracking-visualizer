@@ -2,9 +2,10 @@ import glob
 import os
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLabel
 
+from src.model.model_participant_selection import ModelParticipantSelection
 from src.view.utils import visual_util
+from src.view.view_directory_selection import ViewDirectorySelection
 
 
 class ViewParticipantSelection:
@@ -26,15 +27,8 @@ class ViewParticipantSelection:
     layout = None
     selection_button = None
 
-    view_directory_selection = None
-    delegator = None
-
     selection_check_box_list = None
     selected_check_box_list = None
-
-    color_palette = None
-    scaled_color_palette = None
-    color_palette_dict = None
 
     def __init__(self,
                  hbox,
@@ -43,9 +37,7 @@ class ViewParticipantSelection:
                  select_deselect_all_hspacer,
                  menu,
                  widget_holder,
-                 selection_button,
-                 view_directory_selection,
-                 delegator):
+                 selection_button):
         super().__init__()
         if ViewParticipantSelection.__instance is not None:
             raise Exception("ViewParticipantSelection should be treated as a singleton class.")
@@ -59,8 +51,6 @@ class ViewParticipantSelection:
         self.menu = menu
         self.widget_holder = widget_holder
         self.selection_button = selection_button
-        self.view_directory_selection = view_directory_selection
-        self.delegator = delegator
 
     @staticmethod
     def get_instance():
@@ -113,26 +103,9 @@ class ViewParticipantSelection:
         self.menu.setEnabled(True)
         self.selection_button.setEnabled(True)
 
-    def setup(self):
-        layout = QtWidgets.QVBoxLayout()
-        self.widget_holder.setLayout(layout)
-
-        # Import eligible .tsv files
-        saved_wd = os.getcwd()
-        os.chdir(self.view_directory_selection.get_path())
-        participant_file_list = glob.glob('*.{}'.format('tsv'))
-        os.chdir(saved_wd)
-
-        # generate white dot
-        visual_util.generate_white_dot(self.delegator)
-
-        # initialize check boxes for selected participants
-        self.selection_check_box_list = []
-        for i in range(len(participant_file_list)):
-            check_box_widget = QtWidgets.QCheckBox()
-            check_box_widget.setText(participant_file_list[i])
-            layout.addWidget(check_box_widget)
-            self.selection_check_box_list.append(check_box_widget)
+    def setup_layout(self):
+        self.layout = QtWidgets.QVBoxLayout()
+        self.widget_holder.setLayout(self.layout)
 
     def disable(self):
         # Disable interface
@@ -150,23 +123,16 @@ class ViewParticipantSelection:
                 # new directory is selected
             self.selection_check_box_list = []
 
-    def update(self):
-        self.disable()
-        self.clear()
-        self.setup()
-        self.enable()
-
-    def get_check_box_list_text(self, check_box_list):
-        check_box_list_text = []
-        for check_box in check_box_list:
-            check_box_list_text.append(check_box.text())
-        return check_box_list_text
-
-    def get_selection_check_box_list_text(self):
-        return self.get_check_box_list_text(self.selection_check_box_list)
-
-    def get_selected_check_box_list_text(self):
-        return self.get_check_box_list_text(self.selected_check_box_list)
+    def set_selection_check_box_list(self, selection_participant_list):
+        if self.layout is None:
+            self.setup_layout()
+        # initialize check boxes for selected participants
+        self.selection_check_box_list = []
+        for participant in selection_participant_list:
+            check_box_widget = QtWidgets.QCheckBox()
+            check_box_widget.setText(participant)
+            self.layout.addWidget(check_box_widget)
+            self.selection_check_box_list.append(check_box_widget)
 
     def update_selected_check_box_list(self):
         self.selected_check_box_list = []
@@ -174,6 +140,6 @@ class ViewParticipantSelection:
             if check_box.isChecked():
                 self.selected_check_box_list.append(check_box)
 
-    def reset_check_box_colors(self):
-        for check_box in self.selection_check_box_list:
-            check_box.setStyleSheet("")
+    def get_selected_check_box_list(self):
+        self.update_selected_check_box_list()
+        return self.selected_check_box_list

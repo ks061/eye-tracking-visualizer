@@ -3,36 +3,37 @@ import os
 import PyQt5
 import seaborn as sns
 
+import src.controller.delegator as delegator
+from src.controller.controller_participant_selection import ControllerParticipantSelection
+
 from src.view.utils import visual_util
+from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection
+from src.view.view_data_type_selection import ViewDataTypeSelection
+from src.view.view_directory_selection import ViewDirectorySelection
+from src.view.view_error import ViewError
+from src.view.view_main import ViewMain
+from src.view.view_participant_selection import ViewParticipantSelection
+from src.view.view_plot import ViewPlot
+from src.view.view_plot_config_selection import ViewPlotConfigSelection
+from src.view.view_stimulus_selection import ViewStimulusSelection
 
 
 class Controller:
     # singleton instance
     __instance = None
 
-    # initializing controller
     delegator = None
 
-    # View objects
-    view_main = None
-    view_error = None
-    view_directory_selection = None
-    view_participant_selection = None
-    view_stimulus_selection = None
-    view_data_type_selection = None
-    view_analysis_type_selection = None
-    view_plot_config_selection = None
-    view_plot = None
+    # Sub Controllers
+    controller_participant_selection = None
 
-    def __init__(self, delegator):
+    def __init__(self):
         super().__init__()
         if Controller.__instance is not None:
             raise Exception("Controller should be treated as a singleton class.")
         else:
             Controller.__instance = self
-        self.delegator = delegator
-        self.init_view_objects()
-        self.connect_gui_components_to_functions()
+        self._connect_gui_components_to_functions()
 
     @staticmethod
     def get_instance():
@@ -48,141 +49,105 @@ class Controller:
                             "cannot be done so without a Delegator object")
         return Controller.__instance
 
-    def init_view_objects(self):
-        self.view_main = self.delegator.view_main
-        self.view_error = self.delegator.view_error
-        self.view_directory_selection = self.delegator.view_directory_selection
-        self.view_participant_selection = self.delegator.view_participant_selection
-        self.view_stimulus_selection = self.delegator.view_stimulus_selection
-        self.view_data_type_selection = self.delegator.view_data_type_selection
-        self.view_analysis_type_selection = self.delegator.view_analysis_type_selection
-        self.view_plot_config_selection = self.delegator.view_plot_config_selection
-        self.view_plot = self.delegator.view_plot
-
-    def connect_gui_components_to_functions(self):
-        self.view_directory_selection.button.clicked.connect(
+    def _connect_gui_components_to_functions(self):
+        ViewDirectorySelection.get_instance().button.clicked.connect(
             lambda: self.process_directory_selection_button_click()
         )
-        self.view_participant_selection.select_all_button.clicked.connect(
-            lambda: self.view_participant_selection.process_select_all_button_click()
+        ViewParticipantSelection.get_instance().select_all_button.clicked.connect(
+            lambda: ViewParticipantSelection.get_instance().process_select_all_button_click()
         )
-        self.view_participant_selection.deselect_all_button.clicked.connect(
-            lambda: self.view_participant_selection.process_deselect_all_button_click()
+        ViewParticipantSelection.get_instance().deselect_all_button.clicked.connect(
+            lambda: ViewParticipantSelection.get_instance().process_deselect_all_button_click()
         )
-        self.view_participant_selection.selection_button.clicked.connect(
+        ViewParticipantSelection.get_instance().selection_button.clicked.connect(
             lambda: self.process_participant_selection_button_click()
         )
-        self.view_stimulus_selection.menu.activated.connect(
+        ViewStimulusSelection.get_instance().menu.activated.connect(
             lambda: self.process_stimulus_selection_menu_change()
         )
-        self.view_data_type_selection.menu.activated.connect(
+        ViewDataTypeSelection.get_instance().menu.activated.connect(
             lambda: self.process_data_type_selection_menu_change()
         )
-        self.view_analysis_type_selection.menu.activated.connect(
+        ViewAnalysisTypeSelection.get_instance().menu.activated.connect(
             lambda: self.process_analysis_type_selection_menu_change()
         )
-        self.view_main.plot_button.clicked.connect(
+        ViewMain.get_instance().plot_button.clicked.connect(
             lambda: self.process_plot_button_click()
         )
 
+    @staticmethod
     # Processes the directory selection button click
-    def process_directory_selection_button_click(self):
+    def process_directory_selection_button_click():
         # disable/clear latter setup options
-        self.view_participant_selection.disable()
-        self.view_stimulus_selection.disable()
-        self.view_data_type_selection.disable()
-        self.view_analysis_type_selection.disable()
-        self.view_plot_config_selection.disable()
+        ViewParticipantSelection.get_instance().disable()
+        ViewStimulusSelection.get_instance().disable()
+        ViewDataTypeSelection.get_instance().disable()
+        ViewAnalysisTypeSelection.get_instance().disable()
+        ViewPlotConfigSelection.get_instance().disable()
 
-        path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(self.delegator, "Select Directory"))
-        self.view_directory_selection.set_path(
+        path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(delegator.Delegator.get_instance(), "Select Directory"))
+        ViewDirectorySelection.get_instance().set_path(
             path
         )
-        self.view_participant_selection.update()
+        ControllerParticipantSelection.update_view_selection_participants_from_model()
 
+    @staticmethod
     # Processes the participant selection button click
-    def process_participant_selection_button_click(self):
+    def process_participant_selection_button_click():
         # disable/clear latter setup options
-        self.view_stimulus_selection.disable()
-        self.view_data_type_selection.disable()
-        self.view_analysis_type_selection.disable()
-        self.view_plot_config_selection.disable()
+        ViewStimulusSelection.get_instance().disable()
+        ViewDataTypeSelection.get_instance().disable()
+        ViewAnalysisTypeSelection.get_instance().disable()
+        ViewPlotConfigSelection.get_instance().disable()
 
-        self.view_participant_selection.update_selected_check_box_list()
+        ControllerParticipantSelection.get_instance().update_model_selected_participants_from_view()
 
         # Participants selected with check marks; now, time to update
         # the colors to the left of the participant selection menu.
 
-        # First, reset previous assignment of color palette
-        self.view_participant_selection.reset_check_box_colors()
-        # generate color palette
-        self.view_participant_selection.color_palette = \
-            sns.color_palette(
-                n_colors=len(
-                    self.view_participant_selection.selection_check_box_list
-                )
-            )
-        self.view_participant_selection.scaled_color_palette = \
-            visual_util.scale_palette(
-                self.view_participant_selection.color_palette
-            )
-        self.view_participant_selection.color_palette_dict = {}
-        # assigning color palette
-        for i, check_box in zip(
-                range(len(self.view_participant_selection.selected_check_box_list)),
-                self.view_participant_selection.selected_check_box_list
-        ):
-            colored_dot_image_path = visual_util.generate_colored_dot(
-                scaled_color=self.view_participant_selection.scaled_color_palette[i],
-                id_num=i,
-                qmainwindow=self.delegator
-            )
-            check_box.setStyleSheet(
-                "QCheckBox::indicator:checked {image: url(" + colored_dot_image_path + ");}"
-            )
-            self.view_participant_selection.color_palette_dict[check_box.text()] = \
-                self.view_participant_selection.color_palette[i]
+        if len(ViewParticipantSelection.get_instance().selected_check_box_list) != 0:
+            ViewError.get_instance().message.setText('')
 
-        if len(self.view_participant_selection.selected_check_box_list) != 0:
-            self.view_error.message.setText('')
-
-            self.view_stimulus_selection.enable()
+            ViewStimulusSelection.get_instance().enable()
         else:
-            self.view_error.message.setText(
+            ViewError.get_instance().message.setText(
                 "No participants selected. Please select at least one participant" +
                 " to refresh the plot area"
             )
+        ViewStimulusSelection.get_instance().update()
 
-        self.view_stimulus_selection.update()
-
-    def process_stimulus_selection_menu_change(self):
+    @staticmethod
+    def process_stimulus_selection_menu_change():
         # disable/clear latter setup options
-        self.view_data_type_selection.disable()
-        self.view_analysis_type_selection.disable()
-        self.view_plot_config_selection.disable()
+        ViewDataTypeSelection.get_instance().disable()
+        ViewAnalysisTypeSelection.get_instance().disable()
+        ViewPlotConfigSelection.get_instance().disable()
 
-        self.view_stimulus_selection.set_selection()
+        ViewStimulusSelection.get_instance().set_selection()
 
         # enable next option
-        self.view_data_type_selection.update()
+        ViewDataTypeSelection.get_instance().update()
 
-    def process_data_type_selection_menu_change(self):
+    @staticmethod
+    def process_data_type_selection_menu_change():
         # disable/clear latter setup options
-        self.view_analysis_type_selection.disable()
-        self.view_plot_config_selection.disable()
+        ViewAnalysisTypeSelection.get_instance().disable()
+        ViewPlotConfigSelection.get_instance().disable()
 
-        self.view_data_type_selection.set_selection()
+        ViewDataTypeSelection.get_instance().set_selection()
 
         # enable next option
-        self.view_analysis_type_selection.update()
+        ViewAnalysisTypeSelection.get_instance().update()
 
-    def process_analysis_type_selection_menu_change(self):
-        self.view_plot_config_selection.disable()
+    @staticmethod
+    def process_analysis_type_selection_menu_change():
+        ViewPlotConfigSelection.get_instance().disable()
 
-        self.view_analysis_type_selection.set_selection()
+        ViewAnalysisTypeSelection.get_instance().set_selection()
 
-        self.view_plot_config_selection.enable()
+        ViewPlotConfigSelection.get_instance().enable()
 
-    def process_plot_button_click(self):
-        self.view_plot.setup()
-        self.view_plot.plot()
+    @staticmethod
+    def process_plot_button_click():
+        ViewPlot.get_instance().setup()
+        ViewPlot.get_instance().plot()
