@@ -5,6 +5,7 @@ import plotly.express as px
 
 from src.main import config
 from src.model.model_main import ModelMain
+from src.model.model_plot import ModelPlot
 from src.model.utils import data_util
 from src.view.utils import visual_util
 from src.view.view_directory_selection import ViewDirectorySelection
@@ -32,6 +33,7 @@ class ViewPlot:
         else:
             ViewPlot.__instance = self
         self.placeholder = placeholder
+        self._setup()
 
     @staticmethod
     def get_instance():
@@ -40,24 +42,16 @@ class ViewPlot:
         implemented for the variable.
         :return: the single instance of ViewPlot
         """
-        if ViewPlot.__instance is not None:
-            pass
-        else:
+        if ViewPlot.__instance is None:
             raise Exception("ViewPlot has not been instantiated and " + \
                             "cannot be done so without proper attributes")
         return ViewPlot.__instance
 
-    def setup(self):
+    def _setup(self):
         self.browser = QtWebEngineWidgets.QWebEngineView(self.placeholder)
         self.vbox = QtWidgets.QVBoxLayout(self.placeholder)
         self.vbox.addWidget(self.browser)
 
     def plot(self):
-
-        fig = px.scatter(
-            ModelMain.get_instance().df,
-            x=config.X_GAZE_COL_TITLE,
-            y=config.Y_GAZE_COL_TITLE,
-            color="ParticipantName"
-        )
+        fig = ModelPlot.get_instance().get_fig()
         self.browser.setHtml(fig.to_html(include_plotlyjs='cdn'))

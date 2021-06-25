@@ -9,7 +9,6 @@ from src.view.view_error import ViewError
 from src.view.view_main import ViewMain
 from src.view.view_participant_selection import ViewParticipantSelection
 from src.view.view_plot import ViewPlot
-from src.view.view_plot_config_selection import ViewPlotConfigSelection
 from src.view.view_stimulus_selection import ViewStimulusSelection
 
 
@@ -66,11 +65,6 @@ class Delegator(QMainWindow):
     analysis_type_label = None
     analysis_type_menu = None
 
-    # ViewPlotConfigSelection components
-    plot_config_selection_vbox = None
-    axes_selection_check_box = None
-    only_data_on_stimulus_selection_check_box = None
-
     # ViewPlot components
     plot_placeholder = None
 
@@ -109,7 +103,7 @@ class Delegator(QMainWindow):
 
     def create_view_objects(self):
         # Encapsulating the main window
-        self.view_main = ViewMain(
+        ViewMain(
             main_window=self.main_window,
             central_widget=self.central_widget,
             plotting_row_hbox=self.plotting_row_hbox,
@@ -157,12 +151,6 @@ class Delegator(QMainWindow):
             hbox=self.analysis_type_hbox,
             label=self.analysis_type_label,
             menu=self.analysis_type_menu
-        )
-        # Encapsulating the plotting config UI functionality
-        ViewPlotConfigSelection(
-            vbox=self.plot_config_selection_vbox,
-            axes_selection_check_box=self.axes_selection_check_box,
-            only_data_on_stimulus_selection_check_box=self.only_data_on_stimulus_selection_check_box
         )
         # Encapsulating the plot to be displayed in the UI
         ViewPlot(placeholder=self.plot_placeholder)

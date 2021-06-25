@@ -1,0 +1,9 @@
+PyQt5
+sentry_sdk
+pandas
+seaborn
+matplotlib
+numpy
+scipy
+PIL
+plotly

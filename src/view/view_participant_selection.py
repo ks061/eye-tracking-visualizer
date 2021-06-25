@@ -59,9 +59,7 @@ class ViewParticipantSelection:
         implemented for the variable.
         :return: the single instance of ViewParticipantSelection
         """
-        if ViewParticipantSelection.__instance is not None:
-            pass
-        else:
+        if ViewParticipantSelection.__instance is None:
             raise Exception("ViewParticipantSelection has not been instantiated and " + \
                             "cannot be done so without proper attributes")
         return ViewParticipantSelection.__instance

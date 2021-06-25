@@ -38,18 +38,6 @@ def import_stimulus_image(stimulus_image_file_name):
     return plt.imread(str(Path.cwd() / config.RELATIVE_STIMULUS_IMAGE_DIRECTORY / stimulus_image_file_name))
 
 
-# Returns a blank plot
-def get_blank_plot():
-    data_frame = pd.DataFrame(columns=['X', 'Y'])
-    x_title = 'X'
-    y_title = 'Y'
-    sns.lmplot(x=x_title, y=y_title, data=data_frame,
-               fit_reg=False, height=config.PLOT_HEIGHT,
-               legend=False)
-    plt.axis('off')
-    return plt.gcf()
-
-
 # Returns a figure containing a scatter plot of
 # raw gaze data as specified in data_frame
 def get_gaze_scatter_plot(data_frame, color_palette, stimulus_file_name, show_axes, show_only_data_on_stimulus):
@@ -388,20 +376,6 @@ def get_gaze_heat_map(data_frame, stimulus_file_name, show_axes, show_only_data_
     heatmap_image.overlay_heatmap_on_axes(plt.gca())
 
     return plt.gcf()
-
-
-# Round the RGB values in the palette
-def scale_palette(color_palette):
-    rounded_color_palette = []
-    for color in color_palette:
-        rounded_red_value = round(color[0] * 255)
-        rounded_green_value = round(color[1] * 255)
-        rounded_blue_value = round(color[2] * 255)
-        rounded_color = (rounded_red_value,
-                         rounded_green_value,
-                         rounded_blue_value)
-        rounded_color_palette.append(rounded_color)
-    return rounded_color_palette
 
 
 # Return a list of stimuli, where each stimulus corresponds to

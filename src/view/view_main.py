@@ -1,29 +1,24 @@
 # import project libraries
 import sys
-
-sys.path.insert(0, '../../../../')
 import src.model.utils.data_util as data_util
 import src.view.utils.visual_util as visual_util
 import src.view.utils.heatmap_util as heatmap_util
 import src.model.utils.cluster_util as cluster_util
-import src.view.view_data_type_selection as datatypeselectionbox
-
 import glob
 import os
 from pathlib import Path
-
 # Data libraries
 import seaborn as sns
 # Visual libraries
 from PIL import Image, ImageDraw
-
 # Matplotlib/PyQt5 libraries
 from PyQt5 import QtGui, QtWidgets
 from PyQt5 import uic
 
+sys.path.insert(0, '../../../../')
+
 
 class ViewMain:
-
     __instance = None
 
     main_window = None
@@ -79,12 +74,7 @@ class ViewMain:
         implemented for the variable.
         :return: the single instance of ViewMain
         """
-        if ViewMain.__instance is not None:
-            pass
-        else:
+        if ViewMain.__instance is None:
             raise Exception("ViewMain has not been instantiated and " + \
                             "cannot be done so without proper attributes")
         return ViewMain.__instance
-
-
-

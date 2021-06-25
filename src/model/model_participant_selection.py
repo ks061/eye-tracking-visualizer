@@ -1,15 +1,14 @@
 import glob
 import os
 
-from src.view.view_directory_selection import ViewDirectorySelection
+from src.model.model_directory_selection import ModelDirectorySelection
 
 
 class ModelParticipantSelection:
-
     __instance = None
 
-    selection_participants = None
-    selected_participants = None
+    selection_participants: list = None
+    selected_participants: list = None
 
     def __init__(self):
         super().__init__()
@@ -32,7 +31,7 @@ class ModelParticipantSelection:
     def import_selection_participants(self):
         # Import eligible .tsv files
         saved_wd = os.getcwd()
-        os.chdir(ViewDirectorySelection.get_instance().get_path())
+        os.chdir(ModelDirectorySelection.get_instance().get_path())
         self.selection_participants = glob.glob('*.{}'.format('tsv'))
         os.chdir(saved_wd)
 
@@ -49,3 +48,6 @@ class ModelParticipantSelection:
     def set_selected_participants(self, selected_participants):
         self.selected_participants = selected_participants
 
+    def clear(self):
+        self.selection_participants = None
+        self.selected_participants = None

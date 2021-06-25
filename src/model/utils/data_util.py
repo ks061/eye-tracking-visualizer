@@ -18,6 +18,9 @@ def get_data_frame_one_participant_one_stimulus(
     data_frame_one_participant = get_data_frame_one_participant(
         selected_participant_file_path
     )
+    print(stimulus_file_name)
+    print()
+    print(data_frame_one_participant[config.STIMULUS_COL_TITLE])
     data_frame_one_participant_one_stimulus = data_frame_one_participant.loc[
         data_frame_one_participant[config.STIMULUS_COL_TITLE] == stimulus_file_name
         ]
@@ -64,5 +67,5 @@ def get_data_frame_multiple_participants(
 # Filter out rows with empty values in any of the columns specified.
 def remove_incomplete_observations(data_frame, arr_col_titles):
     for col_title in arr_col_titles:
-        data_frame = data_frame[data_frame[col_title].notnull() is True]
+        data_frame = data_frame[data_frame[col_title].notnull()]
     return data_frame

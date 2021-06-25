@@ -33,17 +33,7 @@ class ViewError:
         implemented for the variable.
         :return: the single instance of ViewError
         """
-        if ViewError.__instance is not None:
-            pass
-        else:
+        if ViewError.__instance is None:
             raise Exception("ViewError has not been instantiated and " + \
                             "cannot be done so without proper attributes")
         return ViewError.__instance
-
-    def show(self):
-        self.scroll_area.show()
-        self.message.show()
-
-    def hide(self):
-        self.scroll_area.hide()
-        self.message.hide()

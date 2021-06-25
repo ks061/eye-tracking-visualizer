@@ -1,12 +1,14 @@
-import os
-
 import PyQt5
-import seaborn as sns
 
 import src.controller.delegator as delegator
 from src.controller.controller_participant_selection import ControllerParticipantSelection
-
-from src.view.utils import visual_util
+from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
+from src.model.model_data_type_selection import ModelDataTypeSelection
+from src.model.model_directory_selection import ModelDirectorySelection
+from src.model.model_main import ModelMain
+from src.model.model_participant_selection import ModelParticipantSelection
+from src.model.model_plot import ModelPlot
+from src.model.model_stimulus_selection import ModelStimulusSelection
 from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection
 from src.view.view_data_type_selection import ViewDataTypeSelection
 from src.view.view_directory_selection import ViewDirectorySelection
@@ -14,7 +16,6 @@ from src.view.view_error import ViewError
 from src.view.view_main import ViewMain
 from src.view.view_participant_selection import ViewParticipantSelection
 from src.view.view_plot import ViewPlot
-from src.view.view_plot_config_selection import ViewPlotConfigSelection
 from src.view.view_stimulus_selection import ViewStimulusSelection
 
 
@@ -80,13 +81,16 @@ class Controller:
     def process_directory_selection_button_click():
         # disable/clear latter setup options
         ViewParticipantSelection.get_instance().disable()
+        ModelParticipantSelection.get_instance().clear()
         ViewStimulusSelection.get_instance().disable()
+        ModelStimulusSelection.get_instance().clear()
         ViewDataTypeSelection.get_instance().disable()
+        ModelDataTypeSelection.get_instance().clear()
         ViewAnalysisTypeSelection.get_instance().disable()
-        ViewPlotConfigSelection.get_instance().disable()
+        ModelAnalysisTypeSelection.get_instance().clear()
 
         path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(delegator.Delegator.get_instance(), "Select Directory"))
-        ViewDirectorySelection.get_instance().set_path(
+        ModelDirectorySelection.get_instance().set_path(
             path
         )
         ControllerParticipantSelection.update_view_selection_participants_from_model()
@@ -96,9 +100,11 @@ class Controller:
     def process_participant_selection_button_click():
         # disable/clear latter setup options
         ViewStimulusSelection.get_instance().disable()
+        ModelStimulusSelection.get_instance().clear()
         ViewDataTypeSelection.get_instance().disable()
+        ModelDataTypeSelection.get_instance().clear()
         ViewAnalysisTypeSelection.get_instance().disable()
-        ViewPlotConfigSelection.get_instance().disable()
+        ModelAnalysisTypeSelection.get_instance().clear()
 
         ControllerParticipantSelection.get_instance().update_model_selected_participants_from_view()
 
@@ -114,16 +120,20 @@ class Controller:
                 "No participants selected. Please select at least one participant" +
                 " to refresh the plot area"
             )
+        ModelStimulusSelection.get_instance().update_stimuli_names()
         ViewStimulusSelection.get_instance().update()
 
     @staticmethod
     def process_stimulus_selection_menu_change():
         # disable/clear latter setup options
         ViewDataTypeSelection.get_instance().disable()
+        ModelDataTypeSelection.get_instance().clear()
         ViewAnalysisTypeSelection.get_instance().disable()
-        ViewPlotConfigSelection.get_instance().disable()
+        ModelAnalysisTypeSelection.get_instance().clear()
 
-        ViewStimulusSelection.get_instance().set_selection()
+        ModelStimulusSelection.get_instance().set_selection(
+            ViewStimulusSelection.get_instance().get_current_menu_selection()
+        )
 
         # enable next option
         ViewDataTypeSelection.get_instance().update()
@@ -132,22 +142,22 @@ class Controller:
     def process_data_type_selection_menu_change():
         # disable/clear latter setup options
         ViewAnalysisTypeSelection.get_instance().disable()
-        ViewPlotConfigSelection.get_instance().disable()
+        ModelAnalysisTypeSelection.get_instance().clear()
 
-        ViewDataTypeSelection.get_instance().set_selection()
+        ModelDataTypeSelection.get_instance().set_selection(
+            ViewDataTypeSelection.get_instance().get_current_menu_selection()
+        )
 
         # enable next option
         ViewAnalysisTypeSelection.get_instance().update()
 
     @staticmethod
     def process_analysis_type_selection_menu_change():
-        ViewPlotConfigSelection.get_instance().disable()
-
-        ViewAnalysisTypeSelection.get_instance().set_selection()
-
-        ViewPlotConfigSelection.get_instance().enable()
+        ModelAnalysisTypeSelection.get_instance().set_selection(
+            ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
+        )
 
     @staticmethod
     def process_plot_button_click():
-        ViewPlot.get_instance().setup()
+        ModelPlot.get_instance().update_fig()
         ViewPlot.get_instance().plot()

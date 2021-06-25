@@ -2,7 +2,9 @@ import os
 
 from PyQt5 import QtWidgets
 
+from src.model.model_directory_selection import ModelDirectorySelection
 from src.model.model_participant_selection import ModelParticipantSelection
+from src.model.model_stimulus_selection import ModelStimulusSelection
 from src.view.utils import visual_util
 from src.view.view_directory_selection import ViewDirectorySelection
 from src.view.view_participant_selection import ViewParticipantSelection
@@ -21,8 +23,6 @@ class ViewStimulusSelection:
     hbox = None
     label = None
     menu = None
-
-    selection = None
 
     def __init__(self,
                  hbox,
@@ -44,34 +44,10 @@ class ViewStimulusSelection:
         implemented for the variable.
         :return: the single instance of ViewStimulusSelection
         """
-        if ViewStimulusSelection.__instance is not None:
-            pass
-        else:
+        if ViewStimulusSelection.__instance is None:
             raise Exception("ViewStimulusSelection has not been instantiated and " + \
                             "cannot be done so without proper attributes")
         return ViewStimulusSelection.__instance
-
-    def show(self):
-        # Data type selection
-        self.menu.show()
-
-    def hide(self):
-        # Data type selection
-        self.menu.hide()
-
-    # Initializes the drop down menu to select the stimulus
-    # based on stimuli available in the specified tsv file
-    def enable(self):
-        # Enable interface
-        self.menu.setEnabled(True)
-
-    def setup(self):
-        # initialize with stimulus options within specified tsv file
-        for stimulus in visual_util.get_found_stimuli(
-                ModelParticipantSelection.get_instance().get_selected_participants(),
-                ViewDirectorySelection.get_instance().path
-        ):
-            self.menu.addItem(str(stimulus))
 
     def disable(self):
         # Disable interface
@@ -81,22 +57,22 @@ class ViewStimulusSelection:
         # clear stimulus selection menu
         self.menu.clear()
 
-    def update(self):
-        # disconnect stimulus selection from plotting
-        try:
-            self.menu.currentTextChanged.disconnect()
-        except:
-            pass
+    def setup(self):
+        # initialize with stimulus options within specified tsv file
+        for stimulus in ModelStimulusSelection.get_instance().get_stimuli_names():
+            self.menu.addItem(str(stimulus))
 
+    # Initializes the drop down menu to select the stimulus
+    # based on stimuli available in the specified tsv file
+    def enable(self):
+        # Enable interface
+        self.menu.setEnabled(True)
+
+    def update(self):
         self.disable()
         self.clear()
         self.setup()
         self.enable()
 
-    def set_selection(self):
-        self.selection = self.menu.currentText()
-
-    def get_selection(self):
-        return self.selection
-
-
+    def get_current_menu_selection(self):
+        return self.menu.currentText()

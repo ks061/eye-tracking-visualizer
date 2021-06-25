@@ -3,7 +3,6 @@ from src.view.view_participant_selection import ViewParticipantSelection
 
 
 class ControllerParticipantSelection:
-
     __instance = None
 
     def __init__(self):
@@ -24,7 +23,6 @@ class ControllerParticipantSelection:
             ControllerParticipantSelection()
         return ControllerParticipantSelection.__instance
 
-
     @staticmethod
     def update_view_selection_participants_from_model():
         ViewParticipantSelection.get_instance().disable()
@@ -32,7 +30,8 @@ class ControllerParticipantSelection:
             ModelParticipantSelection.get_instance().get_selection_participants())
         ViewParticipantSelection.get_instance().enable()
 
-    def update_model_selected_participants_from_view(self):
+    @staticmethod
+    def update_model_selected_participants_from_view():
         ModelParticipantSelection.get_instance().set_selected_participants(
             list(map(lambda check_box: check_box.text(),
                      ViewParticipantSelection.get_instance().get_selected_check_box_list()))

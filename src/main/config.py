@@ -53,7 +53,8 @@ MAX_FIXATION_POINT_SIZE = 10
 # Image Configurations
 
 # Relative directory location of images
-RELATIVE_STIMULUS_IMAGE_DIRECTORY = "stimuli"
+RELATIVE_STIMULUS_IMAGE_DIRECTORY = "../../data/stimuli"
+STIMULUS_DIR_PATH_RELATIVE_TO_MODEL_PLOT = "../../data/stimuli"
 
 # Visual Configurations
 GAZE_SCATTER_PLOT_TITLE = "Gaze Data Scatter Plot"

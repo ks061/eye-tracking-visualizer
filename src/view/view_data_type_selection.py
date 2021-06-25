@@ -11,8 +11,6 @@ class ViewDataTypeSelection:
     label = None
     menu = None
 
-    selection = None
-
     def __init__(self,
                  hbox,
                  label,
@@ -33,9 +31,7 @@ class ViewDataTypeSelection:
         implemented for the variable.
         :return: the single instance of ViewDataTypeSelection
         """
-        if ViewDataTypeSelection.__instance is not None:
-            pass
-        else:
+        if ViewDataTypeSelection.__instance is None:
             raise Exception("ViewDataTypeSelection has not been instantiated and " + \
                             "cannot be done so without proper attributes")
         return ViewDataTypeSelection.__instance
@@ -64,14 +60,5 @@ class ViewDataTypeSelection:
         self.setup()
         self.enable()
 
-    def show(self):
-        self.menu.show()
-
-    def hide(self):
-        self.menu.hide()
-
-    def set_selection(self):
-        self.selection = self.menu.currentText()
-
-    def get_selection(self):
-        return self.selection
+    def get_current_menu_selection(self):
+        return self.menu.currentText()
