@@ -1,10 +1,9 @@
 class ModelAnalysisTypeSelection:
     __instance = None
 
-    selection: str = None
+    selection = None
 
     def __init__(self):
-        super().__init__()
         if ModelAnalysisTypeSelection.__instance is not None:
             raise Exception("ModelAnalysisTypeSelection should be treated as a singleton class.")
         else:

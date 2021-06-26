@@ -17,7 +17,6 @@ class ViewError:
                  scroll_area,
                  scroll_area_widget_contents,
                  message):
-        super().__init__()
         if ViewError.__instance is not None:
             raise Exception("ViewError should be treated as a singleton class.")
         else:

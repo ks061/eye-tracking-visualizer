@@ -1,10 +1,9 @@
 class ModelDataTypeSelection:
     __instance = None
 
-    selection: str = None
+    selection = None
 
     def __init__(self):
-        super().__init__()
         if ModelDataTypeSelection.__instance is not None:
             raise Exception("ModelDataTypeSelection should be treated as a singleton class.")
         else:

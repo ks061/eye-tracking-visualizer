@@ -6,7 +6,6 @@ class ControllerParticipantSelection:
     __instance = None
 
     def __init__(self):
-        super().__init__()
         if ControllerParticipantSelection.__instance is not None:
             raise Exception("ControllerParticipantSelection should be treated as a singleton class.")
         else:

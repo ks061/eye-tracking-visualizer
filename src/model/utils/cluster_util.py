@@ -7,8 +7,7 @@ from matplotlib import pyplot as plt
 if __name__ == '__main__':
     # import project libraries
     import src.main.config as config
-    import src.model.utils.data_util as data_util
-    import src.view.utils.visual_util as visual_util
+    import src.model.utils.fixation_util as visual_util
 
 
 def _cluster_range_query(data_frame_cluster, index_list_of_all_points, index_of_center_point,

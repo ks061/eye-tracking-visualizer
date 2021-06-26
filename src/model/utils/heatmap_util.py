@@ -3,13 +3,12 @@ from pathlib import Path
 
 from matplotlib import pyplot as plt, image
 
-from src.view.utils.heatmap_image import HeatmapImage
+from src.model.utils.heatmap_image import HeatmapImage
 
 if __name__ == 'main':
     # import project libraries
     import src.main.config as config
-    import src.model.utils.data_util as data_util
-    import src.view.utils.visual_util as visual_util
+    import src.model.utils.fixation_util as visual_util
 
 
 def get_fixation_heat_map(data_frame, stimulus_file_name, show_axes, show_only_data_on_stimulus):

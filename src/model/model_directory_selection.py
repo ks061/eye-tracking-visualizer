@@ -1,10 +1,9 @@
 class ModelDirectorySelection:
     __instance = None
 
-    path: str = None
+    path = None
 
     def __init__(self):
-        super().__init__()
         if ModelDirectorySelection.__instance is not None:
             raise Exception("ModelDirectorySelection should be treated as a singleton class.")
         else:

@@ -7,11 +7,10 @@ from src.model.model_directory_selection import ModelDirectorySelection
 class ModelParticipantSelection:
     __instance = None
 
-    selection_participants: list = None
-    selected_participants: list = None
+    selection_participants = None
+    selected_participants = None
 
     def __init__(self):
-        super().__init__()
         if ModelParticipantSelection.__instance is not None:
             raise Exception("ModelParticipantSelection should be treated as a singleton class.")
         else:
@@ -47,6 +46,12 @@ class ModelParticipantSelection:
 
     def set_selected_participants(self, selected_participants):
         self.selected_participants = selected_participants
+
+    def enforce_exists_selected_participants(self):
+        if self.selected_participants is None:
+            raise Exception("List of selected participant file names is null.")
+        if len(self.selected_participants) == 0:
+            raise Exception("No participants were selected.")
 
     def clear(self):
         self.selection_participants = None

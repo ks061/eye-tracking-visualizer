@@ -69,7 +69,6 @@ class Delegator(QMainWindow):
     plot_placeholder = None
 
     def __init__(self):
-        super().__init__()
         if Delegator.__instance is not None:
             raise Exception("Delegator should be treated as a singleton class.")
         else:

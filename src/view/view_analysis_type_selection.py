@@ -15,7 +15,6 @@ class ViewAnalysisTypeSelection:
                  hbox,
                  label,
                  menu):
-        super().__init__()
         if ViewAnalysisTypeSelection.__instance is not None:
             raise Exception("ViewAnalysisSelection should be treated as a singleton class.")
         else:

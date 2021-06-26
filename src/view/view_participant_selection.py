@@ -1,11 +1,4 @@
-import glob
-import os
-
 from PyQt5 import QtWidgets
-
-from src.model.model_participant_selection import ModelParticipantSelection
-from src.view.utils import visual_util
-from src.view.view_directory_selection import ViewDirectorySelection
 
 
 class ViewParticipantSelection:
@@ -38,7 +31,6 @@ class ViewParticipantSelection:
                  menu,
                  widget_holder,
                  selection_button):
-        super().__init__()
         if ViewParticipantSelection.__instance is not None:
             raise Exception("ViewParticipantSelection should be treated as a singleton class.")
         else:

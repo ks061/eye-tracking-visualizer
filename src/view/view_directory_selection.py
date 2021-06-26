@@ -10,7 +10,6 @@ class ViewDirectorySelection:
     button = None
 
     def __init__(self, button):
-        super().__init__()
         if ViewDirectorySelection.__instance is not None:
             raise Exception("ViewDirectorySelection should be treated as a singleton class.")
         else:

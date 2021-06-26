@@ -1,13 +1,4 @@
-import os
-
-from PyQt5 import QtWidgets
-
-from src.model.model_directory_selection import ModelDirectorySelection
-from src.model.model_participant_selection import ModelParticipantSelection
 from src.model.model_stimulus_selection import ModelStimulusSelection
-from src.view.utils import visual_util
-from src.view.view_directory_selection import ViewDirectorySelection
-from src.view.view_participant_selection import ViewParticipantSelection
 
 
 class ViewStimulusSelection:
@@ -28,7 +19,6 @@ class ViewStimulusSelection:
                  hbox,
                  label,
                  menu):
-        super().__init__()
         if ViewStimulusSelection.__instance is not None:
             raise Exception("ViewStimulusSelection should be treated as a singleton class.")
         else:

@@ -1,11 +1,12 @@
+"""Imports"""
+# External
 import PyQt5
-
+# Internal
 import src.controller.delegator as delegator
 from src.controller.controller_participant_selection import ControllerParticipantSelection
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
 from src.model.model_data_type_selection import ModelDataTypeSelection
 from src.model.model_directory_selection import ModelDirectorySelection
-from src.model.model_main import ModelMain
 from src.model.model_participant_selection import ModelParticipantSelection
 from src.model.model_plot import ModelPlot
 from src.model.model_stimulus_selection import ModelStimulusSelection
@@ -20,6 +21,9 @@ from src.view.view_stimulus_selection import ViewStimulusSelection
 
 
 class Controller:
+    """
+    Controls operation of application among model and view
+    """
     # singleton instance
     __instance = None
 
@@ -29,7 +33,6 @@ class Controller:
     controller_participant_selection = None
 
     def __init__(self):
-        super().__init__()
         if Controller.__instance is not None:
             raise Exception("Controller should be treated as a singleton class.")
         else:
@@ -86,6 +89,12 @@ class Controller:
     @staticmethod
     # Processes the directory selection button click
     def process_directory_selection_button_click():
+        """
+        Processes when user clicks directory button
+
+        Refreshes participant selection menu
+        Disables stimulus selection menu and plot button
+        """
         # disable/clear latter setup options
         ViewMain.get_instance().plot_button.setEnabled(False)
         ViewParticipantSelection.get_instance().disable()
@@ -93,7 +102,9 @@ class Controller:
         ViewStimulusSelection.get_instance().disable()
         ModelStimulusSelection.get_instance().clear()
 
-        path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(delegator.Delegator.get_instance(), "Select Directory"))
+        # noinspection PyUnresolvedReferences
+        path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(delegator.Delegator.get_instance(),
+                                                                    "Select Directory"))
         ModelDirectorySelection.get_instance().set_path(
             path
         )

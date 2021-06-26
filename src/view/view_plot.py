@@ -1,14 +1,6 @@
-import os
-
 from PyQt5 import QtWidgets, QtWebEngineWidgets
-import plotly.express as px
 
-from src.main import config
-from src.model.model_main import ModelMain
 from src.model.model_plot import ModelPlot
-from src.model.utils import data_util
-from src.view.utils import visual_util
-from src.view.view_directory_selection import ViewDirectorySelection
 
 
 class ViewPlot:
@@ -27,7 +19,6 @@ class ViewPlot:
 
     def __init__(self,
                  placeholder):
-        super().__init__()
         if ViewPlot.__instance is not None:
             raise Exception("ViewPlot should be treated as a singleton class.")
         else:
