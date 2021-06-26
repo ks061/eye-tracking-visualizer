@@ -271,6 +271,9 @@
        </item>
        <item alignment="Qt::AlignHCenter">
         <widget class="QPushButton" name="participant_selection_button">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>200</width>
@@ -354,7 +357,7 @@
          <item>
           <widget class="QComboBox" name="data_type_menu">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="minimumSize">
             <size>
@@ -396,7 +399,7 @@
          <item>
           <widget class="QComboBox" name="analysis_type_menu">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="minimumSize">
             <size>
@@ -416,6 +419,9 @@
        </item>
        <item alignment="Qt::AlignHCenter">
         <widget class="QPushButton" name="plot_button">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>75</width>

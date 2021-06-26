@@ -18,9 +18,6 @@ def get_data_frame_one_participant_one_stimulus(
     data_frame_one_participant = get_data_frame_one_participant(
         selected_participant_file_path
     )
-    print(stimulus_file_name)
-    print()
-    print(data_frame_one_participant[config.STIMULUS_COL_TITLE])
     data_frame_one_participant_one_stimulus = data_frame_one_participant.loc[
         data_frame_one_participant[config.STIMULUS_COL_TITLE] == stimulus_file_name
         ]
@@ -42,6 +39,11 @@ def get_data_frame_multiple_participants(
         selected_participant_file_name_list,
         data_directory_path,
         stimulus_file_name=None):
+    if selected_participant_file_name_list is None:
+        raise Exception("List of selected participant file names is null.")
+    if len(selected_participant_file_name_list) == 0:
+        raise Exception("No participants were selected.")
+
     data_frame_multiple_participants = None
 
     for i in range(len(selected_participant_file_name_list)):

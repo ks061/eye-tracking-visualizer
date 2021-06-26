@@ -2,12 +2,13 @@ from pathlib import Path
 from PIL import Image
 import plotly.express as px
 
-
 import src.main.config as config
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
+from src.model.model_data_type_selection import ModelDataTypeSelection
 from src.model.model_stimulus_selection import ModelStimulusSelection
 from src.model.model_main import ModelMain
 import src.view.utils.visual_util as visual_util
+
 
 class ModelPlot:
     __instance = None
@@ -33,27 +34,36 @@ class ModelPlot:
         return ModelPlot.__instance
 
     def update_fig(self):
+        data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
+
+        if data_type_selection == "Gaze Data":
+            x = config.X_GAZE_COL_TITLE
+            y = config.Y_GAZE_COL_TITLE
+        if data_type_selection == "Fixation Data":
+            x = config.X_FIXATION_COL_TITLE
+            y = config.Y_FIXATION_COL_TITLE
+
         analysis_type_selection = ModelAnalysisTypeSelection.get_instance().get_selection()
 
         if analysis_type_selection == "Scatter Plot":
             self.fig = px.scatter(
                 ModelMain.get_instance().df,
-                x=config.X_GAZE_COL_TITLE,
-                y=config.Y_GAZE_COL_TITLE,
+                x=x,
+                y=y,
                 color="ParticipantName"
             )
         if analysis_type_selection == "Line Plot":
             self.fig = px.line(
                 ModelMain.get_instance().df,
-                x=config.X_GAZE_COL_TITLE,
-                y=config.Y_GAZE_COL_TITLE,
+                x=x,
+                y=y,
                 color="ParticipantName"
             )
         if analysis_type_selection == "Heat Map":
             self.fig = px.density_heatmap(
                 ModelMain.get_instance().df,
-                x=config.X_GAZE_COL_TITLE,
-                y=config.Y_GAZE_COL_TITLE
+                x=x,
+                y=y
             )
         # "Cluster":
 
@@ -83,8 +93,8 @@ class ModelPlot:
                 yanchor='bottom')
         )
 
-
     def get_fig(self):
+        self.update_fig()
         return self.fig
 
     def clear(self):

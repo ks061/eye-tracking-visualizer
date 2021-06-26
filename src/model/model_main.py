@@ -18,12 +18,7 @@ class ModelMain:
             raise Exception("ModelMain should be treated as a singleton class.")
         else:
             ModelMain.__instance = self
-
-        self.df = data_util.get_data_frame_multiple_participants(
-            selected_participant_file_name_list=ModelParticipantSelection.get_instance().get_selected_participants(),
-            data_directory_path=ModelDirectorySelection.get_instance().path,
-            stimulus_file_name=ModelStimulusSelection.get_instance().get_selection()
-        )
+        self._update_df()
 
     @staticmethod
     def get_instance():
@@ -36,7 +31,15 @@ class ModelMain:
             ModelMain()
         return ModelMain.__instance
 
+    def _update_df(self):
+        self.df = data_util.get_data_frame_multiple_participants(
+            selected_participant_file_name_list=ModelParticipantSelection.get_instance().get_selected_participants(),
+            data_directory_path=ModelDirectorySelection.get_instance().path,
+            stimulus_file_name=ModelStimulusSelection.get_instance().get_selection()
+        )
+
     def get_df(self):
+        self._update_df()
         return self.df
 
     def clear(self):

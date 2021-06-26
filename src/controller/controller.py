@@ -34,7 +34,9 @@ class Controller:
             raise Exception("Controller should be treated as a singleton class.")
         else:
             Controller.__instance = self
+        ViewMain.get_instance().plot_button.setEnabled(False)
         self._connect_gui_components_to_functions()
+        self._setup_static_selection_menus()
 
     @staticmethod
     def get_instance():
@@ -77,17 +79,19 @@ class Controller:
         )
 
     @staticmethod
+    def _setup_static_selection_menus():
+        ViewDataTypeSelection.get_instance().setup()
+        ViewAnalysisTypeSelection.get_instance().setup()
+
+    @staticmethod
     # Processes the directory selection button click
     def process_directory_selection_button_click():
         # disable/clear latter setup options
+        ViewMain.get_instance().plot_button.setEnabled(False)
         ViewParticipantSelection.get_instance().disable()
         ModelParticipantSelection.get_instance().clear()
         ViewStimulusSelection.get_instance().disable()
         ModelStimulusSelection.get_instance().clear()
-        ViewDataTypeSelection.get_instance().disable()
-        ModelDataTypeSelection.get_instance().clear()
-        ViewAnalysisTypeSelection.get_instance().disable()
-        ModelAnalysisTypeSelection.get_instance().clear()
 
         path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(delegator.Delegator.get_instance(), "Select Directory"))
         ModelDirectorySelection.get_instance().set_path(
@@ -99,12 +103,9 @@ class Controller:
     # Processes the participant selection button click
     def process_participant_selection_button_click():
         # disable/clear latter setup options
+        ViewMain.get_instance().plot_button.setEnabled(False)
         ViewStimulusSelection.get_instance().disable()
         ModelStimulusSelection.get_instance().clear()
-        ViewDataTypeSelection.get_instance().disable()
-        ModelDataTypeSelection.get_instance().clear()
-        ViewAnalysisTypeSelection.get_instance().disable()
-        ModelAnalysisTypeSelection.get_instance().clear()
 
         ControllerParticipantSelection.get_instance().update_model_selected_participants_from_view()
 
@@ -114,50 +115,36 @@ class Controller:
         if len(ViewParticipantSelection.get_instance().selected_check_box_list) != 0:
             ViewError.get_instance().message.setText('')
 
-            ViewStimulusSelection.get_instance().enable()
+            ModelStimulusSelection.get_instance().update_stimuli_names()
+            ViewStimulusSelection.get_instance().update()
         else:
             ViewError.get_instance().message.setText(
                 "No participants selected. Please select at least one participant" +
                 " to refresh the plot area"
             )
-        ModelStimulusSelection.get_instance().update_stimuli_names()
-        ViewStimulusSelection.get_instance().update()
 
     @staticmethod
     def process_stimulus_selection_menu_change():
-        # disable/clear latter setup options
-        ViewDataTypeSelection.get_instance().disable()
-        ModelDataTypeSelection.get_instance().clear()
-        ViewAnalysisTypeSelection.get_instance().disable()
-        ModelAnalysisTypeSelection.get_instance().clear()
-
-        ModelStimulusSelection.get_instance().set_selection(
-            ViewStimulusSelection.get_instance().get_current_menu_selection()
-        )
-
-        # enable next option
-        ViewDataTypeSelection.get_instance().update()
+        ViewMain.get_instance().plot_button.setEnabled(True)
 
     @staticmethod
     def process_data_type_selection_menu_change():
-        # disable/clear latter setup options
-        ViewAnalysisTypeSelection.get_instance().disable()
-        ModelAnalysisTypeSelection.get_instance().clear()
-
-        ModelDataTypeSelection.get_instance().set_selection(
-            ViewDataTypeSelection.get_instance().get_current_menu_selection()
-        )
-
-        # enable next option
-        ViewAnalysisTypeSelection.get_instance().update()
+        pass
 
     @staticmethod
     def process_analysis_type_selection_menu_change():
-        ModelAnalysisTypeSelection.get_instance().set_selection(
-            ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
-        )
+        pass
 
     @staticmethod
     def process_plot_button_click():
+        ModelStimulusSelection.get_instance().set_selection(
+            ViewStimulusSelection.get_instance().get_current_menu_selection()
+        )
+        ModelDataTypeSelection.get_instance().set_selection(
+            ViewDataTypeSelection.get_instance().get_current_menu_selection()
+        )
+        ModelAnalysisTypeSelection.get_instance().set_selection(
+            ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
+        )
         ModelPlot.get_instance().update_fig()
         ViewPlot.get_instance().plot()

@@ -27,7 +27,8 @@ class ControllerParticipantSelection:
     def update_view_selection_participants_from_model():
         ViewParticipantSelection.get_instance().disable()
         ViewParticipantSelection.get_instance().set_selection_check_box_list(
-            ModelParticipantSelection.get_instance().get_selection_participants())
+            ModelParticipantSelection.get_instance().get_selection_participants()
+        )
         ViewParticipantSelection.get_instance().enable()
 
     @staticmethod

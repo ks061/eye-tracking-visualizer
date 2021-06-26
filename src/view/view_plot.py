@@ -48,10 +48,15 @@ class ViewPlot:
         return ViewPlot.__instance
 
     def _setup(self):
-        self.browser = QtWebEngineWidgets.QWebEngineView(self.placeholder)
         self.vbox = QtWidgets.QVBoxLayout(self.placeholder)
+        self._browser_refresh()
+
+    def _browser_refresh(self):
+        self.vbox.removeWidget(self.browser)
+        self.browser = QtWebEngineWidgets.QWebEngineView(self.placeholder)
         self.vbox.addWidget(self.browser)
 
     def plot(self):
+        self._browser_refresh()
         fig = ModelPlot.get_instance().get_fig()
         self.browser.setHtml(fig.to_html(include_plotlyjs='cdn'))

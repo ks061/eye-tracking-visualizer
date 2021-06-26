@@ -58,11 +58,5 @@ class ViewAnalysisTypeSelection:
         # clear analysis type selection menu
         self.menu.clear()
 
-    def update(self):
-        self.disable()
-        self.clear()
-        self.setup()
-        self.enable()
-
     def get_current_menu_selection(self):
         return self.menu.currentText()

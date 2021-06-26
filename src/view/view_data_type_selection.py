@@ -36,15 +36,15 @@ class ViewDataTypeSelection:
                             "cannot be done so without proper attributes")
         return ViewDataTypeSelection.__instance
 
-    def enable(self):
-        # Enable interface
-        self.menu.setEnabled(True)
-
     def setup(self):
         if self.menu.findText("Gaze Data") == -1:
             self.menu.addItem("Gaze Data")
         if self.menu.findText("Fixation Data") == -1:
             self.menu.addItem("Fixation Data")
+
+    def enable(self):
+        # Enable interface
+        self.menu.setEnabled(True)
 
     def disable(self):
         # Disable interface
@@ -53,12 +53,6 @@ class ViewDataTypeSelection:
     def clear(self):
         # clear data type selection menu
         self.menu.clear()
-
-    def update(self):
-        self.disable()
-        self.clear()
-        self.setup()
-        self.enable()
 
     def get_current_menu_selection(self):
         return self.menu.currentText()
