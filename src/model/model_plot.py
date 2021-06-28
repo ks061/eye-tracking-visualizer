@@ -1,7 +1,12 @@
+"""
+Contains the class ModelPlot
+"""
+
+# External imports
 import os.path
 from PIL import Image
 import plotly.express as px
-
+# Internal imports
 import src.main.config as config
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
 from src.model.model_data_type_selection import ModelDataTypeSelection
@@ -10,6 +15,9 @@ from src.model.model_data import ModelData
 
 
 class ModelPlot:
+    """
+    Model for the plot
+    """
     __instance = None
 
     fig = None
@@ -25,15 +33,21 @@ class ModelPlot:
     @staticmethod
     def get_instance():
         """
-        Static method to access the one instance currently
-        implemented for the variable.
-        :return: the single instance of ModelPlot
+        Static method to access the singleton
+        instance for this class
+
+        :return: the singleton instance
+        :rtype: ModelPlot
         """
         if ModelPlot.__instance is None:
             ModelPlot()
         return ModelPlot.__instance
 
-    def set_x(self):
+    def set_x_col_name(self):
+        """
+        Sets the column name from which to read the x coordinates
+        of the plot from the pandas DataFrame in the data model
+        """
         data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
 
         if data_type_selection is "Gaze Data":
@@ -41,7 +55,11 @@ class ModelPlot:
         if data_type_selection is "Fixation Data":
             self.x = config.X_FIXATION_COL_TITLE
 
-    def set_y(self):
+    def set_y_col_name(self):
+        """
+        Sets the column name from which to read the y coordinates
+        of the plot from the pandas DataFrame in the data model
+        """
         data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
 
         if data_type_selection is "Gaze Data":
@@ -50,8 +68,12 @@ class ModelPlot:
             self.y = config.Y_FIXATION_COL_TITLE
 
     def update_fig(self):
-        self.set_x()
-        self.set_y()
+        """
+        Updates the underlying figure based upon
+        user's selections
+        """
+        self.set_x_col_name()
+        self.set_y_col_name()
 
         analysis_type_selection = ModelAnalysisTypeSelection.get_instance().get_selection()
 
@@ -106,11 +128,15 @@ class ModelPlot:
 
     def get_fig(self):
         """
-
-        :return:
+        Returns the underlying figure
+        :return: underlying figure
+        :rtype: plotly.graph_objects.Figure
         """
         self.update_fig()
         return self.fig
 
     def clear(self):
+        """
+        Clears the underlying figure stored in the model
+        """
         self.fig = None

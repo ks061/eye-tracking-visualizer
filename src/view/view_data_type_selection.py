@@ -1,8 +1,11 @@
+"""
+Contains the class ViewDataTypeSelection
+"""
+
+
 class ViewDataTypeSelection:
     """
-    Wrapper for the object that represents
-    the GUI component of the app that deals with selecting
-    the type of data that the app will be plotting.
+    View for the data type selection
     """
 
     __instance = None
@@ -26,9 +29,11 @@ class ViewDataTypeSelection:
     @staticmethod
     def get_instance():
         """
-        Static method to access the one instance currently
-        implemented for the variable.
-        :return: the single instance of ViewDataTypeSelection
+        Static method to access the singleton
+        instance for this class
+
+        :return: the singleton instance
+        :rtype: ViewDataTypeSelection
         """
         if ViewDataTypeSelection.__instance is None:
             raise Exception("ViewDataTypeSelection has not been instantiated and " + \

@@ -1,10 +1,11 @@
+"""
+Contains the class ViewError
+"""
+
 class ViewError:
     """
-    Wrapper for the object that represents
-    the GUI component of the app that deals with
-    displaying any errors that occur during the initial
-    selection (of parameters) process prior to the
-    application plotting.
+    View for the error-displaying
+    part of the user interface
     """
 
     __instance = None
@@ -28,9 +29,11 @@ class ViewError:
     @staticmethod
     def get_instance():
         """
-        Static method to access the one instance currently
-        implemented for the variable.
-        :return: the single instance of ViewError
+        Static method to access the singleton
+        instance for this class
+
+        :return: the singleton instance
+        :rtype: ViewError
         """
         if ViewError.__instance is None:
             raise Exception("ViewError has not been instantiated and " + \

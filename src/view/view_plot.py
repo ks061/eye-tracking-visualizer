@@ -1,14 +1,16 @@
-from PyQt5 import QtWidgets, QtWebEngineWidgets
+"""
+Contains the class ViewPlot
+"""
 
+# External imports
+from PyQt5 import QtWidgets, QtWebEngineWidgets
+# Internal imports
 from src.model.model_plot import ModelPlot
 
 
 class ViewPlot:
     """
-    Wrapper for the object that represents
-    the GUI component of the app that deals with
-    displaying the plot plotted by the
-    application.
+    View for the plot
     """
 
     __instance = None
@@ -29,9 +31,11 @@ class ViewPlot:
     @staticmethod
     def get_instance():
         """
-        Static method to access the one instance currently
-        implemented for the variable.
-        :return: the single instance of ViewPlot
+        Static method to access the singleton
+        instance for this class
+
+        :return: the singleton instance
+        :rtype: ViewPlot
         """
         if ViewPlot.__instance is None:
             raise Exception("ViewPlot has not been instantiated and " + \

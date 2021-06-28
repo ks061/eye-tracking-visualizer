@@ -14,7 +14,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="src.main package" href="src.main.html" />
+    <link rel="next" title="src.controller.utils package" href="src.controller.utils.html" />
     <link rel="prev" title="src package" href="src.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -34,96 +34,69 @@
             
   <div class="section" id="src-controller-package">
 <h1>src.controller package<a class="headerlink" href="#src-controller-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src.controller.utils.html">src.controller.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.controller.utils.html#module-src.controller.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-src.controller.delegator">
-<span id="src-controller-delegator-module"></span><h2>src.controller.delegator module<a class="headerlink" href="#module-src.controller.delegator" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="src-controller-controller-module">
+<h2>src.controller.controller module<a class="headerlink" href="#src-controller-controller-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-src.controller.controller_participant_selection">
+<span id="src-controller-controller-participant-selection-module"></span><h2>src.controller.controller_participant_selection module<a class="headerlink" href="#module-src.controller.controller_participant_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ControllerParticipantSelection</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.controller.delegator.</span></span><span class="sig-name descname"><span class="pre">Delegator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_main</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="src.view.html#src.view.view_main.ViewMain" title="src.view.view_main.ViewMain"><span class="pre">src.view.view_main.ViewMain</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.controller.delegator.Delegator" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.controller.controller_participant_selection.ControllerParticipantSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.controller.controller_participant_selection.</span></span><span class="sig-name descname"><span class="pre">ControllerParticipantSelection</span></span><a class="headerlink" href="#src.controller.controller_participant_selection.ControllerParticipantSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>This class delegates the user interface components loaded in
-from the specified UI file by PyQt5’s uic library. It delegates
-them to static wrapper objects that will contain specific
-sets of those components and manage them accordingly.</p>
+<p>Controls operation of application functions
+that are related to participant selection
+among model and view</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.create_view_objects">
-<span class="sig-name descname"><span class="pre">create_view_objects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.controller.delegator.Delegator.create_view_objects" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.main_window_attributes">
-<span class="sig-name descname"><span class="pre">main_window_attributes</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.main_window_attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.other_component_attributes">
-<span class="sig-name descname"><span class="pre">other_component_attributes</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.other_component_attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.set_attributes">
-<span class="sig-name descname"><span class="pre">set_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.controller.delegator.Delegator.set_attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="src.controller.controller_participant_selection.ControllerParticipantSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.controller.controller_participant_selection.ControllerParticipantSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.controller.controller_participant_selection.ControllerParticipantSelection" title="src.controller.controller_participant_selection.ControllerParticipantSelection">ControllerParticipantSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.set_main_window_attributes">
-<span class="sig-name descname"><span class="pre">set_main_window_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.controller.delegator.Delegator.set_main_window_attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="src.controller.controller_participant_selection.ControllerParticipantSelection.update_model_selected_participants_from_view">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">update_model_selected_participants_from_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.controller.controller_participant_selection.ControllerParticipantSelection.update_model_selected_participants_from_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the participant model based upon
+the selected participants within the participant
+selection view</p>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.set_other_component_attributes">
-<span class="sig-name descname"><span class="pre">set_other_component_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.controller.delegator.Delegator.set_other_component_attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.view_analysis_type_selection">
-<span class="sig-name descname"><span class="pre">view_analysis_type_selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.view_analysis_type_selection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.view_data_type_selection">
-<span class="sig-name descname"><span class="pre">view_data_type_selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.view_data_type_selection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.view_directory_selection">
-<span class="sig-name descname"><span class="pre">view_directory_selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.view_directory_selection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.view_error">
-<span class="sig-name descname"><span class="pre">view_error</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.view_error" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.view_main">
-<span class="sig-name descname"><span class="pre">view_main</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.view_main" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.view_participant_selection">
-<span class="sig-name descname"><span class="pre">view_participant_selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.view_participant_selection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.view_plot">
-<span class="sig-name descname"><span class="pre">view_plot</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.view_plot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.view_plot_config_selection">
-<span class="sig-name descname"><span class="pre">view_plot_config_selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.view_plot_config_selection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.controller.delegator.Delegator.view_stimulus_selection">
-<span class="sig-name descname"><span class="pre">view_stimulus_selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.controller.delegator.Delegator.view_stimulus_selection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="src.controller.controller_participant_selection.ControllerParticipantSelection.update_view_selection_participants_from_model">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">update_view_selection_participants_from_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.controller.controller_participant_selection.ControllerParticipantSelection.update_view_selection_participants_from_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the participant view selection menu based upon
+the available participants, as determined by the
+participant selection model</p>
+</dd></dl>
 
 </dd></dl>
 
+</div>
+<div class="section" id="src-controller-delegator-module">
+<h2>src.controller.delegator module<a class="headerlink" href="#src-controller-delegator-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-src.controller">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.controller" title="Permalink to this headline">¶</a></h2>
@@ -162,7 +135,7 @@ sets of those components and manage them accordingly.</p>
   <li><a href="modules.html">src</a><ul>
   <li><a href="src.html">src package</a><ul>
       <li>Previous: <a href="src.html" title="previous chapter">src package</a></li>
-      <li>Next: <a href="src.main.html" title="next chapter">src.main package</a></li>
+      <li>Next: <a href="src.controller.utils.html" title="next chapter">src.controller.utils package</a></li>
   </ul></li>
   </ul></li>
   </ul></li>

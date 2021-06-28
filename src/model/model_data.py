@@ -1,13 +1,11 @@
 """
-Imports
+Contains the class ModelData
 """
-# External
+
+# External imports
 import pandas as pd
-# Internal
+# Internal imports
 from src.main import config as config
-from src.model.model_directory_selection import ModelDirectorySelection
-from src.model.model_participant_selection import ModelParticipantSelection
-from src.model.model_stimulus_selection import ModelStimulusSelection
 
 
 class ModelData:
@@ -30,8 +28,11 @@ class ModelData:
     @staticmethod
     def get_instance():
         """
-        Returns the singleton instance
+        Static method to access the singleton
+        instance for this class
+
         :return: the singleton instance
+        :rtype: ModelData
         """
         if ModelData.__instance is None:
             ModelData()
@@ -39,12 +40,11 @@ class ModelData:
 
     def get_df(self):
         """
-        Returns the data contained in the model for participants in
-        ModelParticipantSelection and stimulus in ModelStimulusSelection
+        Returns the data contained in the model
+
         :return: data
-        :return type
+        :rtype: pd.DataFrame
         """
-        self.set_df_multi_participants_selected_stimulus()
         return self.df
 
     def clear(self):
@@ -57,21 +57,38 @@ class ModelData:
     # Return a data frame based on data for a particular participant
     # from a specified .tsv file
     @staticmethod
-    def get_df_one_participant_all_stimuli(selected_participant_file_name):
+    def get_df_one_participant_all_stimuli(data_directory_path,
+                                           selected_participant):
         """
-        :param selected_participant_file_name: participant of which data will be retrieved
+        Returns a pandas DataFrame containing eye-tracking data
+        from the participant filename specified
+
+        :param data_directory_path: directory path containing eye-tracking data
+        :type data_directory_path: str
+        :param selected_participant: participant of which data will be retrieved
+        :type selected_participant: str
         :return data
         :rtype: pd.DataFrame
         """
         # additional variables being used
-        data_directory_path = ModelDirectorySelection.get_instance().get_path()
-        selected_participant_file_path = str(data_directory_path + "/" + selected_participant_file_name)
+        selected_participant_file_path = str(data_directory_path + "/" + selected_participant)
 
         return pd.read_csv(selected_participant_file_path, sep='\t')
 
-    # Filter out rows with empty values in any of the columns specified.
     @staticmethod
     def remove_incomplete_observations(df, col_names):
+        """
+        Removes any observations from the specified pandas
+        DataFrame that have an unspecified
+        value in any of the specified columns
+
+        :param df: target DataFrame
+        :type df: pd.DataFrame
+        :param col_names: target columns in target DataFrame
+        :type col_names: list
+        :return: result DataFrame
+        :rtype: pd.DataFrame
+        """
         for col_name in col_names:
             df = df[df[col_name].notnull()]
         return df
@@ -80,17 +97,29 @@ class ModelData:
     # from multiple specified .tsv files within the
     # selected_participant_file_name_list array. Optional parameter
     # stimulus_file_name to filter by a particular stimulus.
-    def get_df_multi_participants_all_stimuli(self):
+    def get_df_multi_selected_participants_all_stimuli(self,
+                                                       data_directory_path,
+                                                       selected_participants):
+        """
+        Returns a pandas DataFrame containing eye-tracking data
+        from the selected participants' eye-tracking data files
+        (inclusive of all stimuli present in the data)
+
+        :return: selected participants' eye-tracking data
+        :rtype: pd.DataFrame
+        """
         # additional variable used
         # noinspection PyUnusedLocal
         df_one_participant_no_stimulus = None
         df_multi_participants_all_stimulus = None
-        selected_participant_file_name_list = ModelParticipantSelection.get_instance().get_selected_participants()
 
         # obtain data frame for each participant
-        for i in range(len(selected_participant_file_name_list)):
-            selected_participant_file_name = selected_participant_file_name_list[i]
-            df_one_participant_no_stimulus = self.get_df_one_participant_all_stimuli(selected_participant_file_name)
+        for i in range(len(selected_participants)):
+            selected_participant_file_name = selected_participants[i]
+            df_one_participant_no_stimulus = self.get_df_one_participant_all_stimuli(
+                selected_participants,
+                data_directory_path
+            )
 
             df_one_participant_no_stimulus = df_one_participant_no_stimulus.assign(
                 participant_identifier=selected_participant_file_name
@@ -107,15 +136,56 @@ class ModelData:
         df_multi_participants_all_stimulus.reset_index(inplace=True)
         return df_multi_participants_all_stimulus
 
-    def set_df_multi_participants_no_stimulus(self):
-        self.df = self.get_df_multi_participants_all_stimuli()
+    def set_df_multi_selected_participants_no_stimulus(self,
+                                                       data_directory_path,
+                                                       selected_participants):
+        """
+        Sets the model's stored DataFrame as a pandas
+        DataFrame containing eye-tracking data from
+        the selected participants' eye-tracking data files
+        (inclusive of all stimuli present in the data)
+        """
+        self.df = self.get_df_multi_selected_participants_all_stimuli(
+            data_directory_path=data_directory_path,
+            selected_participants=selected_participants
+        )
 
-    def get_df_multi_participants_selected_stimulus(self):
-        df_one_participant_selected_stimulus = self.get_df_multi_participants_all_stimuli()
+    def get_df_multi_selected_participants_selected_stimulus(self,
+                                                             data_directory_path,
+                                                             selected_participants,
+                                                             selected_stimulus):
+        """
+        Returns a pandas DataFrame containing eye-tracking data
+        from the selected participants' eye-tracking data files
+        for a particular stimulus
+        (inclusive of all stimuli present in the data)
+
+        :return: selected participants' eye-tracking data for
+        a particular stimulus
+        :rtype: pd.DataFrame
+        """
+        df_one_participant_selected_stimulus = self.get_df_multi_selected_participants_all_stimuli(
+            data_directory_path=data_directory_path,
+            selected_participants=selected_participants
+        )
         return df_one_participant_selected_stimulus.loc[
             df_one_participant_selected_stimulus[config.STIMULUS_COL_TITLE] == \
-            ModelStimulusSelection.get_instance().get_selection()
+            selected_stimulus
             ]
 
-    def set_df_multi_participants_selected_stimulus(self):
-        self.df = self.get_df_multi_participants_selected_stimulus()
+    def set_df_multi_selected_participants_selected_stimulus(self,
+                                                             data_directory_path,
+                                                             selected_participants,
+                                                             selected_stimulus):
+        """
+        Sets the model's stored DataFrame as a pandas
+        DataFrame containing eye-tracking data
+        from the selected participants' eye-tracking
+        data files for a particular stimulus
+        (inclusive of all stimuli present in the data)
+        """
+        self.df = self.get_df_multi_selected_participants_selected_stimulus(
+            data_directory_path=data_directory_path,
+            selected_participants=selected_participants,
+            selected_stimulus=selected_stimulus
+        )

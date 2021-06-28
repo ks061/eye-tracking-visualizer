@@ -12,10 +12,26 @@ src.model.utils.cluster\_util module
    :undoc-members:
    :show-inheritance:
 
-src.model.utils.data\_util module
----------------------------------
+src.model.utils.fixation\_util module
+-------------------------------------
 
-.. automodule:: src.model.utils.data_util
+.. automodule:: src.model.utils.fixation_util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.model.utils.heatmap\_image module
+-------------------------------------
+
+.. automodule:: src.model.utils.heatmap_image
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.model.utils.heatmap\_util module
+------------------------------------
+
+.. automodule:: src.model.utils.heatmap_util
    :members:
    :undoc-members:
    :show-inheritance:

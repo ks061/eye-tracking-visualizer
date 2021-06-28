@@ -1,11 +1,13 @@
+"""
+Contains the class ViewParticipantSelection
+"""
+
 from PyQt5 import QtWidgets
 
 
 class ViewParticipantSelection:
     """
-    Wrapper for the object that represents
-    the GUI component of the app that deals with selecting
-    the participants of which the data will be plotted.
+    View for the participant selection
     """
 
     __instance = None
@@ -47,9 +49,11 @@ class ViewParticipantSelection:
     @staticmethod
     def get_instance():
         """
-        Static method to access the one instance currently
-        implemented for the variable.
-        :return: the single instance of ViewParticipantSelection
+        Static method to access the singleton
+        instance for this class
+
+        :return: the singleton instance
+        :rtype: ViewParticipantSelection
         """
         if ViewParticipantSelection.__instance is None:
             raise Exception("ViewParticipantSelection has not been instantiated and " + \

@@ -50,21 +50,49 @@
 <dd></dd></dl>
 
 </div>
-<div class="section" id="module-src.model.utils.data_util">
-<span id="src-model-utils-data-util-module"></span><h2>src.model.utils.data_util module<a class="headerlink" href="#module-src.model.utils.data_util" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-src.model.utils.fixation_util">
+<span id="src-model-utils-fixation-util-module"></span><h2>src.model.utils.fixation_util module<a class="headerlink" href="#module-src.model.utils.fixation_util" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="src.model.utils.data_util.get_data_frame_multiple_participants">
-<span class="sig-prename descclassname"><span class="pre">src.model.utils.data_util.</span></span><span class="sig-name descname"><span class="pre">get_data_frame_multiple_participants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selected_participant_file_name_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_directory_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_file_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">object</span><a class="headerlink" href="#src.model.utils.data_util.get_data_frame_multiple_participants" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.model.utils.fixation_util.get_fixation_size_array">
+<span class="sig-prename descclassname"><span class="pre">src.model.utils.fixation_util.</span></span><span class="sig-name descname"><span class="pre">get_fixation_size_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.utils.fixation_util.get_fixation_size_array" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="src.model.utils.data_util.get_lower_lim">
-<span class="sig-prename descclassname"><span class="pre">src.model.utils.data_util.</span></span><span class="sig-name descname"><span class="pre">get_lower_lim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_extent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.utils.data_util.get_lower_lim" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+</div>
+<div class="section" id="module-src.model.utils.heatmap_image">
+<span id="src-model-utils-heatmap-image-module"></span><h2>src.model.utils.heatmap_image module<a class="headerlink" href="#module-src.model.utils.heatmap_image" title="Permalink to this headline">¶</a></h2>
+<p>Credits to Professor Brian R. King, Bucknell University</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.utils.heatmap_image.HeatmapImage">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.utils.heatmap_image.</span></span><span class="sig-name descname"><span class="pre">HeatmapImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.utils.heatmap_image.HeatmapImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.utils.heatmap_image.HeatmapImage.overlay_heatmap_on_axes">
+<span class="sig-name descname"><span class="pre">overlay_heatmap_on_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">matplotlib.axes._axes.Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_color_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_color_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#src.model.utils.heatmap_image.HeatmapImage.overlay_heatmap_on_axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overlay the heatmap on a specified set of Axes
+:param ax: Axes object to overlap heatmap on
+:param min_color_val: Minimum value in heatmap to map to the coolest color. To allow everything to be displayed, set to 0.5. Higher is more restrictive.
+:param max_color_val: Maximum value in heatmap to be the “hottest” color
+:param sigma: Value passed to ndimage.gaussian_filter to blur
+:param alpha: amount of alpha blending = default = 0.6</p>
+</dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.utils.heatmap_image.HeatmapImage.update_heatmap_array_with_trial">
+<span class="sig-name descname"><span class="pre">update_heatmap_array_with_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.utils.heatmap_image.HeatmapImage.update_heatmap_array_with_trial" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function updates the heatmap image with data from a trial
+:param trial: Trial data to plot for the heatmap
+:param radius: the size of each point to be placed on the heatmap
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model.utils.heatmap_util">
+<span id="src-model-utils-heatmap-util-module"></span><h2>src.model.utils.heatmap_util module<a class="headerlink" href="#module-src.model.utils.heatmap_util" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="src.model.utils.data_util.get_upper_lim">
-<span class="sig-prename descclassname"><span class="pre">src.model.utils.data_util.</span></span><span class="sig-name descname"><span class="pre">get_upper_lim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_extent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.utils.data_util.get_upper_lim" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.model.utils.heatmap_util.get_fixation_heat_map">
+<span class="sig-prename descclassname"><span class="pre">src.model.utils.heatmap_util.</span></span><span class="sig-name descname"><span class="pre">get_fixation_heat_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_only_data_on_stimulus</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.utils.heatmap_util.get_fixation_heat_map" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

@@ -41,7 +41,9 @@
 <li class="toctree-l1"><a class="reference internal" href="src.model.utils.html">src.model.utils package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils.cluster_util">src.model.utils.cluster_util module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils.data_util">src.model.utils.data_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils.fixation_util">src.model.utils.fixation_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils.heatmap_image">src.model.utils.heatmap_image module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils.heatmap_util">src.model.utils.heatmap_util module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils">Module contents</a></li>
 </ul>
 </li>
@@ -51,19 +53,314 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-src.model.model_main">
-<span id="src-model-model-main-module"></span><h2>src.model.model_main module<a class="headerlink" href="#module-src.model.model_main" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-src.model.model_analysis_type_selection">
+<span id="src-model-model-analysis-type-selection-module"></span><h2>src.model.model_analysis_type_selection module<a class="headerlink" href="#module-src.model.model_analysis_type_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelAnalysisTypeSelection</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="src.model.model_main.ModelMain">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_main.</span></span><span class="sig-name descname"><span class="pre">ModelData</span></span><a class="headerlink" href="#src.model.model_main.ModelMain" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_analysis_type_selection.</span></span><span class="sig-name descname"><span class="pre">ModelAnalysisTypeSelection</span></span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the analysis type selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the analysis type model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection" title="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection">ModelAnalysisTypeSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.get_selection">
+<span class="sig-name descname"><span class="pre">get_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.get_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the selected analysis type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected analysis type</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
-<dt class="sig sig-object py" id="src.model.model_main.ModelMain.stimulus_filtered_data_frame">
-<span class="sig-name descname"><span class="pre">stimulus_filtered_data_frame</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_main.ModelMain.stimulus_filtered_data_frame" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.selection">
+<span class="sig-name descname"><span class="pre">selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.selection" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.set_selection">
+<span class="sig-name descname"><span class="pre">set_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.set_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the selected analysis type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selection</strong> (<em>str</em>) – selected analysis type</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
+</div>
+<div class="section" id="src-model-model-data-module">
+<h2>src.model.model_data module<a class="headerlink" href="#src-model-model-data-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-src.model.model_data_type_selection">
+<span id="src-model-model-data-type-selection-module"></span><h2>src.model.model_data_type_selection module<a class="headerlink" href="#module-src.model.model_data_type_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelDataTypeSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_data_type_selection.</span></span><span class="sig-name descname"><span class="pre">ModelDataTypeSelection</span></span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the data type selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the data type model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_data_type_selection.ModelDataTypeSelection" title="src.model.model_data_type_selection.ModelDataTypeSelection">ModelDataTypeSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.get_selection">
+<span class="sig-name descname"><span class="pre">get_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.get_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the selected data type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected data type</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.selection">
+<span class="sig-name descname"><span class="pre">selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.selection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.set_selection">
+<span class="sig-name descname"><span class="pre">set_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.set_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the selected data type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selection</strong> (<em>str</em>) – selected data type</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model.model_directory_selection">
+<span id="src-model-model-directory-selection-module"></span><h2>src.model.model_directory_selection module<a class="headerlink" href="#module-src.model.model_directory_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelDirectorySelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_directory_selection.</span></span><span class="sig-name descname"><span class="pre">ModelDirectorySelection</span></span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the directory selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the directory selection model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_directory_selection.ModelDirectorySelection" title="src.model.model_directory_selection.ModelDirectorySelection">ModelDirectorySelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.get_path">
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the selected directory path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected directory path</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.path">
+<span class="sig-name descname"><span class="pre">path</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.set_path">
+<span class="sig-name descname"><span class="pre">set_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.set_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the selected directory path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – selected directory path</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model.model_participant_selection">
+<span id="src-model-model-participant-selection-module"></span><h2>src.model.model_participant_selection module<a class="headerlink" href="#module-src.model.model_participant_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelParticipantSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_participant_selection.</span></span><span class="sig-name descname"><span class="pre">ModelParticipantSelection</span></span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the participant selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the participant selection model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.enforce_exists_selected_participants">
+<span class="sig-name descname"><span class="pre">enforce_exists_selected_participants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.enforce_exists_selected_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enforces that the number of selected participants
+is positive</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – List of selected participant file names is null.</p></li>
+<li><p><strong>ValueError</strong> – No participants were selected.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_participant_selection.ModelParticipantSelection" title="src.model.model_participant_selection.ModelParticipantSelection">ModelParticipantSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.get_selected_participants">
+<span class="sig-name descname"><span class="pre">get_selected_participants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.get_selected_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the selected participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected participants</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.get_selection_participants">
+<span class="sig-name descname"><span class="pre">get_selection_participants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.get_selection_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the possible selection of participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>possible selection of participants</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.import_selection_participants">
+<span class="sig-name descname"><span class="pre">import_selection_participants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.import_selection_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports and sets the possible selection of participants
+from the directory specified in ModelDirectorySelection</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.selected_participants">
+<span class="sig-name descname"><span class="pre">selected_participants</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.selected_participants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.selection_participants">
+<span class="sig-name descname"><span class="pre">selection_participants</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.selection_participants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.set_selected_participants">
+<span class="sig-name descname"><span class="pre">set_selected_participants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selected_participants</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.set_selected_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the selected participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selected_participants</strong> (<em>list</em>) – selected participants</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.set_selection_participants">
+<span class="sig-name descname"><span class="pre">set_selection_participants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection_participants</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.set_selection_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the possible selection of participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selection_participants</strong> (<em>list</em>) – possible selection of participants</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="src-model-model-plot-module">
+<h2>src.model.model_plot module<a class="headerlink" href="#src-model-model-plot-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="src-model-model-stimulus-selection-module">
+<h2>src.model.model_stimulus_selection module<a class="headerlink" href="#src-model-model-stimulus-selection-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-src.model">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.model" title="Permalink to this headline">¶</a></h2>

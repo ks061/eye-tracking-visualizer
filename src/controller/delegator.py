@@ -1,6 +1,11 @@
+"""
+Contains the class Delegator
+"""
+
+# External imports
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow
-
+# Internal imports
 from src.controller.controller import Controller
 from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection
 from src.view.view_data_type_selection import ViewDataTypeSelection
@@ -69,6 +74,7 @@ class Delegator(QMainWindow):
     plot_placeholder = None
 
     def __init__(self):
+        super(Delegator, self).__init__()
         if Delegator.__instance is not None:
             raise Exception("Delegator should be treated as a singleton class.")
         else:
@@ -87,9 +93,11 @@ class Delegator(QMainWindow):
     @staticmethod
     def get_instance():
         """
-        Static method to access the one instance currently
-        implemented for the variable.
-        :return: the single instance of Delegator
+        Static method to access the singleton
+        instance for this class
+
+        :return: the singleton instance
+        :rtype: Delegator
         """
         if Delegator.__instance is not None:
             pass
@@ -98,9 +106,17 @@ class Delegator(QMainWindow):
         return Delegator.__instance
 
     def set_attributes(self):
+        """
+        Setting attributes based upon GUI components
+        defined in the UI file created by QtDesigner
+        """
         uic.loadUi('app_gui.ui', self)
 
     def create_view_objects(self):
+        """
+        Initializes the various view objects
+        with the relevant GUI components
+        """
         # Encapsulating the main window
         ViewMain(
             main_window=self.main_window,

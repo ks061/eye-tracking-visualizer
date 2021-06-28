@@ -1,8 +1,11 @@
+"""
+Contains the class ViewDirectorySelection
+"""
+
+
 class ViewDirectorySelection:
     """
-    Wrapper for the object that represents
-    the GUI component of the app that deals with selecting
-    the directory from which the app will be plotting.
+    View for the directory selection
     """
 
     __instance = None
@@ -19,9 +22,11 @@ class ViewDirectorySelection:
     @staticmethod
     def get_instance():
         """
-        Static method to access the one instance currently
-        implemented for the variable.
-        :return: the single instance of ViewDirectorySelection
+        Static method to access the singleton
+        instance for this class
+
+        :return: the singleton instance
+        :rtype: ViewDirectorySelection
         """
         if ViewDirectorySelection.__instance is None:
             raise Exception("ViewDirectorySelection has not been instantiated and " + \

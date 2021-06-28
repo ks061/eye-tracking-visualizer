@@ -1,4 +1,6 @@
-# Data configurations
+"""
+Specifies configuration variables
+"""
 
 # Name of the column of the X coordinates of the gaze
 # points as specified in the .tsv files

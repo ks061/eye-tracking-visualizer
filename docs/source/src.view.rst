@@ -12,22 +12,6 @@ Subpackages
 Submodules
 ----------
 
-src.view.pyqt5\_mpl\_canvas module
-----------------------------------
-
-.. automodule:: src.view.pyqt5_mpl_canvas
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-src.view.pyqt5\_mpl\_widget module
-----------------------------------
-
-.. automodule:: src.view.pyqt5_mpl_widget
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 src.view.view\_analysis\_type\_selection module
 -----------------------------------------------
 
@@ -80,14 +64,6 @@ src.view.view\_plot module
 --------------------------
 
 .. automodule:: src.view.view_plot
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-src.view.view\_plot\_config\_selection module
----------------------------------------------
-
-.. automodule:: src.view.view_plot_config_selection
    :members:
    :undoc-members:
    :show-inheritance:

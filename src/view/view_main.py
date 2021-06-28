@@ -1,14 +1,16 @@
-# import project libraries
-import sys
+"""
+Contains the class ViewMain
+"""
 
-# Data libraries
-# Visual libraries
-# Matplotlib/PyQt5 libraries
+import sys
 
 sys.path.insert(0, '../../../../')
 
 
 class ViewMain:
+    """
+    Wrapper of the whole GUI of the application
+    """
     __instance = None
 
     main_window = None
@@ -59,9 +61,11 @@ class ViewMain:
     @staticmethod
     def get_instance():
         """
-        Static method to access the one instance currently
-        implemented for the variable.
-        :return: the single instance of ViewMain
+        Static method to access the singleton
+        instance for this class
+
+        :return: the singleton instance
+        :rtype: ViewMain
         """
         if ViewMain.__instance is None:
             raise Exception("ViewMain has not been instantiated and " + \
