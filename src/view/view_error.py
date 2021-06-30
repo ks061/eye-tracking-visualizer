@@ -2,6 +2,7 @@
 Contains the class ViewError
 """
 
+
 class ViewError:
     """
     View for the error-displaying

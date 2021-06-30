@@ -43,6 +43,11 @@ class ViewPlot:
         return ViewPlot.__instance
 
     def _setup(self):
+        """
+        Sets up the layout of the plot-holding
+        widget and removes the old layout if
+        needed
+        """
         self.vbox = QtWidgets.QVBoxLayout(self.placeholder)
         self._browser_refresh()
 
@@ -52,6 +57,10 @@ class ViewPlot:
         self.vbox.addWidget(self.browser)
 
     def plot(self):
+        """
+        Creates a visualization based upon the given data,
+        stimulus, and other menu selections made by the user
+        """
         self._browser_refresh()
         fig = ModelPlot.get_instance().get_fig()
         self.browser.setHtml(fig.to_html(include_plotlyjs='cdn'))

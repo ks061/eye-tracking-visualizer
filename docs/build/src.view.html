@@ -1,0 +1,683 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>src.view package &#8212; Eye Tracking Visualizer 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.view.utils package" href="src.view.utils.html" />
+    <link rel="prev" title="src.model.utils package" href="src.model.utils.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="src-view-package">
+<h1>src.view package<a class="headerlink" href="#src-view-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src.view.utils.html">src.view.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.view.utils.html#module-src.view.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-src.view.view_analysis_type_selection">
+<span id="src-view-view-analysis-type-selection-module"></span><h2>src.view.view_analysis_type_selection module<a class="headerlink" href="#module-src.view.view_analysis_type_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ViewAnalysisTypeSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.view.view_analysis_type_selection.</span></span><span class="sig-name descname"><span class="pre">ViewAnalysisTypeSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">menu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>View for the analysis type selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the analysis type selection menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.disable">
+<span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the analysis type selection menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.enable">
+<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables the analysis type selection menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.get_current_menu_selection">
+<span class="sig-name descname"><span class="pre">get_current_menu_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.get_current_menu_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current user selection in
+the analysis type selection menu</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>analysis type selection</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection" title="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection">ViewAnalysisTypeSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.hbox">
+<span class="sig-name descname"><span class="pre">hbox</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.hbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.menu">
+<span class="sig-name descname"><span class="pre">menu</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.menu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_analysis_type_selection.ViewAnalysisTypeSelection.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the analysis type selection menu</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.view.view_data_type_selection">
+<span id="src-view-view-data-type-selection-module"></span><h2>src.view.view_data_type_selection module<a class="headerlink" href="#module-src.view.view_data_type_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ViewDataTypeSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.view.view_data_type_selection.</span></span><span class="sig-name descname"><span class="pre">ViewDataTypeSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">menu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>View for the data type selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.disable">
+<span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.disable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.enable">
+<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.enable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.get_current_menu_selection">
+<span class="sig-name descname"><span class="pre">get_current_menu_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.get_current_menu_selection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.view.view_data_type_selection.ViewDataTypeSelection" title="src.view.view_data_type_selection.ViewDataTypeSelection">ViewDataTypeSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.hbox">
+<span class="sig-name descname"><span class="pre">hbox</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.hbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.menu">
+<span class="sig-name descname"><span class="pre">menu</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.menu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.setup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.view.view_directory_selection">
+<span id="src-view-view-directory-selection-module"></span><h2>src.view.view_directory_selection module<a class="headerlink" href="#module-src.view.view_directory_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ViewDirectorySelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.view.view_directory_selection.ViewDirectorySelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.view.view_directory_selection.</span></span><span class="sig-name descname"><span class="pre">ViewDirectorySelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">button</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_directory_selection.ViewDirectorySelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>View for the directory selection</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_directory_selection.ViewDirectorySelection.button">
+<span class="sig-name descname"><span class="pre">button</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_directory_selection.ViewDirectorySelection.button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_directory_selection.ViewDirectorySelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_directory_selection.ViewDirectorySelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.view.view_directory_selection.ViewDirectorySelection" title="src.view.view_directory_selection.ViewDirectorySelection">ViewDirectorySelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.view.view_error">
+<span id="src-view-view-error-module"></span><h2>src.view.view_error module<a class="headerlink" href="#module-src.view.view_error" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ViewError</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.view.view_error.ViewError">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.view.view_error.</span></span><span class="sig-name descname"><span class="pre">ViewError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scroll_area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scroll_area_widget_contents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_error.ViewError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>View for the error-displaying
+part of the user interface</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_error.ViewError.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_error.ViewError.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.view.view_error.ViewError" title="src.view.view_error.ViewError">ViewError</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_error.ViewError.message">
+<span class="sig-name descname"><span class="pre">message</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_error.ViewError.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_error.ViewError.scrollAreaWidgetContents">
+<span class="sig-name descname"><span class="pre">scrollAreaWidgetContents</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_error.ViewError.scrollAreaWidgetContents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_error.ViewError.scroll_area">
+<span class="sig-name descname"><span class="pre">scroll_area</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_error.ViewError.scroll_area" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.view.view_main">
+<span id="src-view-view-main-module"></span><h2>src.view.view_main module<a class="headerlink" href="#module-src.view.view_main" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ViewMain</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.view.view_main.</span></span><span class="sig-name descname"><span class="pre">ViewMain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">central_widget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotting_row_hbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotting_row_options_vbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_vspacer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_button</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_vspacer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotting_row_plot_vbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotting_row_vspacer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_main.ViewMain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper of the whole GUI of the application</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.bottom_vspacer">
+<span class="sig-name descname"><span class="pre">bottom_vspacer</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_main.ViewMain.bottom_vspacer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.central_widget">
+<span class="sig-name descname"><span class="pre">central_widget</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_main.ViewMain.central_widget" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.directory_vspacer">
+<span class="sig-name descname"><span class="pre">directory_vspacer</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_main.ViewMain.directory_vspacer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_main.ViewMain.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.view.view_main.ViewMain" title="src.view.view_main.ViewMain">ViewMain</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.main_window">
+<span class="sig-name descname"><span class="pre">main_window</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_main.ViewMain.main_window" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.plot_button">
+<span class="sig-name descname"><span class="pre">plot_button</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_main.ViewMain.plot_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.plotting_row_hbox">
+<span class="sig-name descname"><span class="pre">plotting_row_hbox</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_main.ViewMain.plotting_row_hbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.plotting_row_options_vbox">
+<span class="sig-name descname"><span class="pre">plotting_row_options_vbox</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_main.ViewMain.plotting_row_options_vbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.plotting_row_plot_vbox">
+<span class="sig-name descname"><span class="pre">plotting_row_plot_vbox</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_main.ViewMain.plotting_row_plot_vbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_main.ViewMain.plotting_row_vspacer">
+<span class="sig-name descname"><span class="pre">plotting_row_vspacer</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_main.ViewMain.plotting_row_vspacer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.view.view_participant_selection">
+<span id="src-view-view-participant-selection-module"></span><h2>src.view.view_participant_selection module<a class="headerlink" href="#module-src.view.view_participant_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ViewParticipantSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.view.view_participant_selection.</span></span><span class="sig-name descname"><span class="pre">ViewParticipantSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_all_button</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deselect_all_button</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_deselect_all_hspacer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">menu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">widget_holder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection_button</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>View for the participant selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.deselect_all_button">
+<span class="sig-name descname"><span class="pre">deselect_all_button</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.deselect_all_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.disable">
+<span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.disable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.enable">
+<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.enable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.view.view_participant_selection.ViewParticipantSelection" title="src.view.view_participant_selection.ViewParticipantSelection">ViewParticipantSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.get_selected_check_box_list">
+<span class="sig-name descname"><span class="pre">get_selected_check_box_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.get_selected_check_box_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.hbox">
+<span class="sig-name descname"><span class="pre">hbox</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.hbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.hide">
+<span class="sig-name descname"><span class="pre">hide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.hide" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.layout">
+<span class="sig-name descname"><span class="pre">layout</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.layout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.menu">
+<span class="sig-name descname"><span class="pre">menu</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.menu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.process_deselect_all_button_click">
+<span class="sig-name descname"><span class="pre">process_deselect_all_button_click</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.process_deselect_all_button_click" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.process_select_all_button_click">
+<span class="sig-name descname"><span class="pre">process_select_all_button_click</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.process_select_all_button_click" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.select_all_button">
+<span class="sig-name descname"><span class="pre">select_all_button</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.select_all_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.select_deselect_all_hspacer">
+<span class="sig-name descname"><span class="pre">select_deselect_all_hspacer</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.select_deselect_all_hspacer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.selected_check_box_list">
+<span class="sig-name descname"><span class="pre">selected_check_box_list</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.selected_check_box_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.selection_button">
+<span class="sig-name descname"><span class="pre">selection_button</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.selection_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.selection_check_box_list">
+<span class="sig-name descname"><span class="pre">selection_check_box_list</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.selection_check_box_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.set_plot_from_data">
+<span class="sig-name descname"><span class="pre">set_plot_from_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.set_plot_from_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.set_selection_check_box_list">
+<span class="sig-name descname"><span class="pre">set_selection_check_box_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection_participant_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.set_selection_check_box_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.setup_layout">
+<span class="sig-name descname"><span class="pre">setup_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.setup_layout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.show" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.update_selected_check_box_list">
+<span class="sig-name descname"><span class="pre">update_selected_check_box_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.update_selected_check_box_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.widget_holder">
+<span class="sig-name descname"><span class="pre">widget_holder</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.widget_holder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.view.view_plot">
+<span id="src-view-view-plot-module"></span><h2>src.view.view_plot module<a class="headerlink" href="#module-src.view.view_plot" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ViewPlot</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.view.view_plot.ViewPlot">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.view.view_plot.</span></span><span class="sig-name descname"><span class="pre">ViewPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">placeholder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_plot.ViewPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>View for the plot</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_plot.ViewPlot.browser">
+<span class="sig-name descname"><span class="pre">browser</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_plot.ViewPlot.browser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_plot.ViewPlot.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_plot.ViewPlot.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.view.view_plot.ViewPlot" title="src.view.view_plot.ViewPlot">ViewPlot</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_plot.ViewPlot.placeholder">
+<span class="sig-name descname"><span class="pre">placeholder</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_plot.ViewPlot.placeholder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_plot.ViewPlot.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_plot.ViewPlot.plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_plot.ViewPlot.vbox">
+<span class="sig-name descname"><span class="pre">vbox</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_plot.ViewPlot.vbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.view.view_stimulus_selection">
+<span id="src-view-view-stimulus-selection-module"></span><h2>src.view.view_stimulus_selection module<a class="headerlink" href="#module-src.view.view_stimulus_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ViewStimulusSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.view.view_stimulus_selection.</span></span><span class="sig-name descname"><span class="pre">ViewStimulusSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">menu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>View for the stimulus selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear stimulus selection menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.disable">
+<span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable stimulus selection menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.enable">
+<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables stimulus selection menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.get_current_menu_selection">
+<span class="sig-name descname"><span class="pre">get_current_menu_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.get_current_menu_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current stimulus selection
+:return: Current stimulus selection
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.view.view_stimulus_selection.ViewStimulusSelection" title="src.view.view_stimulus_selection.ViewStimulusSelection">ViewStimulusSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.hbox">
+<span class="sig-name descname"><span class="pre">hbox</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.hbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.menu">
+<span class="sig-name descname"><span class="pre">menu</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.menu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up stimulus selection menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates stimulus selection menu</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.view">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.view" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Eye Tracking Visualizer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+  <li><a href="src.html">src package</a><ul>
+      <li>Previous: <a href="src.model.utils.html" title="previous chapter">src.model.utils package</a></li>
+      <li>Next: <a href="src.view.utils.html" title="next chapter">src.view.utils package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Kartikeya Sharma.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/src.view.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

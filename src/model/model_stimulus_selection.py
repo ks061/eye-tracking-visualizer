@@ -5,6 +5,7 @@ Contains the class ModelStimulusSelection
 # External imports
 import os
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 
 # Internal imports
@@ -94,18 +95,21 @@ class ModelStimulusSelection:
         """
         Returns a list of stimuli from a pandas DataFrame
         containing eye-tracking data across
-        a set of participants
+        a set of participants (removing any
+        undefined, i.e. np.nan, values)
+
         :param data: eye-tracking data
         :type data: pd.DataFrame
         :param stimulus_col_title: column title in DataFrame
-        that holds the stimulus names
+            that holds the stimulus names
         :type stimulus_col_title: str
         :return: list of stimulus names
         :rtype: list
         """
         if stimulus_col_title is None:
             stimulus_col_title = config.STIMULUS_COL_TITLE
-        return data[stimulus_col_title].unique()
+        stimuli = data[stimulus_col_title].unique()
+        return stimuli[~(pd.isnull(stimuli))]
 
     # Returns a list of stimuli that whose corresponding images
     # could be found in the stimuli images directory specified
@@ -122,7 +126,7 @@ class ModelStimulusSelection:
         :param data: eye-tracking data
         :type data: pd.DataFrame
         :param stimulus_col_title: column title in DataFrame
-        containing eye-tracking data
+            containing eye-tracking data
         :type stimulus_col_title: str
         :param stimulus_dir: directory containing stimuli
         :type stimulus_dir: str
@@ -145,47 +149,48 @@ class ModelStimulusSelection:
         return stimuli
 
     @staticmethod
-    def stimulus_image_exists(stimulus_file_name,
-                              stimulus_dir=None):
+    def stimulus_image_exists(stimulus_name,
+                              stimulus_relative_dir=None):
         """
         Returns True if the specified filename exists
         in the stimuli directory
 
-        :param stimulus_file_name: filename of stimulus
-        :type stimulus_file_name: str
-        :param stimulus_dir: directory specified to contain
-        the stimulus images
-        :type stimulus_dir: str
+        :param stimulus_name: filename of stimulus
+        :type stimulus_name: str
+        :param stimulus_relative_dir: directory specified to contain
+            the stimulus images
+        :type stimulus_relative_dir: str
         :return: True if specified filename exists in
-        the stimuli directory
+            the stimuli directory
         :rtype: bool
         """
-        if stimulus_dir is None:
-            stimulus_dir = config.RELATIVE_STIMULUS_IMAGE_DIRECTORY
+        if stimulus_relative_dir is None:
+            stimulus_relative_dir = config.RELATIVE_STIMULUS_IMAGE_DIRECTORY
         return os.path.exists(
-            str(os.path.dirname(os.path.realpath(__file__)) / \
-                stimulus_dir / \
-                stimulus_file_name)
+            str(os.path.dirname(os.path.realpath(__file__)) + \
+                stimulus_relative_dir + \
+                stimulus_name)
         )
 
     @staticmethod
     def import_stimulus_image(stimulus_name,
-                              stimulus_dir=None):
+                              stimulus_relative_dir=None):
         """
         Returns a 2D array with RGB values for
         the specified stimulus in the specified
         directory containing the stimulus
+
         :param stimulus_name: filename of the stimulus
         :type stimulus_name: str
-        :param stimulus_dir: directory containing the stimulus
-        :type stimulus_dir: str
+        :param stimulus_relative_dir: directory containing the stimulus
+        :type stimulus_relative_dir: str
         :return: 2D array of RGB values of stimulus
         :rtype: np.array
         """
-        if stimulus_dir is None:
-            stimulus_dir = config.RELATIVE_STIMULUS_IMAGE_DIRECTORY
+        if stimulus_relative_dir is None:
+            stimulus_relative_dir = config.RELATIVE_STIMULUS_IMAGE_DIRECTORY
         return plt.imread(
-            str(os.path.dirname(os.path.realpath(__file__)) / \
-                stimulus_dir / \
+            str(os.path.dirname(os.path.realpath(__file__)) + "/" + \
+                stimulus_relative_dir + "/" + \
                 stimulus_name)
         )

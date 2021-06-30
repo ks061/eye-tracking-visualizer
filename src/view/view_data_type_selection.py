@@ -41,22 +41,36 @@ class ViewDataTypeSelection:
         return ViewDataTypeSelection.__instance
 
     def setup(self):
+        """
+        Setup data type selection menu
+        """
         if self.menu.findText("Gaze Data") == -1:
             self.menu.addItem("Gaze Data")
         if self.menu.findText("Fixation Data") == -1:
             self.menu.addItem("Fixation Data")
 
     def enable(self):
-        # Enable interface
+        """
+        Enable data type selection menu
+        """
         self.menu.setEnabled(True)
 
     def disable(self):
-        # Disable interface
+        """
+        Disable data type selection menu
+        """
         self.menu.setEnabled(False)
 
     def clear(self):
-        # clear data type selection menu
+        """
+        Clear data type selection menu
+        """
         self.menu.clear()
 
     def get_current_menu_selection(self):
+        """
+        Get current data type selection
+        :return: current data type selection
+        :rtype: str
+        """
         return self.menu.currentText()

@@ -86,7 +86,7 @@ class Delegator(QMainWindow):
         # creating view objects with UI components
         self.create_view_objects()
         # creating controller
-        Controller()
+        Controller(delegator=self)
         # show main window
         self.show()
 
@@ -168,4 +168,6 @@ class Delegator(QMainWindow):
             menu=self.analysis_type_menu
         )
         # Encapsulating the plot to be displayed in the UI
-        ViewPlot(placeholder=self.plot_placeholder)
+        ViewPlot(
+            placeholder=self.plot_placeholder
+        )

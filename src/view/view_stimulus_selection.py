@@ -85,6 +85,7 @@ class ViewStimulusSelection:
     def get_current_menu_selection(self):
         """
         Returns the current stimulus selection
+
         :return: Current stimulus selection
         :rtype: str
         """

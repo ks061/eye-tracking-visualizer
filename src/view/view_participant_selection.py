@@ -60,48 +60,53 @@ class ViewParticipantSelection:
                             "cannot be done so without proper attributes")
         return ViewParticipantSelection.__instance
 
-    def set_plot_from_data(self):
-        pass
-
     def show(self):
-        # Data type selection
+        """
+        Show participant selection menu
+        """
         self.select_all_button.show()
         self.deselect_all_button.show()
         self.menu.show()
         self.selection_button.show()
 
     def hide(self):
-        # Data type selection
+        """
+        Hide participant selection menu
+        """
         self.select_all_button.hide()
         self.deselect_all_button.hide()
         self.menu.hide()
         self.selection_button.hide()
 
-    # Processes the select all button click in the participant selection interface
     def process_select_all_button_click(self):
+        """
+        Select all participants in participant
+        selection menu
+        """
         for selection_check_box in self.selection_check_box_list:
             selection_check_box.setChecked(True)
 
-    # Processes the deselect all button click in the participant selection interface
     def process_deselect_all_button_click(self):
+        """
+        Deselect all participants in participant
+        selection menu
+        """
         for selection_check_box in self.selection_check_box_list:
             selection_check_box.setChecked(False)
 
-    # Initializes the check box selection area to select
-    # the participants to view
-
     def enable(self):
-        # Enable interface
+        """
+        Enables the participant selection menu interface
+        """
         self.select_all_button.setEnabled(True)
         self.deselect_all_button.setEnabled(True)
         self.menu.setEnabled(True)
         self.selection_button.setEnabled(True)
 
-    def setup_layout(self):
-        self.layout = QtWidgets.QVBoxLayout()
-        self.widget_holder.setLayout(self.layout)
-
     def disable(self):
+        """
+        Disables the participant selection menu interface
+        """
         # Disable interface
         self.select_all_button.setEnabled(False)
         self.deselect_all_button.setEnabled(False)
@@ -109,6 +114,9 @@ class ViewParticipantSelection:
         self.selection_button.setEnabled(False)
 
     def clear(self):
+        """
+        Clears the participant selection menu interface
+        """
         if self.selection_check_box_list is not None:
             for selection_check_box in self.selection_check_box_list:
                 self.layout.removeWidget(selection_check_box)
@@ -117,9 +125,20 @@ class ViewParticipantSelection:
                 # new directory is selected
             self.selection_check_box_list = []
 
+    def _setup_layout(self):
+        self.layout = QtWidgets.QVBoxLayout()
+        self.widget_holder.setLayout(self.layout)
+
     def set_selection_check_box_list(self, selection_participant_list):
+        """
+        Sets the list of participants
+
+        :param selection_participant_list: list of participants
+            that can be selected
+        :type selection_participant_list: list
+        """
         if self.layout is None:
-            self.setup_layout()
+            self._setup_layout()
         # initialize check boxes for selected participants
         self.selection_check_box_list = []
         for participant in selection_participant_list:
@@ -128,12 +147,24 @@ class ViewParticipantSelection:
             self.layout.addWidget(check_box_widget)
             self.selection_check_box_list.append(check_box_widget)
 
-    def update_selected_check_box_list(self):
+    def update_selected_check_boxes(self):
+        """
+        Updates the check boxes that are selected
+        in the participant selection menu
+        """
         self.selected_check_box_list = []
         for check_box in self.selection_check_box_list:
             if check_box.isChecked():
                 self.selected_check_box_list.append(check_box)
 
-    def get_selected_check_box_list(self):
-        self.update_selected_check_box_list()
+    def get_selected_check_boxes(self):
+        """
+        Gets the check boxes that are selected
+        in the participant selection menu
+
+        :return: check boxes that are selected
+        in the participant selection menu
+        :rtype: list
+        """
+        self.update_selected_check_boxes()
         return self.selected_check_box_list

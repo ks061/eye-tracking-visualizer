@@ -50,9 +50,9 @@ class ModelPlot:
         """
         data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
 
-        if data_type_selection is "Gaze Data":
+        if data_type_selection == "Gaze Data":
             self.x = config.X_GAZE_COL_TITLE
-        if data_type_selection is "Fixation Data":
+        if data_type_selection == "Fixation Data":
             self.x = config.X_FIXATION_COL_TITLE
 
     def set_y_col_name(self):
@@ -62,9 +62,9 @@ class ModelPlot:
         """
         data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
 
-        if data_type_selection is "Gaze Data":
+        if data_type_selection == "Gaze Data":
             self.y = config.Y_GAZE_COL_TITLE
-        if data_type_selection is "Fixation Data":
+        if data_type_selection == "Fixation Data":
             self.y = config.Y_FIXATION_COL_TITLE
 
     def update_fig(self):
@@ -109,7 +109,9 @@ class ModelPlot:
         x_shift = df[config.STIMULUS_X_DISPLACEMENT_COL_TITLE].iloc[0]
         y_shift = df[config.STIMULUS_Y_DISPLACEMENT_COL_TITLE].iloc[0]
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        img_path = os.path.abspath(dir_path / config.STIMULUS_DIR_PATH_RELATIVE_TO_MODEL_PLOT / stimulus_file_name)
+        img_path = os.path.abspath(
+            dir_path + "/" + config.RELATIVE_STIMULUS_IMAGE_DIRECTORY + "/" + stimulus_file_name
+        )
         img = Image.open(img_path)
         self.fig.add_layout_image(
             dict(

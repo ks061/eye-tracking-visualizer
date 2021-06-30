@@ -5,9 +5,9 @@ Contains the class Controller
 # External imports
 import PyQt5
 # Internal imports
-import src.controller.delegator as delegator
 from src.controller.controller_participant_selection import ControllerParticipantSelection
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
+from src.model.model_data import ModelData
 from src.model.model_data_type_selection import ModelDataTypeSelection
 from src.model.model_directory_selection import ModelDirectorySelection
 from src.model.model_participant_selection import ModelParticipantSelection
@@ -35,12 +35,13 @@ class Controller:
     # Sub Controllers
     controller_participant_selection = None
 
-    def __init__(self):
+    def __init__(self, delegator):
         if Controller.__instance is not None:
             raise Exception("Controller should be treated as a singleton class.")
         else:
             Controller.__instance = self
         ViewMain.get_instance().plot_button.setEnabled(False)
+        self.delegator = delegator
         self._connect_gui_components_to_functions()
         self._setup_static_selection_menus()
 
@@ -91,9 +92,7 @@ class Controller:
         ViewDataTypeSelection.get_instance().setup()
         ViewAnalysisTypeSelection.get_instance().setup()
 
-    @staticmethod
-    # Processes the directory selection button click
-    def process_directory_selection_button_click():
+    def process_directory_selection_button_click(self):
         """
         Processes when user clicks directory button
 
@@ -108,15 +107,14 @@ class Controller:
         ModelStimulusSelection.get_instance().clear()
 
         # noinspection PyUnresolvedReferences
-        path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(delegator.Delegator.get_instance(),
+        path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(self.delegator.get_instance(),
                                                                     "Select Directory"))
         ModelDirectorySelection.get_instance().set_path(
-            path
+            path=path
         )
         ControllerParticipantSelection.update_view_selection_participants_from_model()
 
     @staticmethod
-    # Processes the participant selection button click
     def process_participant_selection_button_click():
         """
         Updates stimulus selection based on participant selection
@@ -128,15 +126,14 @@ class Controller:
 
         ControllerParticipantSelection.get_instance().update_model_selected_participants_from_view()
 
-        # Participants selected with check marks; now, time to update
-        # the colors to the left of the participant selection menu.
-
         if len(ViewParticipantSelection.get_instance().selected_check_box_list) != 0:
             ViewError.get_instance().message.setText('')
-
+            ModelData.get_instance().set_df_multi_selected_participants_no_stimulus(
+                data_directory_path=ModelDirectorySelection.get_instance().get_path(),
+                selected_participants=ModelParticipantSelection.get_instance().get_selected_participants()
+            )
             ModelStimulusSelection.get_instance().update_stimuli_names(
-                selected_participants=ModelParticipantSelection.get_instance().get_selection_participants(),
-                data_directory_path=ModelDirectorySelection.get_instance().get_path()
+                data=ModelData.get_instance().get_df()
             )
             ViewStimulusSelection.get_instance().update()
         else:
@@ -144,6 +141,7 @@ class Controller:
                 "No participants selected. Please select at least one participant" +
                 " to refresh the plot area"
             )
+        ViewMain.get_instance().plot_button.setEnabled(True)
 
     @staticmethod
     def process_stimulus_selection_menu_change():
@@ -153,11 +151,14 @@ class Controller:
         menu, updating the corresponding internal model
         accordingly
         """
-        ModelStimulusSelection.get_instance().update_stimuli_names(
+        ModelData.get_instance().set_df_multi_selected_participants_selected_stimulus(
+            data_directory_path=ModelDirectorySelection.get_instance().get_path(),
             selected_participants=ModelParticipantSelection.get_instance().get_selected_participants(),
-            data_directory_path=ModelDirectorySelection.get_instance().get_path()
+            selected_stimulus=ModelStimulusSelection.get_instance().get_selection()
         )
-        ViewMain.get_instance().plot_button.setEnabled(True)
+        ModelStimulusSelection.get_instance().update_stimuli_names(
+            data=ModelData.get_instance().get_df()
+        )
 
     @staticmethod
     def process_data_type_selection_menu_change():
@@ -168,7 +169,7 @@ class Controller:
         accordingly
         """
         ModelDataTypeSelection.get_instance().set_selection(
-            ViewStimulusSelection.get_instance().get_current_menu_selection()
+            selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
         )
 
     @staticmethod
@@ -180,7 +181,7 @@ class Controller:
         accordingly
         """
         ModelAnalysisTypeSelection.get_instance().set_selection(
-            ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
+            selection=ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
         )
 
     @staticmethod
@@ -192,13 +193,13 @@ class Controller:
         plot
         """
         ModelStimulusSelection.get_instance().set_selection(
-            ViewStimulusSelection.get_instance().get_current_menu_selection()
+            selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
         )
         ModelDataTypeSelection.get_instance().set_selection(
-            ViewDataTypeSelection.get_instance().get_current_menu_selection()
+            selection=ViewDataTypeSelection.get_instance().get_current_menu_selection()
         )
         ModelAnalysisTypeSelection.get_instance().set_selection(
-            ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
+            selection=ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
         )
         ModelPlot.get_instance().update_fig()
         ViewPlot.get_instance().plot()

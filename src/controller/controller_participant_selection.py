@@ -43,7 +43,7 @@ class ControllerParticipantSelection:
         """
         ViewParticipantSelection.get_instance().disable()
         ViewParticipantSelection.get_instance().set_selection_check_box_list(
-            ModelParticipantSelection.get_instance().get_selection_participants()
+            selection_participant_list=ModelParticipantSelection.get_instance().get_selection_participants()
         )
         ViewParticipantSelection.get_instance().enable()
 
@@ -55,6 +55,6 @@ class ControllerParticipantSelection:
         selection view
         """
         ModelParticipantSelection.get_instance().set_selected_participants(
-            list(map(lambda check_box: check_box.text(),
-                     ViewParticipantSelection.get_instance().get_selected_check_box_list()))
+            selected_participants=list(map(lambda check_box: check_box.text(),
+                                           ViewParticipantSelection.get_instance().get_selected_check_boxes()))
         )

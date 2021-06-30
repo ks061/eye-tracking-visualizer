@@ -67,7 +67,7 @@ class ModelData:
         :type data_directory_path: str
         :param selected_participant: participant of which data will be retrieved
         :type selected_participant: str
-        :return data
+        :return: data
         :rtype: pd.DataFrame
         """
         # additional variables being used
@@ -105,6 +105,11 @@ class ModelData:
         from the selected participants' eye-tracking data files
         (inclusive of all stimuli present in the data)
 
+        :param data_directory_path: directory containing the
+            eye-tracking data
+        :type data_directory_path: str
+        :param selected_participants: selected participants
+        :type selected_participants: str
         :return: selected participants' eye-tracking data
         :rtype: pd.DataFrame
         """
@@ -115,14 +120,14 @@ class ModelData:
 
         # obtain data frame for each participant
         for i in range(len(selected_participants)):
-            selected_participant_file_name = selected_participants[i]
+            selected_participant = selected_participants[i]
             df_one_participant_no_stimulus = self.get_df_one_participant_all_stimuli(
-                selected_participants,
-                data_directory_path
+                data_directory_path=data_directory_path,
+                selected_participant=selected_participant
             )
 
             df_one_participant_no_stimulus = df_one_participant_no_stimulus.assign(
-                participant_identifier=selected_participant_file_name
+                participant_identifier=selected_participant
             )
             # stack data frame from each participant
             if i == 0:
@@ -161,7 +166,7 @@ class ModelData:
         (inclusive of all stimuli present in the data)
 
         :return: selected participants' eye-tracking data for
-        a particular stimulus
+            a particular stimulus
         :rtype: pd.DataFrame
         """
         df_one_participant_selected_stimulus = self.get_df_multi_selected_participants_all_stimuli(

@@ -41,10 +41,15 @@ class ViewAnalysisTypeSelection:
         return ViewAnalysisTypeSelection.__instance
 
     def enable(self):
-        # Enable interface
+        """
+        Enables the analysis type selection menu
+        """
         self.menu.setEnabled(True)
 
     def setup(self):
+        """
+        Sets up the analysis type selection menu
+        """
         if self.menu.findText("Scatter Plot") == -1:
             self.menu.addItem("Scatter Plot")
         if self.menu.findText("Line Plot") == -1:
@@ -55,12 +60,23 @@ class ViewAnalysisTypeSelection:
             self.menu.addItem("Cluster")
 
     def disable(self):
-        # Disable interface
+        """
+        Disables the analysis type selection menu
+        """
         self.menu.setEnabled(False)
 
     def clear(self):
-        # clear analysis type selection menu
+        """
+        Clears the analysis type selection menu
+        """
         self.menu.clear()
 
     def get_current_menu_selection(self):
+        """
+        Gets the current user selection in
+        the analysis type selection menu
+
+        :return: analysis type selection
+        :rtype: str
+        """
         return self.menu.currentText()

@@ -1,0 +1,846 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>src.model package &#8212; Eye Tracking Visualizer 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.model.utils package" href="src.model.utils.html" />
+    <link rel="prev" title="src.main package" href="src.main.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="src-model-package">
+<h1>src.model package<a class="headerlink" href="#src-model-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src.model.utils.html">src.model.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils.cluster_util">src.model.utils.cluster_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils.fixation_util">src.model.utils.fixation_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils.heatmap_image">src.model.utils.heatmap_image module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils.heatmap_util">src.model.utils.heatmap_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.utils.html#module-src.model.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-src.model.model_analysis_type_selection">
+<span id="src-model-model-analysis-type-selection-module"></span><h2>src.model.model_analysis_type_selection module<a class="headerlink" href="#module-src.model.model_analysis_type_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelAnalysisTypeSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_analysis_type_selection.</span></span><span class="sig-name descname"><span class="pre">ModelAnalysisTypeSelection</span></span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the analysis type selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the analysis type model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection" title="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection">ModelAnalysisTypeSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.get_selection">
+<span class="sig-name descname"><span class="pre">get_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.get_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the selected analysis type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected analysis type</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.selection">
+<span class="sig-name descname"><span class="pre">selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.selection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.set_selection">
+<span class="sig-name descname"><span class="pre">set_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_analysis_type_selection.ModelAnalysisTypeSelection.set_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the selected analysis type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selection</strong> (<em>str</em>) – selected analysis type</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model.model_data">
+<span id="src-model-model-data-module"></span><h2>src.model.model_data module<a class="headerlink" href="#module-src.model.model_data" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelData</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_data.</span></span><span class="sig-name descname"><span class="pre">ModelData</span></span><a class="headerlink" href="#src.model.model_data.ModelData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Contains pandas DataFrame of data being plotted</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data.ModelData.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the data contained in the model</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.df">
+<span class="sig-name descname"><span class="pre">df</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_data.ModelData.df" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.get_df">
+<span class="sig-name descname"><span class="pre">get_df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data.ModelData.get_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the data contained in the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.get_df_multi_selected_participants_all_stimuli">
+<span class="sig-name descname"><span class="pre">get_df_multi_selected_participants_all_stimuli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_participants</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data.ModelData.get_df_multi_selected_participants_all_stimuli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a pandas DataFrame containing eye-tracking data
+from the selected participants’ eye-tracking data files
+(inclusive of all stimuli present in the data)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected participants’ eye-tracking data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.get_df_multi_selected_participants_selected_stimulus">
+<span class="sig-name descname"><span class="pre">get_df_multi_selected_participants_selected_stimulus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_participants</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_stimulus</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data.ModelData.get_df_multi_selected_participants_selected_stimulus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a pandas DataFrame containing eye-tracking data
+from the selected participants’ eye-tracking data files
+for a particular stimulus
+(inclusive of all stimuli present in the data)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected participants’ eye-tracking data for
+a particular stimulus</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.get_df_one_participant_all_stimuli">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_df_one_participant_all_stimuli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_participant</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data.ModelData.get_df_one_participant_all_stimuli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a pandas DataFrame containing eye-tracking data
+from the participant filename specified</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_directory_path</strong> (<em>str</em>) – directory path containing eye-tracking data</p></li>
+<li><p><strong>selected_participant</strong> (<em>str</em>) – participant of which data will be retrieved</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data.ModelData.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_data.ModelData" title="src.model.model_data.ModelData">ModelData</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.remove_incomplete_observations">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">remove_incomplete_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data.ModelData.remove_incomplete_observations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any observations from the specified pandas
+DataFrame that have an unspecified
+value in any of the specified columns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – target DataFrame</p></li>
+<li><p><strong>col_names</strong> (<em>list</em>) – target columns in target DataFrame</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result DataFrame</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.set_df_multi_selected_participants_no_stimulus">
+<span class="sig-name descname"><span class="pre">set_df_multi_selected_participants_no_stimulus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_participants</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data.ModelData.set_df_multi_selected_participants_no_stimulus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model’s stored DataFrame as a pandas
+DataFrame containing eye-tracking data from
+the selected participants’ eye-tracking data files
+(inclusive of all stimuli present in the data)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data.ModelData.set_df_multi_selected_participants_selected_stimulus">
+<span class="sig-name descname"><span class="pre">set_df_multi_selected_participants_selected_stimulus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_participants</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_stimulus</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data.ModelData.set_df_multi_selected_participants_selected_stimulus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model’s stored DataFrame as a pandas
+DataFrame containing eye-tracking data
+from the selected participants’ eye-tracking
+data files for a particular stimulus
+(inclusive of all stimuli present in the data)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model.model_data_type_selection">
+<span id="src-model-model-data-type-selection-module"></span><h2>src.model.model_data_type_selection module<a class="headerlink" href="#module-src.model.model_data_type_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelDataTypeSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_data_type_selection.</span></span><span class="sig-name descname"><span class="pre">ModelDataTypeSelection</span></span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the data type selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the data type model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_data_type_selection.ModelDataTypeSelection" title="src.model.model_data_type_selection.ModelDataTypeSelection">ModelDataTypeSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.get_selection">
+<span class="sig-name descname"><span class="pre">get_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.get_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the selected data type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected data type</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.selection">
+<span class="sig-name descname"><span class="pre">selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.selection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_data_type_selection.ModelDataTypeSelection.set_selection">
+<span class="sig-name descname"><span class="pre">set_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_data_type_selection.ModelDataTypeSelection.set_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the selected data type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selection</strong> (<em>str</em>) – selected data type</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model.model_directory_selection">
+<span id="src-model-model-directory-selection-module"></span><h2>src.model.model_directory_selection module<a class="headerlink" href="#module-src.model.model_directory_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelDirectorySelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_directory_selection.</span></span><span class="sig-name descname"><span class="pre">ModelDirectorySelection</span></span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the directory selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the directory selection model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_directory_selection.ModelDirectorySelection" title="src.model.model_directory_selection.ModelDirectorySelection">ModelDirectorySelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.get_path">
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the selected directory path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected directory path</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.path">
+<span class="sig-name descname"><span class="pre">path</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_directory_selection.ModelDirectorySelection.set_path">
+<span class="sig-name descname"><span class="pre">set_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_directory_selection.ModelDirectorySelection.set_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the selected directory path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – selected directory path</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model.model_participant_selection">
+<span id="src-model-model-participant-selection-module"></span><h2>src.model.model_participant_selection module<a class="headerlink" href="#module-src.model.model_participant_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelParticipantSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_participant_selection.</span></span><span class="sig-name descname"><span class="pre">ModelParticipantSelection</span></span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the participant selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the participant selection model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.enforce_exists_selected_participants">
+<span class="sig-name descname"><span class="pre">enforce_exists_selected_participants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.enforce_exists_selected_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enforces that the number of selected participants
+is positive</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – List of selected participant file names is null.</p></li>
+<li><p><strong>ValueError</strong> – No participants were selected.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_participant_selection.ModelParticipantSelection" title="src.model.model_participant_selection.ModelParticipantSelection">ModelParticipantSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.get_selected_participants">
+<span class="sig-name descname"><span class="pre">get_selected_participants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.get_selected_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the selected participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected participants</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.get_selection_participants">
+<span class="sig-name descname"><span class="pre">get_selection_participants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.get_selection_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the possible selection of participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>possible selection of participants</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.import_selection_participants">
+<span class="sig-name descname"><span class="pre">import_selection_participants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.import_selection_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports and sets the possible selection of participants
+from the directory specified in ModelDirectorySelection</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.selected_participants">
+<span class="sig-name descname"><span class="pre">selected_participants</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.selected_participants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.selection_participants">
+<span class="sig-name descname"><span class="pre">selection_participants</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.selection_participants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.set_selected_participants">
+<span class="sig-name descname"><span class="pre">set_selected_participants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selected_participants</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.set_selected_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the selected participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selected_participants</strong> (<em>list</em>) – selected participants</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_participant_selection.ModelParticipantSelection.set_selection_participants">
+<span class="sig-name descname"><span class="pre">set_selection_participants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection_participants</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_participant_selection.ModelParticipantSelection.set_selection_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the possible selection of participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selection_participants</strong> (<em>list</em>) – possible selection of participants</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model.model_plot">
+<span id="src-model-model-plot-module"></span><h2>src.model.model_plot module<a class="headerlink" href="#module-src.model.model_plot" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelPlot</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_plot.</span></span><span class="sig-name descname"><span class="pre">ModelPlot</span></span><a class="headerlink" href="#src.model.model_plot.ModelPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the plot</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the underlying figure stored in the model</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.fig">
+<span class="sig-name descname"><span class="pre">fig</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_plot.ModelPlot.fig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.get_fig">
+<span class="sig-name descname"><span class="pre">get_fig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.get_fig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the underlying figure
+:return: underlying figure
+:rtype: plotly.graph_objects.Figure</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_plot.ModelPlot" title="src.model.model_plot.ModelPlot">ModelPlot</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.set_x_col_name">
+<span class="sig-name descname"><span class="pre">set_x_col_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.set_x_col_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the column name from which to read the x coordinates
+of the plot from the pandas DataFrame in the data model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.set_y_col_name">
+<span class="sig-name descname"><span class="pre">set_y_col_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.set_y_col_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the column name from which to read the y coordinates
+of the plot from the pandas DataFrame in the data model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.update_fig">
+<span class="sig-name descname"><span class="pre">update_fig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.update_fig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the underlying figure based upon
+user’s selections</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.x">
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_plot.ModelPlot.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.y">
+<span class="sig-name descname"><span class="pre">y</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_plot.ModelPlot.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model.model_stimulus_selection">
+<span id="src-model-model-stimulus-selection-module"></span><h2>src.model.model_stimulus_selection module<a class="headerlink" href="#module-src.model.model_stimulus_selection" title="Permalink to this headline">¶</a></h2>
+<p>Contains the class ModelStimulusSelection</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">src.model.model_stimulus_selection.</span></span><span class="sig-name descname"><span class="pre">ModelStimulusSelection</span></span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for the stimulus selection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the selected stimulus</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.get_existing_stimuli">
+<span class="sig-name descname"><span class="pre">get_existing_stimuli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_col_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.get_existing_stimuli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of stimuli that are within the specified
+eye-tracking data and could be found within the stimulus
+images directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pd.DataFrame</em>) – eye-tracking data</p></li>
+<li><p><strong>stimulus_col_title</strong> (<em>str</em>) – column title in DataFrame
+containing eye-tracking data</p></li>
+<li><p><strong>stimulus_dir</strong> (<em>str</em>) – directory containing stimuli</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of stimuli names</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.get_instance">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method to access the singleton
+instance for this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the singleton instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.model.model_stimulus_selection.ModelStimulusSelection" title="src.model.model_stimulus_selection.ModelStimulusSelection">ModelStimulusSelection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.get_selection">
+<span class="sig-name descname"><span class="pre">get_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.get_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the selected stimulus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>selected stimulus</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.get_stimuli_from_data">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_stimuli_from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_col_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.get_stimuli_from_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of stimuli from a pandas DataFrame
+containing eye-tracking data across
+a set of participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pd.DataFrame</em>) – eye-tracking data</p></li>
+<li><p><strong>stimulus_col_title</strong> (<em>str</em>) – column title in DataFrame
+that holds the stimulus names</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of stimulus names</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.get_stimuli_names">
+<span class="sig-name descname"><span class="pre">get_stimuli_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.get_stimuli_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of available stimuli</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>available stimuli</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.import_stimulus_image">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">import_stimulus_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.import_stimulus_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a 2D array with RGB values for
+the specified stimulus in the specified
+directory containing the stimulus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus_name</strong> (<em>str</em>) – filename of the stimulus</p></li>
+<li><p><strong>stimulus_dir</strong> (<em>str</em>) – directory containing the stimulus</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2D array of RGB values of stimulus</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.selection">
+<span class="sig-name descname"><span class="pre">selection</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.selection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.set_selection">
+<span class="sig-name descname"><span class="pre">set_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.set_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the selected stimulus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selection</strong> (<em>str</em>) – selected stimulus</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.stimuli_names">
+<span class="sig-name descname"><span class="pre">stimuli_names</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.stimuli_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.stimulus_image_exists">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">stimulus_image_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.stimulus_image_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the specified filename exists
+in the stimuli directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus_file_name</strong> (<em>str</em>) – filename of stimulus</p></li>
+<li><p><strong>stimulus_dir</strong> (<em>str</em>) – directory specified to contain
+the stimulus images</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if specified filename exists in
+the stimuli directory</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.update_stimuli_names">
+<span class="sig-name descname"><span class="pre">update_stimuli_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.update_stimuli_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the list of available stimuli
+based upon the stimuli across the observations
+across the selected participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>pd.DataFrame</em>) – eye-tracking data</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.model">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.model" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Eye Tracking Visualizer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+  <li><a href="src.html">src package</a><ul>
+      <li>Previous: <a href="src.main.html" title="previous chapter">src.main package</a></li>
+      <li>Next: <a href="src.model.utils.html" title="next chapter">src.model.utils package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Kartikeya Sharma.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/src.model.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
