@@ -139,22 +139,28 @@ instance for this class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.clear">
 <span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.clear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Clear data type selection menu</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.disable">
 <span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.disable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Disable data type selection menu</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.enable">
 <span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.enable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Enable data type selection menu</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.get_current_menu_selection">
 <span class="sig-name descname"><span class="pre">get_current_menu_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.get_current_menu_selection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get current data type selection
+:return: current data type selection
+:rtype: str</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.get_instance">
@@ -189,7 +195,8 @@ instance for this class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_data_type_selection.ViewDataTypeSelection.setup">
 <span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_data_type_selection.ViewDataTypeSelection.setup" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Setup data type selection menu</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -349,7 +356,8 @@ instance for this class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.clear">
 <span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.clear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Clears the participant selection menu interface</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.deselect_all_button">
@@ -359,12 +367,14 @@ instance for this class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.disable">
 <span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.disable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Disables the participant selection menu interface</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.enable">
 <span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.enable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Enables the participant selection menu interface</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.get_instance">
@@ -382,9 +392,22 @@ instance for this class</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.get_selected_check_box_list">
-<span class="sig-name descname"><span class="pre">get_selected_check_box_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.get_selected_check_box_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.get_selected_check_boxes">
+<span class="sig-name descname"><span class="pre">get_selected_check_boxes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.get_selected_check_boxes" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Gets the check boxes that are selected</dt><dd><p>in the participant selection menu</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>check boxes that are selected
+in the participant selection menu</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.hbox">
@@ -394,7 +417,8 @@ instance for this class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.hide">
 <span class="sig-name descname"><span class="pre">hide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.hide" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Hide participant selection menu</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.layout">
@@ -409,12 +433,16 @@ instance for this class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.process_deselect_all_button_click">
 <span class="sig-name descname"><span class="pre">process_deselect_all_button_click</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.process_deselect_all_button_click" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Deselect all participants in participant
+selection menu</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.process_select_all_button_click">
 <span class="sig-name descname"><span class="pre">process_select_all_button_click</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.process_select_all_button_click" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Select all participants in participant
+selection menu</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.select_all_button">
@@ -442,29 +470,29 @@ instance for this class</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.set_plot_from_data">
-<span class="sig-name descname"><span class="pre">set_plot_from_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.set_plot_from_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.set_selection_check_box_list">
 <span class="sig-name descname"><span class="pre">set_selection_check_box_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection_participant_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.set_selection_check_box_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.setup_layout">
-<span class="sig-name descname"><span class="pre">setup_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.setup_layout" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sets the list of participants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>selection_participant_list</strong> (<em>list</em>) – list of participants
+that can be selected</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.show">
 <span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.show" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Show participant selection menu</p>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.update_selected_check_box_list">
-<span class="sig-name descname"><span class="pre">update_selected_check_box_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.update_selected_check_box_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.update_selected_check_boxes">
+<span class="sig-name descname"><span class="pre">update_selected_check_boxes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_participant_selection.ViewParticipantSelection.update_selected_check_boxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the check boxes that are selected
+in the participant selection menu</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="src.view.view_participant_selection.ViewParticipantSelection.widget_holder">
@@ -510,7 +538,9 @@ instance for this class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_plot.ViewPlot.plot">
 <span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_plot.ViewPlot.plot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Creates a visualization based upon the given data,
+stimulus, and other menu selections made by the user</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="src.view.view_plot.ViewPlot.vbox">
@@ -549,9 +579,15 @@ instance for this class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.view.view_stimulus_selection.ViewStimulusSelection.get_current_menu_selection">
 <span class="sig-name descname"><span class="pre">get_current_menu_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.view.view_stimulus_selection.ViewStimulusSelection.get_current_menu_selection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the current stimulus selection
-:return: Current stimulus selection
-:rtype: str</p>
+<dd><p>Returns the current stimulus selection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Current stimulus selection</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

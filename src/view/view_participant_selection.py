@@ -160,10 +160,10 @@ class ViewParticipantSelection:
     def get_selected_check_boxes(self):
         """
         Gets the check boxes that are selected
-        in the participant selection menu
+            in the participant selection menu
 
         :return: check boxes that are selected
-        in the participant selection menu
+            in the participant selection menu
         :rtype: list
         """
         self.update_selected_check_boxes()

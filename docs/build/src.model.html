@@ -155,11 +155,18 @@ instance for this class</p>
 from the selected participants’ eye-tracking data files
 (inclusive of all stimuli present in the data)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>selected participants’ eye-tracking data</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_directory_path</strong> (<em>str</em>) – directory containing the
+eye-tracking data</p></li>
+<li><p><strong>selected_participants</strong> (<em>str</em>) – selected participants</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>selected participants’ eye-tracking data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -515,6 +522,11 @@ from the directory specified in ModelDirectorySelection</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.color">
+<span class="sig-name descname"><span class="pre">color</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_plot.ModelPlot.color" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.fig">
 <span class="sig-name descname"><span class="pre">fig</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_plot.ModelPlot.fig" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -525,6 +537,29 @@ from the directory specified in ModelDirectorySelection</p>
 <dd><p>Returns the underlying figure
 :return: underlying figure
 :rtype: plotly.graph_objects.Figure</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.get_fixation_points_sizes_and_colors">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_fixation_points_sizes_and_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_point_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.get_fixation_points_sizes_and_colors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the fixation point coordinates and the corresponding
+fixation_durations of the fixations being plotted, which, in turn, are proportional to
+how long a fixation has been looked at (for a particular participant)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame containing fixations within eye-tracking data
+currently being analyzed</p></li>
+<li><p><strong>max_point_size</strong> (<em>int</em>) – size of the longest fixation point in the plot</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array of fixation_durations for fixation points in plot made by plotly</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -543,6 +578,20 @@ instance for this class</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.set_color_col_name">
+<span class="sig-name descname"><span class="pre">set_color_col_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.set_color_col_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the column name from which to distinguish
+colors within the plot from the pandas DataFrame
+in the data model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.set_size">
+<span class="sig-name descname"><span class="pre">set_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.set_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the sizes of the fixations</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.set_x_col_name">
 <span class="sig-name descname"><span class="pre">set_x_col_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_plot.ModelPlot.set_x_col_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the column name from which to read the x coordinates
@@ -555,6 +604,11 @@ of the plot from the pandas DataFrame in the data model</p>
 <dd><p>Sets the column name from which to read the y coordinates
 of the plot from the pandas DataFrame in the data model</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.size">
+<span class="sig-name descname"><span class="pre">size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.model.model_plot.ModelPlot.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.model.model_plot.ModelPlot.update_fig">
@@ -648,7 +702,8 @@ instance for this class</p>
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_stimuli_from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_col_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.get_stimuli_from_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of stimuli from a pandas DataFrame
 containing eye-tracking data across
-a set of participants</p>
+a set of participants (removing any
+undefined, i.e. np.nan, values)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -682,7 +737,7 @@ that holds the stimulus names</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.import_stimulus_image">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">import_stimulus_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.import_stimulus_image" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">import_stimulus_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_relative_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.import_stimulus_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a 2D array with RGB values for
 the specified stimulus in the specified
 directory containing the stimulus</p>
@@ -690,7 +745,7 @@ directory containing the stimulus</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stimulus_name</strong> (<em>str</em>) – filename of the stimulus</p></li>
-<li><p><strong>stimulus_dir</strong> (<em>str</em>) – directory containing the stimulus</p></li>
+<li><p><strong>stimulus_relative_dir</strong> (<em>str</em>) – directory containing the stimulus</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -725,14 +780,14 @@ directory containing the stimulus</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.model.model_stimulus_selection.ModelStimulusSelection.stimulus_image_exists">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">stimulus_image_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.stimulus_image_exists" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">stimulus_image_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_relative_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.model_stimulus_selection.ModelStimulusSelection.stimulus_image_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if the specified filename exists
 in the stimuli directory</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>stimulus_file_name</strong> (<em>str</em>) – filename of stimulus</p></li>
-<li><p><strong>stimulus_dir</strong> (<em>str</em>) – directory specified to contain
+<li><p><strong>stimulus_name</strong> (<em>str</em>) – filename of stimulus</p></li>
+<li><p><strong>stimulus_relative_dir</strong> (<em>str</em>) – directory specified to contain
 the stimulus images</p></li>
 </ul>
 </dd>
