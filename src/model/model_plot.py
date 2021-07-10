@@ -3,14 +3,17 @@ Contains the class ModelPlot
 """
 
 # External imports
+import base64
 import os.path
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from PIL import Image
+import plotly.graph_objects as go
 
 # Internal imports
+from PIL import Image
+
 import src.main.config as config
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
 from src.model.model_data import ModelData
@@ -49,43 +52,86 @@ class ModelPlot:
             ModelPlot()
         return ModelPlot.__instance
 
-    def set_x_col_name(self):
+    # noinspection DuplicatedCode
+    def set_x(self, x_col=None):
         """
-        Sets the column name from which to read the x coordinates
+        Extracts the x column from the model DataFrame
+        and sets self.x from which to read the x coordinates
         of the plot from the pandas DataFrame in the data model
+        :param x_col: None by default, or insert pandas DataFrame
+        directly as the x column for this model
+        :type x_col: list
         """
+        if x_col is not None:
+            self.x = x_col
+            return
+
         data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
+        df = ModelData.get_instance().df
+        x_col_name = None
 
         if data_type_selection == "Gaze Data":
-            self.x = config.X_GAZE_COL_TITLE
+            x_col_name = config.X_GAZE_COL_TITLE
         if data_type_selection == "Fixation Data":
-            self.x = config.X_FIXATION_COL_TITLE
+            x_col_name = config.X_FIXATION_COL_TITLE
 
-    def set_y_col_name(self):
+        self.x = df[x_col_name].copy(deep=True)
+
+    # noinspection DuplicatedCode
+    def set_y(self, y_col=None):
         """
-        Sets the column name from which to read the y coordinates
+        Extracts the y column from the model DataFrame
+        and sets self.y from which to read the y coordinates
         of the plot from the pandas DataFrame in the data model
+        :param y_col: None by default, or insert pandas DataFrame
+        directly as the y column for this model
+        :type y_col: list
         """
+        if y_col is not None:
+            self.y = y_col
+            return
+
         data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
+        df = ModelData.get_instance().df
+        y_col_name = None
 
         if data_type_selection == "Gaze Data":
-            self.y = config.Y_GAZE_COL_TITLE
+            y_col_name = config.Y_GAZE_COL_TITLE
         if data_type_selection == "Fixation Data":
-            self.y = config.Y_FIXATION_COL_TITLE
+            y_col_name = config.Y_FIXATION_COL_TITLE
 
-    def set_color_col_name(self):
+        self.y = df[y_col_name].copy(deep=True)
+
+    def set_color(self, color_col=None):
         """
-        Sets the column name from which to distinguish
+        Extracts the color column from the model DataFrame
+        and sets self.color from which to distinguish
         colors within the plot from the pandas DataFrame
         in the data model
+        :param color_col: None by default, or insert pandas DataFrame
+            directly as the color column for this model
+        :type color_col: list
         """
-        self.color = "ParticipantName"
+        if color_col is None:
+            df = ModelData.get_instance().df
+            color_col_name = "ParticipantName"
+            color_col = df[color_col_name].copy(deep=True)
 
-    def set_size(self):
+        self.color = pd.Categorical(color_col)
+
+    def set_size(self, size_col=None):
         """
-        Sets the sizes of the fixations
+        Extracts the size column from the model DataFrame
+        and sets self.size from which to distinguish
+        sizes within the plot from the pandas DataFrame
+        in the data model
+        :param size_col: None by default, or insert pandas DataFrame
+            directly as the size column for this model
+        :type size_col: list
         """
-        self.size = self.get_fixation_points_sizes_and_colors(ModelData.get_instance().get_df())
+        if size_col is not None:
+            self.size = size_col
+            return
 
     def update_fig(self):
         """
@@ -95,51 +141,52 @@ class ModelPlot:
         # clear df column fields
         self.x = None
         self.y = None
-        self.size = None
         self.color = None
+        self.size = None
 
-        self.set_x_col_name()
-        self.set_y_col_name()
-        self.set_color_col_name()
+        self.set_x()
+        self.set_y()
+        self.set_color()
 
         analysis_type_selection = ModelAnalysisTypeSelection.get_instance().get_selection()
         data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
 
         if analysis_type_selection == "Scatter Plot":
             if data_type_selection == "Fixation Data":
-                output_dict = self.get_fixation_points_sizes_and_colors(
+                self.set_fixation_points_sizes_and_colors(
                     df=ModelData.get_instance().get_df()
                 )
-                # noinspection PyTypeChecker
-                self.x = output_dict["x_coords"]
-                # noinspection PyTypeChecker
-                self.y = output_dict["y_coords"]
-                # noinspection PyTypeChecker
-                self.size = output_dict["point_sizes"]
-                # noinspection PyTypeChecker
-                self.color = output_dict["participants"]
             self.fig = px.scatter(
-                ModelData.get_instance().df,
                 x=self.x,
                 y=self.y,
-                size=self.size,
-                color=self.color
+                color=self.color,
+                size=self.size
             )
         if analysis_type_selection == "Line Plot":
             self.fig = px.line(
-                ModelData.get_instance().get_df(),
                 x=self.x,
                 y=self.y,
-                color="ParticipantName"
+                color=self.color
             )
         if analysis_type_selection == "Heat Map":
-            self.fig = px.density_heatmap(
-                ModelData.get_instance().get_df(),
-                x=self.x,
-                y=self.y
+            self.fig = go.Figure(
+                go.Histogram2dContour(
+                    x=self.x,
+                    y=self.y,
+                    contours=dict(coloring='heatmap',
+                                  showlines=False),
+                    line=dict(width=0),
+                    opacity=0.8
+                )
+            )
+            self.fig.update_traces(
+                visible=False,
+                selector=dict(type='contour')
             )
         # "Cluster":
-
+        print(self.fig.data)
+        print(self.fig.layout)
+        print(self.fig.layout.template)
         stimulus_file_name = ModelStimulusSelection.get_instance().get_selection()
         df = ModelData.get_instance().get_df()
 
@@ -147,26 +194,45 @@ class ModelPlot:
         # defining stimulus image extent in plot
         x_len = len(stimulus_image[0])
         y_len = len(stimulus_image)
-        x_shift = df[config.STIMULUS_X_DISPLACEMENT_COL_TITLE].iloc[0]
-        y_shift = df[config.STIMULUS_Y_DISPLACEMENT_COL_TITLE].iloc[0]
+        x_shift = \
+        df[config.STIMULUS_X_DISPLACEMENT_COL_TITLE][df[config.STIMULUS_X_DISPLACEMENT_COL_TITLE].notnull()].iloc[0]
+        y_shift = \
+        df[config.STIMULUS_Y_DISPLACEMENT_COL_TITLE][df[config.STIMULUS_Y_DISPLACEMENT_COL_TITLE].notnull()].iloc[0]
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        img_path = os.path.abspath(
-            dir_path + "/" + config.RELATIVE_STIMULUS_IMAGE_DIRECTORY + "/" + stimulus_file_name
+        img_path_str = dir_path + "/" + config.RELATIVE_STIMULUS_IMAGE_DIRECTORY + "/" + stimulus_file_name
+
+        img_bmp = Image.open(os.path.abspath(img_path_str))
+        img_bmp.save(os.path.abspath(
+            img_path_str + ".png"
+        ))
+        enc_img = base64.b64encode(
+            open(img_path_str + ".png", 'rb').read()
         )
-        img = Image.open(img_path)
         self.fig.add_layout_image(
             dict(
-                source=img,
+                source="data:image/png;base64,{}".format(enc_img.decode()),
                 xref="x",
                 yref="y",
                 x=x_shift,
-                y=y_shift,
+                y=y_shift + y_len,
                 sizex=x_len,
                 sizey=y_len,
                 sizing="stretch",
-                opacity=0.5,
-                xanchor='left',
-                yanchor='bottom')
+                opacity=1,
+                layer="below"
+            )
+        )
+        self.fig.update_xaxes(
+            showgrid=False,
+            zeroline=False,
+            range=[x_shift - (x_len * 0.10), x_shift + x_len + (x_len * 0.10)]
+        )
+        self.fig.update_yaxes(
+            showgrid=False,
+            zeroline=False,
+            range=[y_shift - (y_len * 0.10), y_shift + y_len + (y_len * 0.10)],
+            scaleanchor="x",
+            scaleratio=1
         )
 
     def get_fig(self):
@@ -178,11 +244,11 @@ class ModelPlot:
         self.update_fig()
         return self.fig
 
-    @staticmethod
-    def get_fixation_points_sizes_and_colors(df,
+    def set_fixation_points_sizes_and_colors(self,
+                                             df,
                                              max_point_size=config.MAX_FIXATION_POINT_SIZE):
         """
-        Gets the fixation point coordinates and the corresponding
+        Sets the fixation point coordinates and the corresponding
         fixation_durations of the fixations being plotted, which, in turn, are proportional to
         how long a fixation has been looked at (for a particular participant)
 
@@ -191,9 +257,6 @@ class ModelPlot:
         :type df: pd.DataFrame
         :param max_point_size: size of the longest fixation point in the plot
         :type max_point_size: int
-
-        :return: array of fixation_durations for fixation points in plot made by plotly
-        :rtype: list
         """
         fixation_x_coords = []
         fixation_y_coords = []
@@ -286,11 +349,10 @@ class ModelPlot:
                 (float(fixation_durations[i]) / float(max_fixation_duration)) * max_point_size
             )
 
-        output_dict = {"x_coords": fixation_x_coords,
-                       "y_coords": fixation_y_coords,
-                       "point_sizes": fixation_point_sizes,
-                       "participants": fixation_participant_identifiers}
-        return output_dict
+        self.set_x(fixation_x_coords)
+        self.set_y(fixation_y_coords)
+        self.set_color(fixation_participant_identifiers)
+        self.set_size(fixation_point_sizes)
 
     def clear(self):
         """
