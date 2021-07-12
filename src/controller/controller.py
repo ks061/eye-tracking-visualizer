@@ -102,9 +102,7 @@ class Controller:
         # disable/clear latter setup options
         ViewMain.get_instance().plot_button.setEnabled(False)
         ViewParticipantSelection.get_instance().disable()
-        ModelParticipantSelection.get_instance().clear()
         ViewStimulusSelection.get_instance().disable()
-        ModelStimulusSelection.get_instance().clear()
 
         # noinspection PyUnresolvedReferences
         path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(self.delegator.get_instance(),
@@ -112,6 +110,10 @@ class Controller:
         ModelDirectorySelection.get_instance().set_path(
             path=path
         )
+
+        ModelParticipantSelection.get_instance().import_selection_participants()
+        ModelStimulusSelection.get_instance().clear()
+        ViewStimulusSelection.get_instance().clear()
         ControllerParticipantSelection.update_view_selection_participants_from_model()
 
     @staticmethod
@@ -142,6 +144,9 @@ class Controller:
                 " to refresh the plot area"
             )
         ViewMain.get_instance().plot_button.setEnabled(True)
+        ModelStimulusSelection.get_instance().set_selection(
+            selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
+        )
 
     @staticmethod
     def process_stimulus_selection_menu_change():
@@ -151,10 +156,8 @@ class Controller:
         menu, updating the corresponding internal model
         accordingly
         """
-        ModelData.get_instance().set_df_multi_selected_participants_selected_stimulus(
-            data_directory_path=ModelDirectorySelection.get_instance().get_path(),
-            selected_participants=ModelParticipantSelection.get_instance().get_selected_participants(),
-            selected_stimulus=ModelStimulusSelection.get_instance().get_selection()
+        ModelStimulusSelection.get_instance().set_selection(
+            selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
         )
         ModelStimulusSelection.get_instance().update_stimuli_names(
             data=ModelData.get_instance().get_df()
@@ -200,6 +203,11 @@ class Controller:
         )
         ModelAnalysisTypeSelection.get_instance().set_selection(
             selection=ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
+        )
+        ModelData.get_instance().set_df_multi_selected_participants_selected_stimulus(
+            data_directory_path=ModelDirectorySelection.get_instance().get_path(),
+            selected_participants=ModelParticipantSelection.get_instance().get_selected_participants(),
+            selected_stimulus=ModelStimulusSelection.get_instance().get_selection()
         )
         ModelPlot.get_instance().update_fig()
         ViewPlot.get_instance().plot()

@@ -42,6 +42,7 @@ class ControllerParticipantSelection:
         participant selection model
         """
         ViewParticipantSelection.get_instance().disable()
+        ViewParticipantSelection.get_instance().clear()
         ViewParticipantSelection.get_instance().set_selection_check_box_list(
             selection_participant_list=ModelParticipantSelection.get_instance().get_selection_participants()
         )

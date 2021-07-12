@@ -162,7 +162,7 @@ class ModelPlot:
         stimulus_file_name = ModelStimulusSelection.get_instance().get_selection()
         df = ModelData.get_instance().get_df()
 
-        self.extract_and_set_stimulus_info(stimulus_file_name, df)
+        self.extract_and_set_stimulus_info(stimulus_file_name=stimulus_file_name, df=df)
 
         if data_type_selection == "Fixation Data":
             self.set_fixation_points_sizes_and_colors(
@@ -303,10 +303,10 @@ class ModelPlot:
         is_curr_y_coord_nan = False
 
         # columns being analyzed
-        x_coord_fixation_col = pd.Series(df[config.X_FIXATION_COL_TITLE])
-        y_coord_fixation_col = pd.Series(df[config.Y_FIXATION_COL_TITLE])
-        timestamp_col = pd.Series(df[config.TIMESTAMP_COL_TITLE])
-        participant_identifier_col = pd.Series(df['participant_identifier'])
+        x_coord_fixation_col = df[config.X_FIXATION_COL_TITLE].values.tolist()
+        y_coord_fixation_col = df[config.Y_FIXATION_COL_TITLE].values.tolist()
+        timestamp_col = df[config.TIMESTAMP_COL_TITLE].values.tolist()
+        participant_identifier_col = df['participant_identifier'].values.tolist()
 
         for index in range(len(df.index)):
             # assessing if fixation is currently being iterated through
