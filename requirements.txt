@@ -1,9 +1,8 @@
-PyQt5
-sentry_sdk
-pandas
-seaborn
-matplotlib
-numpy
-scipy
-PIL
-plotly
+pandas~=1.2.4
+seaborn~=0.11.1
+matplotlib~=3.3.4
+numpy~=1.20.2
+scipy~=1.6.2
+plotly~=4.14.3
+pillow~=8.0.0
+scikit-learn~=0.24.2

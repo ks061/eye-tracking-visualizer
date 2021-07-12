@@ -14,6 +14,9 @@ import plotly.graph_objects as go
 # Internal imports
 from PIL import Image
 
+from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler
+
 import src.main.config as config
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
 from src.model.model_data import ModelData
@@ -32,6 +35,12 @@ class ModelPlot:
     y = None
     color = None
     size = None
+
+    stimulus_image = None
+    x_len = None
+    y_len = None
+    x_shift = None
+    y_shift = None
 
     def __init__(self):
         if ModelPlot.__instance is not None:
@@ -150,12 +159,17 @@ class ModelPlot:
 
         analysis_type_selection = ModelAnalysisTypeSelection.get_instance().get_selection()
         data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
+        stimulus_file_name = ModelStimulusSelection.get_instance().get_selection()
+        df = ModelData.get_instance().get_df()
+
+        self.extract_and_set_stimulus_info(stimulus_file_name, df)
+
+        if data_type_selection == "Fixation Data":
+            self.set_fixation_points_sizes_and_colors(
+                df=ModelData.get_instance().get_df()
+            )
 
         if analysis_type_selection == "Scatter Plot":
-            if data_type_selection == "Fixation Data":
-                self.set_fixation_points_sizes_and_colors(
-                    df=ModelData.get_instance().get_df()
-                )
             self.fig = px.scatter(
                 x=self.x,
                 y=self.y,
@@ -184,20 +198,14 @@ class ModelPlot:
                 selector=dict(type='contour')
             )
         # "Cluster":
-        print(self.fig.data)
-        print(self.fig.layout)
-        print(self.fig.layout.template)
-        stimulus_file_name = ModelStimulusSelection.get_instance().get_selection()
-        df = ModelData.get_instance().get_df()
+        if analysis_type_selection == "Cluster":
+            self.perform_clustering()
+            self.fig = px.scatter(
+                x=self.x,
+                y=self.y,
+                color=self.color
+            )
 
-        stimulus_image = ModelStimulusSelection.get_instance().import_stimulus_image(stimulus_file_name)
-        # defining stimulus image extent in plot
-        x_len = len(stimulus_image[0])
-        y_len = len(stimulus_image)
-        x_shift = \
-        df[config.STIMULUS_X_DISPLACEMENT_COL_TITLE][df[config.STIMULUS_X_DISPLACEMENT_COL_TITLE].notnull()].iloc[0]
-        y_shift = \
-        df[config.STIMULUS_Y_DISPLACEMENT_COL_TITLE][df[config.STIMULUS_Y_DISPLACEMENT_COL_TITLE].notnull()].iloc[0]
         dir_path = os.path.dirname(os.path.realpath(__file__))
         img_path_str = dir_path + "/" + config.RELATIVE_STIMULUS_IMAGE_DIRECTORY + "/" + stimulus_file_name
 
@@ -208,15 +216,16 @@ class ModelPlot:
         enc_img = base64.b64encode(
             open(img_path_str + ".png", 'rb').read()
         )
+
         self.fig.add_layout_image(
             dict(
                 source="data:image/png;base64,{}".format(enc_img.decode()),
                 xref="x",
                 yref="y",
-                x=x_shift,
-                y=y_shift + y_len,
-                sizex=x_len,
-                sizey=y_len,
+                x=self.x_shift,
+                y=self.y_shift + self.y_len,
+                sizex=self.x_len,
+                sizey=self.y_len,
                 sizing="stretch",
                 opacity=1,
                 layer="below"
@@ -225,12 +234,14 @@ class ModelPlot:
         self.fig.update_xaxes(
             showgrid=False,
             zeroline=False,
-            range=[x_shift - (x_len * 0.10), x_shift + x_len + (x_len * 0.10)]
+            range=[self.x_shift - (self.x_len * 0.10),
+                   self.x_shift + self.x_len + (self.x_len * 0.10)]
         )
         self.fig.update_yaxes(
             showgrid=False,
             zeroline=False,
-            range=[y_shift - (y_len * 0.10), y_shift + y_len + (y_len * 0.10)],
+            range=[self.y_shift - (self.y_len * 0.10),
+                   self.y_shift + self.y_len + (self.y_len * 0.10)],
             scaleanchor="x",
             scaleratio=1
         )
@@ -349,13 +360,87 @@ class ModelPlot:
                 (float(fixation_durations[i]) / float(max_fixation_duration)) * max_point_size
             )
 
-        self.set_x(fixation_x_coords)
-        self.set_y(fixation_y_coords)
-        self.set_color(fixation_participant_identifiers)
-        self.set_size(fixation_point_sizes)
+        xy = pd.concat(
+            [
+                pd.DataFrame(fixation_x_coords),
+                pd.DataFrame(fixation_y_coords)
+            ],
+            axis=1
+        )
+        xy = xy.dropna()
+
+        fixation_x_coords = xy.iloc[:, 0].tolist()
+        fixation_y_coords = xy.iloc[:, 1].tolist()
+
+        for i in range(len(fixation_x_coords)):
+            fixation_x_coords[i] += self.x_shift
+
+        for j in range(len(fixation_y_coords)):
+            fixation_y_coords[j] += self.y_shift
+
+        # noinspection PyTypeChecker
+        self.set_x(pd.DataFrame(fixation_x_coords))
+        # noinspection PyTypeChecker
+        self.set_y(pd.DataFrame(fixation_y_coords))
+        # noinspection PyTypeChecker
+        self.set_color(pd.DataFrame(pd.Categorical(fixation_participant_identifiers)))
+        # noinspection PyTypeChecker
+        self.set_size(pd.DataFrame(fixation_point_sizes))
+
+    def perform_clustering(self, eps=0.1, min_samples=5):
+        """
+        Performs clustering on the x and y attributes,
+        removing any x, y pairs that have either value
+        missing from their respective attributes, and
+        sets the color of the points based upon
+        the cluster in which DBSCAN assigns them to
+        :param eps: "The maximum distance between two samples for one to be considered as in the neighborhood of the
+            other. This is not a maximum bound on the distances of points within a cluster. This is the most important
+            DBSCAN parameter to choose appropriately for your data set and distance function." See
+            https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html for more information.
+        :type eps: float
+        :param min_samples: "The number of samples (or total weight) in a neighborhood for a point to be considered as
+         a core point. This includes the point itself." See
+         https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html for more information.
+        :type min_samples: int
+        """
+
+        xy = pd.concat([self.x, self.y], axis=1)
+        xy = xy.dropna()
+
+        ss = StandardScaler().fit_transform(xy)
+        db = DBSCAN(eps=eps, min_samples=min_samples).fit(ss)
+
+        # pd.set_option("display.max_rows", None, "display.max_columns", None)
+
+        self.set_x(xy.iloc[:, 0].tolist())
+        self.set_y(xy.iloc[:, 1].tolist())
+        self.set_color(db.labels_)
 
     def clear(self):
         """
         Clears the underlying figure stored in the model
         """
         self.fig = None
+
+    def extract_and_set_stimulus_info(self, stimulus_file_name, df):
+        """
+        Saves the information about the stimulus image, including the image itself,
+        the dimensions of it, and the x and y shifts of the image on the plot
+        :param stimulus_file_name: filename of the stimulus
+        :type stimulus_file_name: str
+        :param df: data
+        :type df: pd.DataFrame
+        """
+        self.stimulus_image = ModelStimulusSelection.get_instance().import_stimulus_image(stimulus_file_name)
+        # defining stimulus image extent in plot
+        self.x_len = len(self.stimulus_image[0])
+        self.y_len = len(self.stimulus_image)
+        self.x_shift = \
+            df[config.STIMULUS_X_DISPLACEMENT_COL_TITLE][df[config.STIMULUS_X_DISPLACEMENT_COL_TITLE].notnull()].iloc[0]
+        self.y_shift = \
+            df[config.STIMULUS_Y_DISPLACEMENT_COL_TITLE][df[config.STIMULUS_Y_DISPLACEMENT_COL_TITLE].notnull()].iloc[0]
+        if self.x_shift is None:
+            self.x_shift = 0
+        if self.y_shift is None:
+            self.y_shift = 0
