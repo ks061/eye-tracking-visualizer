@@ -430,13 +430,13 @@ class ModelPlot:
                              direction='decreasing')
             eps = kl.knee
             print(kl.knee)
-            plt.xlabel('# clusters k')
-            plt.ylabel('Sum of squared distances')
-            plt.plot(range(1, len(dists) + 1),
-                     dists,
-                     'bx-')
-            plt.vlines(kl.knee, plt.ylim()[0], plt.ylim()[1], linestyles='dashed')
-            plt.show()
+            # plt.xlabel('# clusters k')
+            # plt.ylabel('Sum of squared distances')
+            # plt.plot(range(1, len(dists) + 1),
+            #          dists,
+            #          'bx-')
+            # plt.vlines(kl.knee, plt.ylim()[0], plt.ylim()[1], linestyles='dashed')
+            # plt.show()
 
         ss = StandardScaler().fit_transform(xy)
         db = DBSCAN(eps=eps, min_samples=min_samples).fit(ss)

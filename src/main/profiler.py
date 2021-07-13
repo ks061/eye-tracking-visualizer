@@ -11,7 +11,7 @@ def run():
     Runs the program
     """
     app = QApplication(sys.argv)
-    delegator = Delegator()
+    Delegator()
     app.exec_()
 
 

@@ -73,7 +73,7 @@ class ModelData:
         # additional variables being used
         selected_participant_file_path = str(data_directory_path + "/" + selected_participant)
 
-        return pd.read_csv(selected_participant_file_path, sep='\t')
+        return pd.read_csv(selected_participant_file_path, sep='\t').reset_index(inplace=False)
 
     @staticmethod
     def remove_incomplete_observations(df, col_names):
@@ -115,34 +115,28 @@ class ModelData:
         """
         # additional variable used
         # noinspection PyUnusedLocal
-        df_one_participant_no_stimulus = None
-        df_multi_participants_all_stimulus = None
+        df_one_participant_all_stimuli = None
+        dfs_one_participant_all_stimuli = []
+        # noinspection PyUnusedLocal
+        df_multi_participants_all_stimuli = None
 
         # obtain data frame for each participant
         for i in range(len(selected_participants)):
             selected_participant = selected_participants[i]
-            df_one_participant_no_stimulus = self.get_df_one_participant_all_stimuli(
+            df_one_participant_all_stimuli = self.get_df_one_participant_all_stimuli(
                 data_directory_path=data_directory_path,
                 selected_participant=selected_participant
             )
-
-            df_one_participant_no_stimulus = df_one_participant_no_stimulus.assign(
+            df_one_participant_all_stimuli = df_one_participant_all_stimuli.assign(
                 participant_identifier=selected_participant
             )
-            # stack data frame from each participant
-            if i == 0:
-                df_multi_participants_all_stimulus = df_one_participant_no_stimulus
-            else:
+            dfs_one_participant_all_stimuli.append(df_one_participant_all_stimuli)
 
-                df_multi_participants_all_stimulus = pd.concat([
-                    df_multi_participants_all_stimulus,
-                    df_one_participant_no_stimulus]
-                )
+        df_multi_participants_all_stimuli = pd.concat(dfs_one_participant_all_stimuli)
 
-        df_multi_participants_all_stimulus.reset_index(inplace=True)
-        return df_multi_participants_all_stimulus
+        return df_multi_participants_all_stimuli
 
-    def set_df_multi_selected_participants_no_stimulus(self,
+    def set_df_multi_selected_participants_all_stimuli(self,
                                                        data_directory_path,
                                                        selected_participants):
         """

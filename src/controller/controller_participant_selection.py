@@ -80,7 +80,7 @@ class ControllerParticipantSelection:
 
         if len(ViewParticipantSelection.get_instance().selected_check_box_list) != 0:
             ViewError.get_instance().message.setText('')
-            ModelData.get_instance().set_df_multi_selected_participants_no_stimulus(
+            ModelData.get_instance().set_df_multi_selected_participants_all_stimuli(
                 data_directory_path=ModelDirectorySelection.get_instance().get_path(),
                 selected_participants=ModelParticipantSelection.get_instance().get_selected_participants()
             )
