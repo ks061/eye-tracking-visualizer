@@ -116,10 +116,13 @@ class Controller:
         ViewStimulusSelection.get_instance().clear()
         ControllerParticipantSelection.update_view_selection_participants_from_model()
 
-    @staticmethod
-    def process_participant_selection_button_click():
+        # enable
+        ViewMain.get_instance().plot_button.setEnabled(True)
+
+    def process_participant_selection_button_click(self):
         """
         Updates stimulus selection based on participant selection
+        :param self:
         """
         # disable/clear latter setup options
         ViewMain.get_instance().plot_button.setEnabled(False)
@@ -138,15 +141,16 @@ class Controller:
                 data=ModelData.get_instance().get_df()
             )
             ViewStimulusSelection.get_instance().update()
+            self.process_stimulus_selection_menu_change()
         else:
             ViewError.get_instance().message.setText(
                 "No participants selected. Please select at least one participant" +
                 " to refresh the plot area"
             )
+
+        # enable
         ViewMain.get_instance().plot_button.setEnabled(True)
-        ModelStimulusSelection.get_instance().set_selection(
-            selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
-        )
+
 
     @staticmethod
     def process_stimulus_selection_menu_change():
@@ -156,12 +160,16 @@ class Controller:
         menu, updating the corresponding internal model
         accordingly
         """
+        ViewMain.get_instance().plot_button.setEnabled(False)
         ModelStimulusSelection.get_instance().set_selection(
             selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
         )
-        ModelStimulusSelection.get_instance().update_stimuli_names(
-            data=ModelData.get_instance().get_df()
+        ModelData.get_instance().set_df_multi_selected_participants_selected_stimulus(
+            data_directory_path=ModelDirectorySelection.get_instance().get_path(),
+            selected_participants=ModelParticipantSelection.get_instance().get_selected_participants(),
+            selected_stimulus=ModelStimulusSelection.get_instance().get_selection()
         )
+        ViewMain.get_instance().plot_button.setEnabled(True)
 
     @staticmethod
     def process_data_type_selection_menu_change():
@@ -171,9 +179,11 @@ class Controller:
         menu, updating the corresponding internal model
         accordingly
         """
+        ViewMain.get_instance().plot_button.setEnabled(False)
         ModelDataTypeSelection.get_instance().set_selection(
             selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
         )
+        ViewMain.get_instance().plot_button.setEnabled(True)
 
     @staticmethod
     def process_analysis_type_selection_menu_change():
@@ -183,9 +193,11 @@ class Controller:
         menu, updating the corresponding internal model
         accordingly
         """
+        ViewMain.get_instance().plot_button.setEnabled(False)
         ModelAnalysisTypeSelection.get_instance().set_selection(
             selection=ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
         )
+        ViewMain.get_instance().plot_button.setEnabled(True)
 
     @staticmethod
     def process_plot_button_click():
@@ -195,6 +207,7 @@ class Controller:
         user selections and then displaying the updated
         plot
         """
+        ViewMain.get_instance().plot_button.setEnabled(False)
         ModelStimulusSelection.get_instance().set_selection(
             selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
         )
@@ -204,10 +217,6 @@ class Controller:
         ModelAnalysisTypeSelection.get_instance().set_selection(
             selection=ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
         )
-        ModelData.get_instance().set_df_multi_selected_participants_selected_stimulus(
-            data_directory_path=ModelDirectorySelection.get_instance().get_path(),
-            selected_participants=ModelParticipantSelection.get_instance().get_selected_participants(),
-            selected_stimulus=ModelStimulusSelection.get_instance().get_selection()
-        )
         ModelPlot.get_instance().update_fig()
         ViewPlot.get_instance().plot()
+        ViewMain.get_instance().plot_button.setEnabled(True)

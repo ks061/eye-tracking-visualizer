@@ -133,6 +133,7 @@ class ModelData:
             if i == 0:
                 df_multi_participants_all_stimulus = df_one_participant_no_stimulus
             else:
+
                 df_multi_participants_all_stimulus = pd.concat([
                     df_multi_participants_all_stimulus,
                     df_one_participant_no_stimulus]
