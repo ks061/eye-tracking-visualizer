@@ -13,8 +13,11 @@ import plotly.graph_objects as go
 
 # Internal imports
 from PIL import Image
+from kneed import KneeLocator
+from matplotlib import pyplot as plt
 
 from sklearn.cluster import DBSCAN
+from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import StandardScaler
 
 import src.main.config as config
@@ -387,7 +390,7 @@ class ModelPlot:
         # noinspection PyTypeChecker
         self.set_size(pd.DataFrame(fixation_point_sizes))
 
-    def perform_clustering(self, eps=0.1, min_samples=5):
+    def perform_clustering(self, eps=None, min_samples=5):
         """
         Performs clustering on the x and y attributes,
         removing any x, y pairs that have either value
@@ -408,10 +411,35 @@ class ModelPlot:
         xy = pd.concat([self.x, self.y], axis=1)
         xy = xy.dropna()
 
+        if eps is None:
+            # Adopted and inspired by
+            # https://towardsdatascience.com/
+            # machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc
+            nn = NearestNeighbors(n_neighbors=2)
+            nn_fitted = nn.fit(xy)
+            dists, indices = nn_fitted.kneighbors(xy)
+            dists = np.sort(dists, axis=0)
+            dists = dists[:, 1]
+
+            # Adopted and inspired by
+            # https://stackoverflow.com/questions/51762514/
+            # find-the-elbow-point-on-an-optimization-curve-with-python
+            kl = KneeLocator(range(1, len(dists) + 1),
+                             dists,
+                             curve='convex',
+                             direction='decreasing')
+            eps = kl.knee
+            # print(kl.knee)
+            # plt.xlabel('# clusters k')
+            # plt.ylabel('Sum of squared distances')
+            # plt.plot(range(1, len(dists) + 1),
+            #          dists,
+            #          'bx-')
+            # plt.vlines(kl.knee, plt.ylim()[0], plt.ylim()[1], linestyles='dashed')
+            # plt.show()
+
         ss = StandardScaler().fit_transform(xy)
         db = DBSCAN(eps=eps, min_samples=min_samples).fit(ss)
-
-        # pd.set_option("display.max_rows", None, "display.max_columns", None)
 
         self.set_x(xy.iloc[:, 0].tolist())
         self.set_y(xy.iloc[:, 1].tolist())
