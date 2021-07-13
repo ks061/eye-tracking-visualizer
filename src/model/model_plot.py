@@ -415,7 +415,7 @@ class ModelPlot:
             # Adopted and inspired by
             # https://towardsdatascience.com/
             # machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc
-            nn = NearestNeighbors(n_neighbors=2)
+            nn = NearestNeighbors(n_neighbors=5)
             nn_fitted = nn.fit(xy)
             dists, indices = nn_fitted.kneighbors(xy)
             dists = np.sort(dists, axis=0)
@@ -429,14 +429,14 @@ class ModelPlot:
                              curve='convex',
                              direction='decreasing')
             eps = kl.knee
-            # print(kl.knee)
-            # plt.xlabel('# clusters k')
-            # plt.ylabel('Sum of squared distances')
-            # plt.plot(range(1, len(dists) + 1),
-            #          dists,
-            #          'bx-')
-            # plt.vlines(kl.knee, plt.ylim()[0], plt.ylim()[1], linestyles='dashed')
-            # plt.show()
+            print(kl.knee)
+            plt.xlabel('# clusters k')
+            plt.ylabel('Sum of squared distances')
+            plt.plot(range(1, len(dists) + 1),
+                     dists,
+                     'bx-')
+            plt.vlines(kl.knee, plt.ylim()[0], plt.ylim()[1], linestyles='dashed')
+            plt.show()
 
         ss = StandardScaler().fit_transform(xy)
         db = DBSCAN(eps=eps, min_samples=min_samples).fit(ss)

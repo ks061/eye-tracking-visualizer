@@ -2,21 +2,18 @@
 Contains the class Controller
 """
 
-# External imports
-import PyQt5
-# Internal imports
+from src.controller.controller_analysis_type_selection import ControllerAnalysisTypeSelection
+from src.controller.controller_data_type_selection import ControllerDataTypeSelection
+from src.controller.controller_directory_selection import ControllerDirectorySelection
 from src.controller.controller_participant_selection import ControllerParticipantSelection
+from src.controller.controller_stimulus_selection import ControllerStimulusSelection
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
-from src.model.model_data import ModelData
 from src.model.model_data_type_selection import ModelDataTypeSelection
-from src.model.model_directory_selection import ModelDirectorySelection
-from src.model.model_participant_selection import ModelParticipantSelection
 from src.model.model_plot import ModelPlot
 from src.model.model_stimulus_selection import ModelStimulusSelection
 from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection
 from src.view.view_data_type_selection import ViewDataTypeSelection
 from src.view.view_directory_selection import ViewDirectorySelection
-from src.view.view_error import ViewError
 from src.view.view_main import ViewMain
 from src.view.view_participant_selection import ViewParticipantSelection
 from src.view.view_plot import ViewPlot
@@ -32,15 +29,11 @@ class Controller:
 
     delegator = None
 
-    # Sub Controllers
-    controller_participant_selection = None
-
     def __init__(self, delegator):
         if Controller.__instance is not None:
             raise Exception("Controller should be treated as a singleton class.")
         else:
             Controller.__instance = self
-        ViewMain.get_instance().plot_button.setEnabled(False)
         self.delegator = delegator
         self._connect_gui_components_to_functions()
         self._setup_static_selection_menus()
@@ -63,7 +56,7 @@ class Controller:
 
     def _connect_gui_components_to_functions(self):
         ViewDirectorySelection.get_instance().button.clicked.connect(
-            lambda: self.process_directory_selection_button_click()
+            lambda: ControllerDirectorySelection.get_instance().process_directory_selection_button_click(self.delegator)
         )
         ViewParticipantSelection.get_instance().select_all_button.clicked.connect(
             lambda: ViewParticipantSelection.get_instance().process_select_all_button_click()
@@ -72,16 +65,16 @@ class Controller:
             lambda: ViewParticipantSelection.get_instance().process_deselect_all_button_click()
         )
         ViewParticipantSelection.get_instance().selection_button.clicked.connect(
-            lambda: self.process_participant_selection_button_click()
+            lambda: ControllerParticipantSelection.get_instance().process_participant_selection_button_click()
         )
         ViewStimulusSelection.get_instance().menu.activated.connect(
-            lambda: self.process_stimulus_selection_menu_change()
+            lambda: ControllerStimulusSelection.get_instance().process_stimulus_selection_menu_change()
         )
         ViewDataTypeSelection.get_instance().menu.activated.connect(
-            lambda: self.process_data_type_selection_menu_change()
+            lambda: ControllerDataTypeSelection.get_instance().process_data_type_selection_menu_change()
         )
         ViewAnalysisTypeSelection.get_instance().menu.activated.connect(
-            lambda: self.process_analysis_type_selection_menu_change()
+            lambda: ControllerAnalysisTypeSelection.get_instance().process_analysis_type_selection_menu_change()
         )
         ViewMain.get_instance().plot_button.clicked.connect(
             lambda: self.process_plot_button_click()
@@ -91,113 +84,6 @@ class Controller:
     def _setup_static_selection_menus():
         ViewDataTypeSelection.get_instance().setup()
         ViewAnalysisTypeSelection.get_instance().setup()
-
-    def process_directory_selection_button_click(self):
-        """
-        Processes when user clicks directory button
-
-        Refreshes participant selection menu
-        Disables stimulus selection menu and plot button
-        """
-        # disable/clear latter setup options
-        ViewMain.get_instance().plot_button.setEnabled(False)
-        ViewParticipantSelection.get_instance().disable()
-        ViewStimulusSelection.get_instance().disable()
-
-        # noinspection PyUnresolvedReferences
-        path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(self.delegator.get_instance(),
-                                                                    "Select Directory"))
-        ModelDirectorySelection.get_instance().set_path(
-            path=path
-        )
-
-        ModelParticipantSelection.get_instance().import_selection_participants()
-        ModelStimulusSelection.get_instance().clear()
-        ViewStimulusSelection.get_instance().clear()
-        ControllerParticipantSelection.update_view_selection_participants_from_model()
-
-        # enable
-        ViewMain.get_instance().plot_button.setEnabled(True)
-
-    def process_participant_selection_button_click(self):
-        """
-        Updates stimulus selection based on participant selection
-        :param self:
-        """
-        # disable/clear latter setup options
-        ViewMain.get_instance().plot_button.setEnabled(False)
-        ViewStimulusSelection.get_instance().disable()
-        ModelStimulusSelection.get_instance().clear()
-
-        ControllerParticipantSelection.get_instance().update_model_selected_participants_from_view()
-
-        if len(ViewParticipantSelection.get_instance().selected_check_box_list) != 0:
-            ViewError.get_instance().message.setText('')
-            ModelData.get_instance().set_df_multi_selected_participants_no_stimulus(
-                data_directory_path=ModelDirectorySelection.get_instance().get_path(),
-                selected_participants=ModelParticipantSelection.get_instance().get_selected_participants()
-            )
-            ModelStimulusSelection.get_instance().update_stimuli_names(
-                data=ModelData.get_instance().get_df()
-            )
-            ViewStimulusSelection.get_instance().update()
-            self.process_stimulus_selection_menu_change()
-        else:
-            ViewError.get_instance().message.setText(
-                "No participants selected. Please select at least one participant" +
-                " to refresh the plot area"
-            )
-
-        # enable
-        ViewMain.get_instance().plot_button.setEnabled(True)
-
-
-    @staticmethod
-    def process_stimulus_selection_menu_change():
-        """
-        Processes when the user makes a change in their
-        selection within the stimulus selection
-        menu, updating the corresponding internal model
-        accordingly
-        """
-        ViewMain.get_instance().plot_button.setEnabled(False)
-        ModelStimulusSelection.get_instance().set_selection(
-            selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
-        )
-        ModelData.get_instance().set_df_multi_selected_participants_selected_stimulus(
-            data_directory_path=ModelDirectorySelection.get_instance().get_path(),
-            selected_participants=ModelParticipantSelection.get_instance().get_selected_participants(),
-            selected_stimulus=ModelStimulusSelection.get_instance().get_selection()
-        )
-        ViewMain.get_instance().plot_button.setEnabled(True)
-
-    @staticmethod
-    def process_data_type_selection_menu_change():
-        """
-        Processes when the user makes a change in their
-        selection within the data type selection
-        menu, updating the corresponding internal model
-        accordingly
-        """
-        ViewMain.get_instance().plot_button.setEnabled(False)
-        ModelDataTypeSelection.get_instance().set_selection(
-            selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
-        )
-        ViewMain.get_instance().plot_button.setEnabled(True)
-
-    @staticmethod
-    def process_analysis_type_selection_menu_change():
-        """
-        Processes when the user makes a change in their
-        selection within the analysis type selection
-        menu, updating the corresponding internal model
-        accordingly
-        """
-        ViewMain.get_instance().plot_button.setEnabled(False)
-        ModelAnalysisTypeSelection.get_instance().set_selection(
-            selection=ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
-        )
-        ViewMain.get_instance().plot_button.setEnabled(True)
 
     @staticmethod
     def process_plot_button_click():

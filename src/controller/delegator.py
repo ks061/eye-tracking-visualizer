@@ -2,10 +2,9 @@
 Contains the class Delegator
 """
 
-# External imports
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow
-# Internal imports
+
 from src.controller.controller import Controller
 from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection
 from src.view.view_data_type_selection import ViewDataTypeSelection

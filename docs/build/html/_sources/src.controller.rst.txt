@@ -28,10 +28,10 @@ src.controller.controller\_participant\_selection module
    :undoc-members:
    :show-inheritance:
 
-src.controller.delegator module
+src.controller.self module
 -------------------------------
 
-.. automodule:: src.controller.delegator
+.. automodule:: src.controller.self
    :members:
    :undoc-members:
    :show-inheritance:
