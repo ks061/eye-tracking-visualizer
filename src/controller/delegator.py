@@ -71,6 +71,8 @@ class Delegator(QMainWindow):
 
     # ViewPlot components
     plot_placeholder = None
+    min_samples_label = None
+    min_samples_slider = None
 
     def __init__(self):
         super(Delegator, self).__init__()
@@ -168,5 +170,7 @@ class Delegator(QMainWindow):
         )
         # Encapsulating the plot to be displayed in the UI
         ViewPlot(
-            placeholder=self.plot_placeholder
+            placeholder=self.plot_placeholder,
+            min_samples_label=self.min_samples_label,
+            min_samples_slider=self.min_samples_slider
         )

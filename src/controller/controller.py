@@ -79,6 +79,9 @@ class Controller:
         ViewMain.get_instance().plot_button.clicked.connect(
             lambda: self.process_plot_button_click()
         )
+        ViewPlot.get_instance().min_samples_slider.valueChanged.connect(
+            lambda: self.process_plot_button_click()
+        )
 
     @staticmethod
     def _setup_static_selection_menus():
@@ -103,6 +106,10 @@ class Controller:
         ModelAnalysisTypeSelection.get_instance().set_selection(
             selection=ViewAnalysisTypeSelection.get_instance().get_current_menu_selection()
         )
-        ModelPlot.get_instance().update_fig()
-        ViewPlot.get_instance().plot()
+        ModelPlot.get_instance().update_fig(
+            min_samples=ViewPlot.get_instance().min_samples_slider.value()
+        )
+        ViewPlot.get_instance().plot(
+            min_samples=ViewPlot.get_instance().min_samples_slider.value()
+        )
         ViewMain.get_instance().plot_button.setEnabled(True)

@@ -12,9 +12,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 # Internal imports
 from PIL import Image
-from kneed import KneeLocator
 from sklearn.cluster import OPTICS
-from sklearn.neighbors import NearestNeighbors
 
 import src.main.config as config
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
@@ -141,10 +139,11 @@ class ModelPlot:
             self.size = size_col
             return
 
-    def update_fig(self):
+    def update_fig(self, min_samples):
         """
         Updates the underlying figure based upon
         user's selections
+        :param min_samples:
         """
         # clear df column fields
         self.x = None
@@ -198,7 +197,7 @@ class ModelPlot:
             )
         # "Cluster":
         if analysis_type_selection == "Cluster":
-            self.perform_clustering()
+            self.perform_clustering(min_samples)
             self.fig = px.scatter(
                 x=self.x,
                 y=self.y,
@@ -245,13 +244,13 @@ class ModelPlot:
             scaleratio=1
         )
 
-    def get_fig(self):
+    def get_fig(self, min_samples):
         """
         Returns the underlying figure
         :return: underlying figure
         :rtype: plotly.graph_objects.Figure
         """
-        self.update_fig()
+        self.update_fig(min_samples)
         return self.fig
 
     def set_fixation_points_sizes_and_colors(self,
@@ -386,55 +385,20 @@ class ModelPlot:
         # noinspection PyTypeChecker
         self.set_size(pd.DataFrame(fixation_point_sizes))
 
-    def perform_clustering(self, eps=None, min_samples=5):
+    def perform_clustering(self, min_samples):
         """
         Performs clustering on the x and y attributes,
         removing any x, y pairs that have either value
         missing from their respective attributes, and
         sets the color of the points based upon
-        the cluster in which DBSCAN assigns them to
-        :param eps: "The maximum distance between two samples for one to be considered as in the neighborhood of the
-            other. This is not a maximum bound on the distances of points within a cluster. This is the most important
-            DBSCAN parameter to choose appropriately for your data set and distance function." See
-            https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html for more information.
-        :type eps: float
-        :param min_samples: "The number of samples (or total weight) in a neighborhood for a point to be considered as
-         a core point. This includes the point itself." See
-         https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html for more information.
-        :type min_samples: int
+        the cluster in which OPTICS assigns them to
+        :param min_samples:
         """
 
         xy = pd.concat([self.x, self.y], axis=1)
         xy = xy.dropna()
 
-        if eps is None:
-            # Adopted and inspired by
-            # https://towardsdatascience.com/
-            # machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc
-            nn = NearestNeighbors(n_neighbors=2)
-            nn_fitted = nn.fit(xy)
-            dists, indices = nn_fitted.kneighbors(xy)
-            dists = np.sort(dists, axis=0)
-            dists = dists[:, 1]
-
-            # Adopted and inspired by
-            # https://stackoverflow.com/questions/51762514/
-            # find-the-elbow-point-on-an-optimization-curve-with-python
-            kl = KneeLocator(range(1, len(dists) + 1),
-                             dists,
-                             curve='convex',
-                             direction='decreasing')
-            eps = kl.knee
-            print(kl.knee)
-            # plt.xlabel('# clusters k')
-            # plt.ylabel('Sum of squared distances')
-            # plt.plot(range(1, len(dists) + 1),
-            #          dists,
-            #          'bx-')
-            # plt.vlines(kl.knee, plt.ylim()[0], plt.ylim()[1], linestyles='dashed')
-            # plt.show()
-
-        # labels = DBSCAN(eps=eps, min_samples=min_samples).fit(xy).labels_
+        print(min_samples)
         labels = OPTICS(min_samples=min_samples, n_jobs=-1).fit(xy).labels_
 
         self.set_x(xy.iloc[:, 0].tolist())

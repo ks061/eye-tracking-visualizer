@@ -29,7 +29,7 @@
       <x>10</x>
       <y>10</y>
       <width>1262</width>
-      <height>753</height>
+      <height>754</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="plotting_row_hbox">
@@ -477,16 +477,40 @@
          <property name="minimumSize">
           <size>
            <width>900</width>
-           <height>0</height>
+           <height>700</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>900</width>
-           <height>16777215</height>
+           <height>700</height>
           </size>
          </property>
         </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="min_samples_label">
+           <property name="maximumSize">
+            <size>
+             <width>75</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;min_samples &lt;br/&gt;per cluster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="min_samples_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
