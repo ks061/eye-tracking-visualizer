@@ -10,15 +10,11 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-
 # Internal imports
 from PIL import Image
 from kneed import KneeLocator
-from matplotlib import pyplot as plt
-
-from sklearn.cluster import DBSCAN
+from sklearn.cluster import OPTICS
 from sklearn.neighbors import NearestNeighbors
-from sklearn.preprocessing import StandardScaler
 
 import src.main.config as config
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
@@ -415,7 +411,7 @@ class ModelPlot:
             # Adopted and inspired by
             # https://towardsdatascience.com/
             # machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc
-            nn = NearestNeighbors(n_neighbors=5)
+            nn = NearestNeighbors(n_neighbors=2)
             nn_fitted = nn.fit(xy)
             dists, indices = nn_fitted.kneighbors(xy)
             dists = np.sort(dists, axis=0)
@@ -438,12 +434,12 @@ class ModelPlot:
             # plt.vlines(kl.knee, plt.ylim()[0], plt.ylim()[1], linestyles='dashed')
             # plt.show()
 
-        ss = StandardScaler().fit_transform(xy)
-        db = DBSCAN(eps=eps, min_samples=min_samples).fit(ss)
+        # labels = DBSCAN(eps=eps, min_samples=min_samples).fit(xy).labels_
+        labels = OPTICS(min_samples=min_samples, n_jobs=-1).fit(xy).labels_
 
         self.set_x(xy.iloc[:, 0].tolist())
         self.set_y(xy.iloc[:, 1].tolist())
-        self.set_color(db.labels_)
+        self.set_color(labels)
 
     def clear(self):
         """
