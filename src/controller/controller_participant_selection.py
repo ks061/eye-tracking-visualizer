@@ -67,14 +67,20 @@ class ControllerParticipantSelection:
         )
 
     @staticmethod
-    def process_participant_selection_button_click():
-        """
-        Updates stimulus selection based on participant selection
-        """
-        # disable/clear latter setup options
+    def _pre_process_selection_button_click_disable():
         ViewMain.get_instance().plot_button.setEnabled(False)
         ViewStimulusSelection.get_instance().disable()
         ModelStimulusSelection.get_instance().clear()
+
+    @staticmethod
+    def _post_process_selection_button_click_enable():
+        ViewMain.get_instance().plot_button.setEnabled(True)
+
+    def process_participant_selection_button_click(self):
+        """
+        Updates stimulus selection based on participant selection
+        """
+        self._pre_process_selection_button_click_disable()
 
         ControllerParticipantSelection.get_instance().update_model_selected_participants_from_view()
 
@@ -85,7 +91,7 @@ class ControllerParticipantSelection:
                 selected_participants=ModelParticipantSelection.get_instance().get_selected_participants()
             )
             ModelStimulusSelection.get_instance().update_stimuli_names(
-                data=ModelData.get_instance().get_df()
+                data=ModelData.get_instance().get_complete_df()
             )
             ViewStimulusSelection.get_instance().update()
             ModelDataTypeSelection.get_instance().set_selection(
@@ -97,5 +103,4 @@ class ControllerParticipantSelection:
                 " to refresh the plot area"
             )
 
-        # enable
-        ViewMain.get_instance().plot_button.setEnabled(True)
+        self._post_process_selection_button_click_enable()

@@ -52,7 +52,6 @@ class Delegator(QMainWindow):
     participant_select_deselect_all_hspacer = None
     participant_selection_menu = None
     participant_selection_widget_holder = None
-    participant_selection_button = None
 
     # ViewStimulusSelection components
     stimulus_hbox = None
@@ -137,9 +136,7 @@ class Delegator(QMainWindow):
             message=self.error_message
         )
         # Encapsulating the directory selection UI functionality
-        ViewDirectorySelection(
-            button=self.directory_button
-        )
+        ViewDirectorySelection(button=self.directory_button)
         # Encapsulating the participation selection UI functionality
         ViewParticipantSelection(
             hbox=self.participant_select_deselect_all_button_hbox,
@@ -148,7 +145,6 @@ class Delegator(QMainWindow):
             select_deselect_all_hspacer=self.participant_select_deselect_all_hspacer,
             menu=self.participant_selection_menu,
             widget_holder=self.participant_selection_widget_holder,
-            selection_button=self.participant_selection_button
         )
         # Encapsulating the stimulus selection UI functionality
         ViewStimulusSelection(

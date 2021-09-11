@@ -8,7 +8,6 @@ import glob
 import os
 
 # Internal imports
-from src.model.model_directory_selection import ModelDirectorySelection
 
 
 class ModelParticipantSelection:
@@ -39,14 +38,17 @@ class ModelParticipantSelection:
             ModelParticipantSelection()
         return ModelParticipantSelection.__instance
 
-    def import_selection_participants(self):
+    def import_selection_participants(self, path):
         """
         Imports and sets the possible selection of participants
         from the directory specified in ModelDirectorySelection
+        :param path: directory path from which to import
+            participant data from
+        :type path: str
         """
         # Import eligible .tsv files
         saved_wd = os.getcwd()
-        os.chdir(ModelDirectorySelection.get_instance().get_path())
+        os.chdir(path)
         self.selection_participants = glob.glob('*.{}'.format('tsv'))
         os.chdir(saved_wd)
 

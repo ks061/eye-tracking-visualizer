@@ -5,7 +5,6 @@ Contains the class Controller
 from src.controller.controller_analysis_type_selection import ControllerAnalysisTypeSelection
 from src.controller.controller_data_type_selection import ControllerDataTypeSelection
 from src.controller.controller_directory_selection import ControllerDirectorySelection
-from src.controller.controller_participant_selection import ControllerParticipantSelection
 from src.controller.controller_stimulus_selection import ControllerStimulusSelection
 from src.model.model_analysis_type_selection import ModelAnalysisTypeSelection
 from src.model.model_data_type_selection import ModelDataTypeSelection
@@ -58,17 +57,14 @@ class Controller:
         ViewDirectorySelection.get_instance().button.clicked.connect(
             lambda: ControllerDirectorySelection.get_instance().process_directory_selection_button_click(self.delegator)
         )
+        ViewStimulusSelection.get_instance().menu.activated.connect(
+            lambda: ControllerStimulusSelection.get_instance().process_stimulus_selection_menu_change()
+        )
         ViewParticipantSelection.get_instance().select_all_button.clicked.connect(
             lambda: ViewParticipantSelection.get_instance().process_select_all_button_click()
         )
         ViewParticipantSelection.get_instance().deselect_all_button.clicked.connect(
             lambda: ViewParticipantSelection.get_instance().process_deselect_all_button_click()
-        )
-        ViewParticipantSelection.get_instance().selection_button.clicked.connect(
-            lambda: ControllerParticipantSelection.get_instance().process_participant_selection_button_click()
-        )
-        ViewStimulusSelection.get_instance().menu.activated.connect(
-            lambda: ControllerStimulusSelection.get_instance().process_stimulus_selection_menu_change()
         )
         ViewDataTypeSelection.get_instance().menu.activated.connect(
             lambda: ControllerDataTypeSelection.get_instance().process_data_type_selection_menu_change()
@@ -89,14 +85,22 @@ class Controller:
         ViewAnalysisTypeSelection.get_instance().setup()
 
     @staticmethod
-    def process_plot_button_click():
+    def _pre_process_plot_button_click_disable():
+        ViewMain.get_instance().plot_button.setEnabled(False)
+
+    @staticmethod
+    def _post_process_plot_button_click_enable():
+        ViewMain.get_instance().plot_button.setEnabled(True)
+
+    def process_plot_button_click(self):
         """
         Processes when the user clicks the plot button,
         updating the internal model of the plot based upon
         user selections and then displaying the updated
         plot
         """
-        ViewMain.get_instance().plot_button.setEnabled(False)
+        self._pre_process_plot_button_click_disable()
+
         ModelStimulusSelection.get_instance().set_selection(
             selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
         )
@@ -112,4 +116,5 @@ class Controller:
         ViewPlot.get_instance().plot(
             min_samples=ViewPlot.get_instance().min_samples_slider.value()
         )
-        ViewMain.get_instance().plot_button.setEnabled(True)
+
+        self._post_process_plot_button_click_enable()

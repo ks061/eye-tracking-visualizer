@@ -38,14 +38,22 @@ class ControllerStimulusSelection:
         return ControllerStimulusSelection.__instance
 
     @staticmethod
-    def process_stimulus_selection_menu_change():
+    def _pre_process_selection_button_click_disable():
+        ViewMain.get_instance().plot_button.setEnabled(False)
+
+    @staticmethod
+    def _post_process_selection_button_click_enable():
+        ViewMain.get_instance().plot_button.setEnabled(True)
+
+    def process_stimulus_selection_menu_change(self):
         """
         Processes when the user makes a change in their
         selection within the stimulus selection
         menu, updating the corresponding internal model
         accordingly
         """
-        ViewMain.get_instance().plot_button.setEnabled(False)
+        self._pre_process_selection_button_click_disable()
+
         ModelStimulusSelection.get_instance().set_selection(
             selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
         )
@@ -54,4 +62,5 @@ class ControllerStimulusSelection:
             selected_participants=ModelParticipantSelection.get_instance().get_selected_participants(),
             selected_stimulus=ModelStimulusSelection.get_instance().get_selection()
         )
-        ViewMain.get_instance().plot_button.setEnabled(True)
+
+        self._post_process_selection_button_click_enable()

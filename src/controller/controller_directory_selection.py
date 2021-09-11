@@ -4,7 +4,7 @@ Contains the class ControllerDirectorySelection
 
 import PyQt5
 
-from src.controller.controller_participant_selection import ControllerParticipantSelection
+from src.model.model_data import ModelData
 from src.model.model_directory_selection import ModelDirectorySelection
 from src.model.model_participant_selection import ModelParticipantSelection
 from src.model.model_stimulus_selection import ModelStimulusSelection
@@ -27,7 +27,6 @@ class ControllerDirectorySelection:
             raise Exception("ControllerDirectorySelection should be treated as a singleton class.")
         else:
             ControllerDirectorySelection.__instance = self
-        ViewMain.get_instance().plot_button.setEnabled(False)
 
     @staticmethod
     def get_instance():
@@ -43,16 +42,24 @@ class ControllerDirectorySelection:
         return ControllerDirectorySelection.__instance
 
     @staticmethod
-    def process_directory_selection_button_click(delegator):
+    def _pre_process_selection_button_click_disable():
+        ViewMain.get_instance().plot_button.setEnabled(False)
+        ViewParticipantSelection.get_instance().disable()
+        ViewStimulusSelection.get_instance().disable()
+
+    @staticmethod
+    def _post_process_selection_button_click_enable():
+        ModelStimulusSelection.get_instance().clear()
+        ViewStimulusSelection.get_instance().clear()
+        ViewMain.get_instance().plot_button.setEnabled(True)
+
+    def process_directory_selection_button_click(self, delegator):
         """
         Processes when user clicks directory button
         Refreshes participant selection menu
         Disables stimulus selection menu and plot button
         """
-        # disable/clear latter setup options
-        ViewMain.get_instance().plot_button.setEnabled(False)
-        ViewParticipantSelection.get_instance().disable()
-        ViewStimulusSelection.get_instance().disable()
+        self._pre_process_selection_button_click_disable()
 
         # noinspection PyUnresolvedReferences
         path = str(PyQt5.QtWidgets.QFileDialog.getExistingDirectory(delegator.get_instance(),
@@ -60,11 +67,8 @@ class ControllerDirectorySelection:
         ModelDirectorySelection.get_instance().set_path(
             path=path
         )
+        ModelData.get_instance().import_data(path)
+        ModelParticipantSelection.get_instance().selection_participants = \
+            ModelData.get_instance().participants
 
-        ModelParticipantSelection.get_instance().import_selection_participants()
-        ModelStimulusSelection.get_instance().clear()
-        ViewStimulusSelection.get_instance().clear()
-        ControllerParticipantSelection.update_view_selection_participants_from_model()
-
-        # enable
-        ViewMain.get_instance().plot_button.setEnabled(True)
+        self._post_process_selection_button_click_enable()

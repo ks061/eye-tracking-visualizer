@@ -158,13 +158,13 @@ class ModelPlot:
         analysis_type_selection = ModelAnalysisTypeSelection.get_instance().get_selection()
         data_type_selection = ModelDataTypeSelection.get_instance().get_selection()
         stimulus_file_name = ModelStimulusSelection.get_instance().get_selection()
-        df = ModelData.get_instance().get_df()
+        df = ModelData.get_instance().get_complete_df()
 
         self.extract_and_set_stimulus_info(stimulus_file_name=stimulus_file_name, df=df)
 
         if data_type_selection == "Fixation Data":
             self.set_fixation_points_sizes_and_colors(
-                df=ModelData.get_instance().get_df()
+                df=ModelData.get_instance().get_complete_df()
             )
 
         if analysis_type_selection == "Scatter Plot":
@@ -399,7 +399,7 @@ class ModelPlot:
         xy = xy.dropna()
 
         print(min_samples)
-        labels = OPTICS(min_samples=min_samples, n_jobs=-1).fit(xy).labels_
+        labels = OPTICS(min_samples=min_samples, n_jobs=-1, max_eps=50).fit(xy).labels_
 
         self.set_x(xy.iloc[:, 0].tolist())
         self.set_y(xy.iloc[:, 1].tolist())
