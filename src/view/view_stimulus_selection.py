@@ -1,30 +1,40 @@
 """
 Contains the class ViewStimulusSelection
+
+MODULAR INTERNAL IMPORTS ARE AT THE BOTTOM OF THE FILE. THIS IS AN
+INTENTIONAL DESIGN CHOICE. IT HELPS AVOID CIRCULAR IMPORT ISSUES.
+IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
+HIGHLY MODULAR PROGRAM.
 """
-from src.model.model_stimulus_selection import ModelStimulusSelection
 
 
-class ViewStimulusSelection:
+class ViewStimulusSelection(object):
     """
-    View for the stimulus selection
+    View for the stimulus selected
     """
 
     __instance = None
 
-    hbox = None
-    label = None
     menu = None
 
+    def enable(self) -> None:
+        self.menu.setEnabled(True)
+
+    def disable(self) -> None:
+        self.menu.setEnabled(False)
+
+    def clear(self) -> None:
+        self.menu.clear()
+
+    def get_selected(self) -> str:
+        return self.menu.currentText()
+
     def __init__(self,
-                 hbox,
-                 label,
                  menu):
         if ViewStimulusSelection.__instance is not None:
             raise Exception("ViewStimulusSelection should be treated as a singleton class.")
         else:
             ViewStimulusSelection.__instance = self
-        self.hbox = hbox
-        self.label = label
         self.menu = menu
 
     @staticmethod
@@ -41,52 +51,14 @@ class ViewStimulusSelection:
                             "cannot be done so without proper attributes")
         return ViewStimulusSelection.__instance
 
-    def disable(self):
+    def setup(self) -> None:
         """
-        Disable stimulus selection menu
-        """
-        # Disable interface
-        self.menu.setEnabled(False)
-
-    def clear(self):
-        """
-        Clear stimulus selection menu
-        """
-        # clear stimulus selection menu
-        self.menu.clear()
-
-    def setup(self):
-        """
-        Sets up stimulus selection menu
+        Sets up stimulus selected menu
         """
         # initialize with stimulus options within specified tsv file
         self.menu.clear()
-        for stimulus in ModelStimulusSelection.get_instance().get_stimuli_names():
+        for stimulus in ModelStimulusSelection.get_instance().update_stimuli_from_data_and_dir():
             self.menu.addItem(str(stimulus))
 
-    # Initializes the drop down menu to select the stimulus
-    # based on stimuli available in the specified tsv file
-    def enable(self):
-        """
-        Enables stimulus selection menu
-        """
-        # Enable interface
-        self.menu.setEnabled(True)
 
-    def update(self):
-        """
-        Updates stimulus selection menu
-        """
-        self.disable()
-        self.clear()
-        self.setup()
-        self.enable()
-
-    def get_current_menu_selection(self):
-        """
-        Returns the current stimulus selection
-
-        :return: Current stimulus selection
-        :rtype: str
-        """
-        return self.menu.currentText()
+from src.model.model_stimulus_selection import ModelStimulusSelection

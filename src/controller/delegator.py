@@ -1,19 +1,14 @@
 """
 Contains the class Delegator
-"""
 
+MODULAR INTERNAL IMPORTS ARE AT THE BOTTOM OF THE FILE. THIS IS AN
+INTENTIONAL DESIGN CHOICE. IT HELPS AVOID CIRCULAR IMPORT ISSUES.
+IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
+HIGHLY MODULAR PROGRAM.
+"""
+import os
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow
-
-from src.controller.controller import Controller
-from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection
-from src.view.view_data_type_selection import ViewDataTypeSelection
-from src.view.view_directory_selection import ViewDirectorySelection
-from src.view.view_error import ViewError
-from src.view.view_main import ViewMain
-from src.view.view_participant_selection import ViewParticipantSelection
-from src.view.view_plot import ViewPlot
-from src.view.view_stimulus_selection import ViewStimulusSelection
 
 
 class Delegator(QMainWindow):
@@ -32,7 +27,6 @@ class Delegator(QMainWindow):
     plotting_row_hbox = None
     plotting_row_options_vbox = None
     directory_vspacer = None
-    plot_button = None
     bottom_vspacer = None
     plotting_row_plot_vbox = None
     plotting_row_vspacer = None
@@ -42,8 +36,10 @@ class Delegator(QMainWindow):
     scroll_area_widget_contents = None
     error_message = None
 
-    # ViewDirectory components
-    directory_button = None
+    # ViewStimulusSelection components
+    stimulus_hbox = None
+    stimulus_label = None
+    stimulus_menu = None
 
     # ViewParticipantSelection components
     participant_select_deselect_all_button_hbox = None
@@ -52,11 +48,6 @@ class Delegator(QMainWindow):
     participant_select_deselect_all_hspacer = None
     participant_selection_menu = None
     participant_selection_widget_holder = None
-
-    # ViewStimulusSelection components
-    stimulus_hbox = None
-    stimulus_label = None
-    stimulus_menu = None
 
     # ViewDataTypeSelection components
     data_type_hbox = None
@@ -70,7 +61,7 @@ class Delegator(QMainWindow):
 
     # ViewPlot components
     plot_placeholder = None
-    min_samples_label = None
+    plot_button = None
     min_samples_slider = None
 
     def __init__(self):
@@ -81,8 +72,6 @@ class Delegator(QMainWindow):
             Delegator.__instance = self
         # importing UI components
         self.set_attributes()
-        # self.set_main_window_attributes()
-        # self.set_other_component_attributes()
         # creating view objects with UI components
         self.create_view_objects()
         # creating controller
@@ -105,14 +94,15 @@ class Delegator(QMainWindow):
             Delegator()
         return Delegator.__instance
 
-    def set_attributes(self):
+    def set_attributes(self) -> None:
         """
         Setting attributes based upon GUI components
         defined in the UI file created by QtDesigner
         """
-        uic.loadUi('app_gui.ui', self)
+        curr_file_path = os.path.dirname(os.path.abspath(__file__))
+        uic.loadUi(os.path.join(curr_file_path, '../main/app_gui.ui'), self)
 
-    def create_view_objects(self):
+    def create_view_objects(self) -> None:
         """
         Initializes the various view objects
         with the relevant GUI components
@@ -120,53 +110,44 @@ class Delegator(QMainWindow):
         # Encapsulating the main window
         ViewMain(
             main_window=self.main_window,
-            central_widget=self.central_widget,
-            plotting_row_hbox=self.plotting_row_hbox,
-            plotting_row_options_vbox=self.plotting_row_options_vbox,
-            directory_vspacer=self.directory_vspacer,
-            plot_button=self.plot_button,
-            bottom_vspacer=self.bottom_vspacer,
-            plotting_row_plot_vbox=self.plotting_row_plot_vbox,
-            plotting_row_vspacer=self.plotting_row_vspacer
+            central_widget=self.central_widget
         )
         # Encapsulating the error displaying UI section
         ViewError(
-            scroll_area=self.error_scroll_area,
-            scroll_area_widget_contents=self.scroll_area_widget_contents,
             message=self.error_message
         )
-        # Encapsulating the directory selection UI functionality
-        ViewDirectorySelection(button=self.directory_button)
-        # Encapsulating the participation selection UI functionality
-        ViewParticipantSelection(
-            hbox=self.participant_select_deselect_all_button_hbox,
-            select_all_button=self.participant_select_all_button,
-            deselect_all_button=self.participant_deselect_all_button,
-            select_deselect_all_hspacer=self.participant_select_deselect_all_hspacer,
-            menu=self.participant_selection_menu,
-            widget_holder=self.participant_selection_widget_holder,
-        )
-        # Encapsulating the stimulus selection UI functionality
+        # Encapsulating the stimulus selected UI functionality
         ViewStimulusSelection(
-            hbox=self.stimulus_hbox,
-            label=self.stimulus_label,
             menu=self.stimulus_menu
         )
-        # Encapsulating the data type selection UI functionality
+        # Encapsulating the participation selected UI functionality
+        ViewParticipantSelection(
+            select_all_button=self.participant_select_all_button,
+            deselect_all_button=self.participant_deselect_all_button,
+            menu=self.participant_selection_menu,
+            widget_holder=self.participant_selection_widget_holder
+        )
+        # Encapsulating the data type selected UI functionality
         ViewDataTypeSelection(
-            hbox=self.data_type_hbox,
-            label=self.data_type_label,
             menu=self.data_type_menu
         )
-        # Encapsulating the analysis type selection UI functionality
+        # Encapsulating the analysis type selected UI functionality
         ViewAnalysisTypeSelection(
-            hbox=self.analysis_type_hbox,
-            label=self.analysis_type_label,
             menu=self.analysis_type_menu
         )
         # Encapsulating the plot to be displayed in the UI
         ViewPlot(
+            plot_button=self.plot_button,
             placeholder=self.plot_placeholder,
-            min_samples_label=self.min_samples_label,
             min_samples_slider=self.min_samples_slider
         )
+
+
+from src.controller.controller import Controller
+from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection
+from src.view.view_data_type_selection import ViewDataTypeSelection
+from src.view.view_error import ViewError
+from src.view.view_main import ViewMain
+from src.view.view_participant_selection import ViewParticipantSelection
+from src.view.view_plot import ViewPlot
+from src.view.view_stimulus_selection import ViewStimulusSelection

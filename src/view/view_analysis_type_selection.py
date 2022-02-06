@@ -1,29 +1,39 @@
 """
 Contains the class ViewAnalysisTypeSelection
+
+MODULAR INTERNAL IMPORTS ARE AT THE BOTTOM OF THE FILE. THIS IS AN
+INTENTIONAL DESIGN CHOICE. IT HELPS AVOID CIRCULAR IMPORT ISSUES.
+IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
+HIGHLY MODULAR PROGRAM.
 """
 
 
-class ViewAnalysisTypeSelection:
+class ViewAnalysisTypeSelection(object):
     """
-    View for the analysis type selection
+    View for the analysis type selected
     """
 
     __instance = None
 
-    hbox = None
-    label = None
     menu = None
 
-    def __init__(self,
-                 hbox,
-                 label,
-                 menu):
+    def enable(self) -> None:
+        self.menu.setEnabled(True)
+
+    def disable(self) -> None:
+        self.menu.setEnabled(False)
+
+    def clear(self) -> None:
+        self.menu.clear()
+
+    def get_selected(self) -> str:
+        return self.menu.currentText()
+
+    def __init__(self, menu):
         if ViewAnalysisTypeSelection.__instance is not None:
             raise Exception("ViewAnalysisSelection should be treated as a singleton class.")
         else:
             ViewAnalysisTypeSelection.__instance = self
-        self.hbox = hbox
-        self.label = label
         self.menu = menu
 
     @staticmethod
@@ -40,43 +50,11 @@ class ViewAnalysisTypeSelection:
                             "cannot be done so without proper attributes")
         return ViewAnalysisTypeSelection.__instance
 
-    def enable(self):
+    def setup(self) -> None:
         """
-        Enables the analysis type selection menu
+        Sets up the analysis type selected menu
         """
-        self.menu.setEnabled(True)
-
-    def setup(self):
-        """
-        Sets up the analysis type selection menu
-        """
-        if self.menu.findText("Scatter Plot") == -1:
-            self.menu.addItem("Scatter Plot")
-        if self.menu.findText("Line Plot") == -1:
-            self.menu.addItem("Line Plot")
-        if self.menu.findText("Heat Map") == -1:
-            self.menu.addItem("Heat Map")
-        if self.menu.findText("Cluster") == -1:
-            self.menu.addItem("Cluster")
-
-    def disable(self):
-        """
-        Disables the analysis type selection menu
-        """
-        self.menu.setEnabled(False)
-
-    def clear(self):
-        """
-        Clears the analysis type selection menu
-        """
-        self.menu.clear()
-
-    def get_current_menu_selection(self):
-        """
-        Gets the current user selection in
-        the analysis type selection menu
-
-        :return: analysis type selection
-        :rtype: str
-        """
-        return self.menu.currentText()
+        analysis_types = ["Scatter Plot", "Line Plot", "Heat Map", "Cluster"]
+        for analysis_type in analysis_types:
+            if self.menu.findText(analysis_type) == -1:
+                self.menu.addItem(analysis_type)

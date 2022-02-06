@@ -2,7 +2,6 @@ import cProfile
 import sys
 
 from PyQt5.QtWidgets import QApplication
-
 from src.controller.delegator import Delegator
 
 

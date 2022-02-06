@@ -1,50 +1,54 @@
 """
 Contains the class ViewParticipantSelection
+
+MODULAR INTERNAL IMPORTS ARE AT THE BOTTOM OF THE FILE. THIS IS AN
+INTENTIONAL DESIGN CHOICE. IT HELPS AVOID CIRCULAR IMPORT ISSUES.
+IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
+HIGHLY MODULAR PROGRAM.
 """
 
 from PyQt5 import QtWidgets
 
 
-class ViewParticipantSelection:
+class ViewParticipantSelection(object):
     """
-    View for the participant selection
+    View for the participant selected
     """
 
     __instance = None
 
-    hbox = None
+    menu = None
     select_all_button = None
     deselect_all_button = None
-    select_deselect_all_hspacer = None
-
-    menu = None
     widget_holder = None
-    layout = None
-    selection_button = None
 
-    selection_check_box_list = None
-    selected_check_box_list = None
+    # initialized within class
+    layout = None
+    selection_checkbox_list = None
+    selected_checkbox_list = None
+
+    def select_all(self) -> None:
+        for selection_checkbox in self.selection_checkbox_list:
+            selection_checkbox.setChecked(True)
+
+    def deselect_all(self) -> None:
+        for selection_checkbox in self.selection_checkbox_list:
+            selection_checkbox.setChecked(False)
 
     def __init__(self,
-                 hbox,
                  select_all_button,
                  deselect_all_button,
-                 select_deselect_all_hspacer,
                  menu,
-                 widget_holder,
-                 selection_button):
+                 widget_holder):
         if ViewParticipantSelection.__instance is not None:
             raise Exception("ViewParticipantSelection should be treated as a singleton class.")
         else:
             ViewParticipantSelection.__instance = self
 
-        self.hbox = hbox
         self.select_all_button = select_all_button
         self.deselect_all_button = deselect_all_button
-        self.select_deselect_all_hspacer = select_deselect_all_hspacer
         self.menu = menu
         self.widget_holder = widget_holder
-        self.selection_button = selection_button
 
     @staticmethod
     def get_instance():
@@ -60,111 +64,69 @@ class ViewParticipantSelection:
                             "cannot be done so without proper attributes")
         return ViewParticipantSelection.__instance
 
-    def show(self):
-        """
-        Show participant selection menu
-        """
-        self.select_all_button.show()
-        self.deselect_all_button.show()
-        self.menu.show()
-        self.selection_button.show()
+    def setup_layout(self) -> None:
+        self.layout = QtWidgets.QVBoxLayout()
+        self.widget_holder.setLayout(self.layout)
 
-    def hide(self):
+    def update_selection_checkboxes(self) -> list:
         """
-        Hide participant selection menu
-        """
-        self.select_all_button.hide()
-        self.deselect_all_button.hide()
-        self.menu.hide()
-        self.selection_button.hide()
+        Sets the list of participants
 
-    def process_select_all_button_click(self):
+        :return: list of selection checkboxes
         """
-        Select all participants in participant
-        selection menu
-        """
-        for selection_check_box in self.selection_check_box_list:
-            selection_check_box.setChecked(True)
+        self.clear()
+        if self.layout is None:
+            self.setup_layout()
+        # initialize check boxes for selected participants
+        self.selection_checkbox_list = []
+        for participant in ModelParticipantSelection.get_instance().import_stimuli_filtered_participant_selection():
+            checkbox_widget = QtWidgets.QCheckBox()
+            checkbox_widget.setText(participant)
+            self.layout.addWidget(checkbox_widget)
+            self.selection_checkbox_list.append(checkbox_widget)
+        return self.selection_checkbox_list
 
-    def process_deselect_all_button_click(self):
+    def update_selected_checkboxes(self) -> list:
         """
-        Deselect all participants in participant
-        selection menu
-        """
-        for selection_check_box in self.selection_check_box_list:
-            selection_check_box.setChecked(False)
+        Updates the checkboxes that are selected
+        in the participant selected menu
 
-    def enable(self):
+        :return: list of selected checkboxes
         """
-        Enables the participant selection menu interface
+        self.selected_checkbox_list = []
+        for checkbox in self.selection_checkbox_list:
+            if checkbox.isChecked():
+                self.selected_checkbox_list.append(checkbox)
+        return self.selected_checkbox_list
+
+    def enable(self) -> None:
+        """
+        Enables the participant selected menu interface
         """
         self.select_all_button.setEnabled(True)
         self.deselect_all_button.setEnabled(True)
         self.menu.setEnabled(True)
-        self.selection_button.setEnabled(True)
 
-    def disable(self):
+    def disable(self) -> None:
         """
-        Disables the participant selection menu interface
+        Disables the participant selected menu interface
         """
         # Disable interface
         self.select_all_button.setEnabled(False)
         self.deselect_all_button.setEnabled(False)
         self.menu.setEnabled(False)
-        self.selection_button.setEnabled(False)
 
-    def clear(self):
+    def clear(self) -> None:
         """
-        Clears the participant selection menu interface
+        Clears the participant selected menu interface
         """
-        if self.selection_check_box_list is not None:
-            for selection_check_box in self.selection_check_box_list:
-                self.layout.removeWidget(selection_check_box)
-                selection_check_box.hide()  # necessary for removing checkboxes from
+        if self.selection_checkbox_list is not None:
+            for selection_checkbox in self.selection_checkbox_list:
+                self.layout.removeWidget(selection_checkbox)
+                selection_checkbox.hide()  # necessary for removing checkboxes from
                 # old participant list from display once
                 # new directory is selected
-            self.selection_check_box_list = []
+            self.selection_checkbox_list = []
 
-    def _setup_layout(self):
-        self.layout = QtWidgets.QVBoxLayout()
-        self.widget_holder.setLayout(self.layout)
 
-    def set_selection_check_box_list(self, selection_participant_list):
-        """
-        Sets the list of participants
-
-        :param selection_participant_list: list of participants
-            that can be selected
-        :type selection_participant_list: list
-        """
-        if self.layout is None:
-            self._setup_layout()
-        # initialize check boxes for selected participants
-        self.selection_check_box_list = []
-        for participant in selection_participant_list:
-            check_box_widget = QtWidgets.QCheckBox()
-            check_box_widget.setText(participant)
-            self.layout.addWidget(check_box_widget)
-            self.selection_check_box_list.append(check_box_widget)
-
-    def update_selected_check_boxes(self):
-        """
-        Updates the check boxes that are selected
-        in the participant selection menu
-        """
-        self.selected_check_box_list = []
-        for check_box in self.selection_check_box_list:
-            if check_box.isChecked():
-                self.selected_check_box_list.append(check_box)
-
-    def get_selected_check_boxes(self):
-        """
-        Gets the check boxes that are selected
-            in the participant selection menu
-
-        :return: check boxes that are selected
-            in the participant selection menu
-        :rtype: list
-        """
-        self.update_selected_check_boxes()
-        return self.selected_check_box_list
+from src.model.model_participant_selection import ModelParticipantSelection

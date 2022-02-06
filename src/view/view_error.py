@@ -1,9 +1,14 @@
 """
 Contains the class ViewError
+
+MODULAR INTERNAL IMPORTS ARE AT THE BOTTOM OF THE FILE. THIS IS AN
+INTENTIONAL DESIGN CHOICE. IT HELPS AVOID CIRCULAR IMPORT ISSUES.
+IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
+HIGHLY MODULAR PROGRAM.
 """
 
 
-class ViewError:
+class ViewError(object):
     """
     View for the error-displaying
     part of the user interface
@@ -15,16 +20,15 @@ class ViewError:
     scrollAreaWidgetContents = None
     message = None
 
+    def get_message(self) -> str: return self.message
+    def set_message(self, message: str): self.message = message
+
     def __init__(self,
-                 scroll_area,
-                 scroll_area_widget_contents,
                  message):
         if ViewError.__instance is not None:
             raise Exception("ViewError should be treated as a singleton class.")
         else:
             ViewError.__instance = self
-        self.scroll_area = scroll_area
-        self.scrollAreaWidgetContents = scroll_area_widget_contents
         self.message = message
 
     @staticmethod

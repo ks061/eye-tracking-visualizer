@@ -1,23 +1,35 @@
 """
 Contains the class ModelParticipantSelection
-"""
 
+MODULAR INTERNAL IMPORTS ARE AT THE BOTTOM OF THE FILE. THIS IS AN
+INTENTIONAL DESIGN CHOICE. IT HELPS AVOID CIRCULAR IMPORT ISSUES.
+IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
+HIGHLY MODULAR PROGRAM.
+"""
 
 # External imports
 import glob
 import os
 
-# Internal imports
+from src.main.config import RELATIVE_DATA_DIR
+from src.main.config import STIMULUS_COL_TITLE
 
 
-class ModelParticipantSelection:
+class ModelParticipantSelection(object):
     """
-    Model for the participant selection
+    Model for the participant selected
     """
     __instance = None
 
-    selection_participants = None
-    selected_participants = None
+    all_participants: list = None
+    stimulus_filtered_participants: list = None
+    selected_participants: list = None
+
+    def set_selected_participants(self, selected_participants: list) -> None:
+        self.selected_participants = selected_participants
+
+    def get_selected_participants(self) -> list:
+        return self.selected_participants
 
     def __init__(self):
         if ModelParticipantSelection.__instance is not None:
@@ -38,73 +50,30 @@ class ModelParticipantSelection:
             ModelParticipantSelection()
         return ModelParticipantSelection.__instance
 
-    def import_selection_participants(self, path):
+    def import_all_participants(self) -> list:
         """
-        Imports and sets the possible selection of participants
-        from the directory specified in ModelDirectorySelection
-        :param path: directory path from which to import
-            participant data from
-        :type path: str
+        Imports and stores all participants
+        from the eye-tracking data directory
+
+        :return: all participants
+        :rtype: list
         """
-        # Import eligible .tsv files
         saved_wd = os.getcwd()
-        os.chdir(path)
-        self.selection_participants = glob.glob('*.{}'.format('tsv'))
+        os.chdir(RELATIVE_DATA_DIR)
+        self.all_participants = glob.glob('*.{}'.format('tsv'))
         os.chdir(saved_wd)
+        return self.all_participants
 
-    def get_selection_participants(self):
-        """
-        Gets the possible selection of participants
+    def import_stimuli_filtered_participant_selection(self) -> list:
+        if self.all_participants is None:
+            self.import_all_participants()
 
-        :return: possible selection of participants
-        :rtype: list
-        """
-        self.import_selection_participants()
-        return self.selection_participants
+        df = ModelData.get_instance().df
+        df = df[df[STIMULUS_COL_TITLE] == ViewStimulusSelection.get_instance().get_selected()]
 
-    def set_selection_participants(self, selection_participants):
-        """
-        Sets the possible selection of participants
+        self.stimulus_filtered_participants = df['participant_filename'].unique()
+        return self.stimulus_filtered_participants
 
-        :param selection_participants: possible selection of participants
-        :type selection_participants: list
-        """
-        self.selection_participants = selection_participants
 
-    def get_selected_participants(self):
-        """
-        Gets the selected participants
-
-        :return: selected participants
-        :rtype: list
-        """
-        return self.selected_participants
-
-    def set_selected_participants(self, selected_participants):
-        """
-        Sets the selected participants
-
-        :param selected_participants: selected participants
-        :type selected_participants: list
-        """
-        self.selected_participants = selected_participants
-
-    def enforce_exists_selected_participants(self):
-        """
-        Enforces that the number of selected participants
-        is positive
-
-        :raises TypeError: List of selected participant file names is null.
-        :raises ValueError: No participants were selected.
-        """
-        if self.selected_participants is None:
-            raise TypeError("List of selected participant file names is null.")
-        if len(self.selected_participants) == 0:
-            raise ValueError("No participants were selected.")
-
-    def clear(self):
-        """
-        Clears the participant selection model
-        """
-        self.selection_participants = None
-        self.selected_participants = None
+from src.model.model_data import ModelData
+from src.view.view_stimulus_selection import ViewStimulusSelection

@@ -1,6 +1,8 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# This file only contains a selection of the most common options. For a full
+"""
+Configuration file for the Sphinx documentation builder.
+"""
+
+# This file only contains the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
@@ -13,13 +15,15 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-import os, sys
+import os
+import sys
+
 sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
 
 # -- Project information -----------------------------------------------------
 
 project = 'Eye Tracking Visualizer'
-copyright = '2021, Kartikeya Sharma'
+copyright_info = '2021, Kartikeya Sharma'
 author = 'Kartikeya Sharma'
 
 # The full version, including alpha/beta/rc tags

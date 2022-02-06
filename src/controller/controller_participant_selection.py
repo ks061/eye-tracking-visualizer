@@ -1,22 +1,17 @@
 """
 Contains the class ControllerParticipantSelection
+
+MODULAR INTERNAL IMPORTS ARE AT THE BOTTOM OF THE FILE. THIS IS AN
+INTENTIONAL DESIGN CHOICE. IT HELPS AVOID CIRCULAR IMPORT ISSUES.
+IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
+HIGHLY MODULAR PROGRAM.
 """
 
-from src.model.model_data import ModelData
-from src.model.model_data_type_selection import ModelDataTypeSelection
-from src.model.model_directory_selection import ModelDirectorySelection
-from src.model.model_participant_selection import ModelParticipantSelection
-from src.model.model_stimulus_selection import ModelStimulusSelection
-from src.view.view_error import ViewError
-from src.view.view_main import ViewMain
-from src.view.view_participant_selection import ViewParticipantSelection
-from src.view.view_stimulus_selection import ViewStimulusSelection
 
-
-class ControllerParticipantSelection:
+class ControllerParticipantSelection(object):
     """
     Controls operation of application functions
-    that are related to participant selection
+    that are related to participant selected
     among model and view
     """
     __instance = None
@@ -41,66 +36,31 @@ class ControllerParticipantSelection:
         return ControllerParticipantSelection.__instance
 
     @staticmethod
-    def update_view_selection_participants_from_model():
+    def update_view_selection_participants_from_model() -> None:
         """
-        Updates the participant view selection menu based upon
+        Updates the participant view selected menu based upon
         the available participants, as determined by the
-        participant selection model
+        participant selected model
         """
         ViewParticipantSelection.get_instance().disable()
         ViewParticipantSelection.get_instance().clear()
-        ViewParticipantSelection.get_instance().set_selection_check_box_list(
-            selection_participant_list=ModelParticipantSelection.get_instance().get_selection_participants()
-        )
+        ViewParticipantSelection.get_instance().update_selection_checkboxes()
         ViewParticipantSelection.get_instance().enable()
 
     @staticmethod
-    def update_model_selected_participants_from_view():
+    def update_model_selected_participants_from_view() -> list:
         """
         Updates the participant model based upon
         the selected participants within the participant
-        selection view
+        selected view
         """
-        ModelParticipantSelection.get_instance().set_selected_participants(
-            selected_participants=list(map(lambda check_box: check_box.text(),
-                                           ViewParticipantSelection.get_instance().get_selected_check_boxes()))
-        )
-
-    @staticmethod
-    def _pre_process_selection_button_click_disable():
-        ViewMain.get_instance().plot_button.setEnabled(False)
-        ViewStimulusSelection.get_instance().disable()
-        ModelStimulusSelection.get_instance().clear()
-
-    @staticmethod
-    def _post_process_selection_button_click_enable():
-        ViewMain.get_instance().plot_button.setEnabled(True)
-
-    def process_participant_selection_button_click(self):
-        """
-        Updates stimulus selection based on participant selection
-        """
-        self._pre_process_selection_button_click_disable()
-
-        ControllerParticipantSelection.get_instance().update_model_selected_participants_from_view()
-
-        if len(ViewParticipantSelection.get_instance().selected_check_box_list) != 0:
-            ViewError.get_instance().message.setText('')
-            ModelData.get_instance().set_df_multi_selected_participants_all_stimuli(
-                data_directory_path=ModelDirectorySelection.get_instance().get_path(),
-                selected_participants=ModelParticipantSelection.get_instance().get_selected_participants()
+        if ViewParticipantSelection.get_instance().update_selected_checkboxes() is not None:
+            ModelParticipantSelection.get_instance().set_selected_participants(
+                selected_participants=list(map(lambda check_box: check_box.text(),
+                                               ViewParticipantSelection.get_instance().update_selected_checkboxes()))
             )
-            ModelStimulusSelection.get_instance().update_stimuli_names(
-                data=ModelData.get_instance().get_complete_df()
-            )
-            ViewStimulusSelection.get_instance().update()
-            ModelDataTypeSelection.get_instance().set_selection(
-                selection=ViewStimulusSelection.get_instance().get_current_menu_selection()
-            )
-        else:
-            ViewError.get_instance().message.setText(
-                "No participants selected. Please select at least one participant" +
-                " to refresh the plot area"
-            )
+        return ModelParticipantSelection.get_instance().get_selected_participants()
 
-        self._post_process_selection_button_click_enable()
+
+from src.model.model_participant_selection import ModelParticipantSelection
+from src.view.view_participant_selection import ViewParticipantSelection
