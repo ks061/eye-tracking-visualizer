@@ -7,14 +7,16 @@ IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
 HIGHLY MODULAR PROGRAM.
 """
 
+
 import base64
 import os.path
-
+import numba
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image
+from numba import cuda
 from sklearn.cluster import OPTICS
 
 from src.main.config import MAX_FIXATION_PT_SIZE
@@ -72,7 +74,7 @@ class ModelPlot(object):
         return ModelPlot.__instance
 
     # noinspection DuplicatedCode
-    def set_x(self, df: pd.DataFrame, x_col: pd.Series = None) -> None:
+    def set_x(self, df: pd.DataFrame = None, x_col: pd.Series = None) -> None:
         """
         Extracts the x column from the model DataFrame
         and sets self.x from which to read the x coordinates
@@ -86,19 +88,21 @@ class ModelPlot(object):
         if x_col is not None:
             self.x = x_col
             return
+        elif df is not None:
+            data_type_selection = ViewDataTypeSelection.get_instance().get_selected()
+            x_col_name = None
 
-        data_type_selection = ViewDataTypeSelection.get_instance().get_selected()
-        x_col_name = None
+            if data_type_selection == "Gaze Data":
+                x_col_name = X_GAZE_COL_TITLE
+            if data_type_selection == "Fixation Data":
+                x_col_name = X_FIXATION_COL_TITLE
 
-        if data_type_selection == "Gaze Data":
-            x_col_name = X_GAZE_COL_TITLE
-        if data_type_selection == "Fixation Data":
-            x_col_name = X_FIXATION_COL_TITLE
-
-        self.x = df[x_col_name].copy(deep=True)
+            self.x = df[x_col_name]
+        else:
+            raise Exception("Parameters df and x_col cannot both be None.")
 
     # noinspection DuplicatedCode
-    def set_y(self, df: pd.DataFrame, y_col: pd.Series = None) -> None:
+    def set_y(self, df: pd.DataFrame = None, y_col: pd.Series = None) -> None:
         """
         Extracts the y column from the model DataFrame
         and sets self.y from which to read the y coordinates
@@ -112,18 +116,20 @@ class ModelPlot(object):
         if y_col is not None:
             self.y = y_col
             return
+        elif df is not None:
+            data_type_selection = ViewDataTypeSelection.get_instance().get_selected()
+            y_col_name = None
 
-        data_type_selection = ViewDataTypeSelection.get_instance().get_selected()
-        y_col_name = None
+            if data_type_selection == "Gaze Data":
+                y_col_name = Y_GAZE_COL_TITLE
+            if data_type_selection == "Fixation Data":
+                y_col_name = Y_FIXATION_COL_TITLE
 
-        if data_type_selection == "Gaze Data":
-            y_col_name = Y_GAZE_COL_TITLE
-        if data_type_selection == "Fixation Data":
-            y_col_name = Y_FIXATION_COL_TITLE
+            self.y = df[y_col_name]
+        else:
+            raise Exception("Parameters df and y_col cannot both be None.")
 
-        self.y = df[y_col_name].copy(deep=True)
-
-    def set_color(self, df: pd.DataFrame, color_col: list = None) -> None:
+    def set_color(self, df: pd.DataFrame = None, color_col: list = None) -> None:
         """
         Extracts the color column from the model DataFrame
         and sets self.color from which to distinguish
@@ -135,10 +141,12 @@ class ModelPlot(object):
             directly as the color column for this model
         :type color_col: list
         """
-        if color_col is None:
-            color_col_name = "ParticipantName"
-            color_col = df[color_col_name].copy(deep=True)
+        if color_col is None and df is None:
+            raise Exception("Parameters df and color_col cannot both be None.")
 
+        if color_col is None:
+            color_col_name = PARTICIPANT_NAME_COL_TITLE
+            color_col = df[color_col_name].copy(deep=True)
         self.color = pd.Categorical(color_col)
 
     def set_size(self, size_col: list = None) -> None:
@@ -157,9 +165,10 @@ class ModelPlot(object):
     def fig_params_clear(self) -> None:
         self.x, self.y, self.color, self.size = None, None, None, None
 
-    def set_fig_params(self, df: pd.DataFrame) -> None:
+    def set_gaze_params(self, df: pd.DataFrame) -> None:
         self.set_x(df=df), self.set_y(df=df), self.set_color(df=df)
 
+    @numba.jit
     def update_fig(self, min_samples: int) -> go.Figure:
         """
         Updates the underlying figure based upon
@@ -173,10 +182,10 @@ class ModelPlot(object):
         df = ModelData.get_instance().update_df()
         selected_stimulus_filename = ViewStimulusSelection.get_instance().get_selected()
 
+        df = df[df[STIMULUS_COL_TITLE] == selected_stimulus_filename]
         df = df[df[PARTICIPANT_FILENAME_COL_TITLE].isin(
             ModelParticipantSelection.get_instance().get_selected_participants()
         )]
-        df = df[df[STIMULUS_COL_TITLE] == selected_stimulus_filename]
 
         self.extract_and_set_stimulus_params(
             selected_stimulus_filename=selected_stimulus_filename, df=df
@@ -196,14 +205,14 @@ class ModelPlot(object):
                 df,
                 [TIMESTAMP_COL_TITLE, X_GAZE_COL_TITLE, Y_GAZE_COL_TITLE]
             )
-            self.set_fig_params(df=df)
+            self.set_gaze_params(df=df)
 
         if analysis_type_selection == "Scatter Plot":
             self.fig = px.scatter(
                 x=self.x,
                 y=self.y,
                 color=self.color,
-                size=self.size
+                size=self.size,
             )
         if analysis_type_selection == "Line Plot":
             self.fig = px.line(
@@ -241,20 +250,6 @@ class ModelPlot(object):
         img_bmp.save(os.path.abspath(img_path_str + ".png"))
         enc_img = base64.b64encode(open(img_path_str + ".png", 'rb').read())
 
-        self.fig.add_layout_image(
-            dict(
-                source="data:image/png;base64,{}".format(enc_img.decode()),
-                xref="x",
-                yref="y",
-                x=self.x_shift,
-                y=self.y_shift + self.y_len,
-                sizex=self.x_len,
-                sizey=self.y_len,
-                sizing="stretch",
-                opacity=1,
-                layer="below"
-            )
-        )
         self.fig.update_xaxes(
             showgrid=False,
             zeroline=False,
@@ -267,11 +262,27 @@ class ModelPlot(object):
             range=[self.y_shift - (self.y_len * 0.10),
                    self.y_shift + self.y_len + (self.y_len * 0.10)],
             scaleanchor="x",
-            scaleratio=1
+            scaleratio=1,
+            autorange="reversed"
+        )
+        self.fig.add_layout_image(
+            dict(
+                source="data:image/png;base64,{}".format(enc_img.decode()),
+                xref="x",
+                yref="y",
+                x=self.x_shift,
+                y=self.y_shift,
+                sizex=self.x_len,
+                sizey=self.y_len,
+                sizing="stretch",
+                opacity=1,
+                layer="below"
+            )
         )
 
         return self.fig
 
+    @numba.jit
     def set_fixation_params(self,
                             df: pd.DataFrame,
                             max_point_size: int = MAX_FIXATION_PT_SIZE) -> None:
@@ -405,6 +416,7 @@ class ModelPlot(object):
         # noinspection PyTypeChecker
         self.set_size(size_col=pd.Series(fixation_point_sizes))
 
+    @numba.jit
     def perform_optics_clustering(self, min_samples: int) -> None:
         """
         Performs clustering on the x and y attributes,
@@ -418,12 +430,12 @@ class ModelPlot(object):
         xy = pd.concat([self.x, self.y], axis=1)
         xy = xy.dropna()
 
-        print(min_samples)
         labels = OPTICS(min_samples=min_samples, n_jobs=-1, max_eps=50).fit(xy).labels_
 
-        self.set_x(xy.iloc[:, 0].tolist())
-        self.set_y(xy.iloc[:, 1].tolist())
-        self.set_color(labels)
+        # df=None will be ignored
+        self.set_x(x_col=xy.iloc[:, 0].tolist())
+        self.set_y(y_col=xy.iloc[:, 1].tolist())
+        self.set_color(color_col=labels)
 
     def extract_and_set_stimulus_params(self,
                                         selected_stimulus_filename: str,

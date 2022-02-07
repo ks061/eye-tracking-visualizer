@@ -9,7 +9,7 @@ HIGHLY MODULAR PROGRAM.
 
 # External imports
 from PyQt5 import QtWidgets, QtWebEngineWidgets
-
+import time
 
 class ViewPlot(object):
     """
@@ -77,7 +77,16 @@ class ViewPlot(object):
         fig = ModelPlot.get_instance().update_fig(min_samples)
         self.browser.resize(900, 700)
         self.browser.show()
-        self.browser.setHtml(fig.to_html(include_plotlyjs='cdn'))
+        start = time.time()
+        html_fig = fig.to_html(include_plotlyjs='cdn')
+        end = time.time()
+        print("Generating HTML")
+        print(end - start)
+        start = time.time()
+        self.browser.setHtml(html_fig)
+        end = time.time()
+        print("Setting HTML")
+        print(end - start)
 
     def browser_refresh(self) -> None:
         self.vbox.removeWidget(self.browser)

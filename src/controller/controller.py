@@ -51,7 +51,9 @@ class Controller(object):
         """
         Connects buttons to actions
         """
-        ViewStimulusSelection.get_instance()
+        ViewStimulusSelection.get_instance().menu.currentIndexChanged.connect(
+            lambda: ViewParticipantSelection.get_instance().update_selection_checkboxes()
+        )
         ViewParticipantSelection.get_instance().select_all_button.clicked.connect(
             lambda: ViewParticipantSelection.get_instance().select_all()
         )
