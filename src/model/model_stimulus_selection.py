@@ -50,7 +50,7 @@ class ModelStimulusSelection(object):
         :return: list of stimuli names
         :rtype: list
         """
-        stimuli_names = ModelData.get_instance().update_df()[STIMULUS_COL_TITLE].unique()
+        stimuli_names = ModelData.get_instance().df[STIMULUS_COL_TITLE].unique()
         stimuli_names = stimuli_names[~(pd.isnull(stimuli_names))]
 
         # filter found stimuli_names for those that

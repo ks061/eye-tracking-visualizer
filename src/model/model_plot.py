@@ -16,8 +16,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image
-from numba import cuda
-from sklearn.cluster import OPTICS
+from numba.core.errors import NumbaWarning, NumbaDeprecationWarning, NumbaPendingDeprecationWarning
+import warnings
+from sklearn.cluster import DBSCAN
 
 from src.main.config import MAX_FIXATION_PT_SIZE
 from src.main.config import STIMULUS_COL_TITLE
@@ -59,6 +60,16 @@ class ModelPlot(object):
             raise Exception("ModelPlot should be treated as a singleton class.")
         else:
             ModelPlot.__instance = self
+        self._suppress_warnings()
+
+    @staticmethod
+    def _suppress_warnings() -> None:
+        """
+        Suppress numba warnings
+        """
+        warnings.simplefilter('ignore', category=NumbaWarning)
+        warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
+        warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
 
     @staticmethod
     def get_instance():
@@ -179,7 +190,7 @@ class ModelPlot(object):
         """
         self.fig_params_clear()
 
-        df = ModelData.get_instance().update_df()
+        df = ModelData.get_instance().df
         selected_stimulus_filename = ViewStimulusSelection.get_instance().get_selected()
 
         df = df[df[STIMULUS_COL_TITLE] == selected_stimulus_filename]
@@ -250,6 +261,20 @@ class ModelPlot(object):
         img_bmp.save(os.path.abspath(img_path_str + ".png"))
         enc_img = base64.b64encode(open(img_path_str + ".png", 'rb').read())
 
+        self.fig.add_layout_image(
+            dict(
+                source="data:image/png;base64,{}".format(enc_img.decode()),
+                xref="x",
+                yref="y",
+                x=self.x_shift,
+                y=self.y_shift,
+                sizex=self.x_len,
+                sizey=self.y_len,
+                sizing="stretch",
+                opacity=1,
+                layer="below"
+            )
+        )
         self.fig.update_xaxes(
             showgrid=False,
             zeroline=False,
@@ -264,20 +289,6 @@ class ModelPlot(object):
             scaleanchor="x",
             scaleratio=1,
             autorange="reversed"
-        )
-        self.fig.add_layout_image(
-            dict(
-                source="data:image/png;base64,{}".format(enc_img.decode()),
-                xref="x",
-                yref="y",
-                x=self.x_shift,
-                y=self.y_shift,
-                sizex=self.x_len,
-                sizey=self.y_len,
-                sizing="stretch",
-                opacity=1,
-                layer="below"
-            )
         )
 
         return self.fig
@@ -430,7 +441,7 @@ class ModelPlot(object):
         xy = pd.concat([self.x, self.y], axis=1)
         xy = xy.dropna()
 
-        labels = OPTICS(min_samples=min_samples, n_jobs=-1, max_eps=50).fit(xy).labels_
+        labels = DBSCAN(eps=10, min_samples=10, n_jobs=-1).fit(xy).labels_
 
         # df=None will be ignored
         self.set_x(x_col=xy.iloc[:, 0].tolist())

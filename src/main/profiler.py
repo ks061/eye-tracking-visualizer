@@ -23,4 +23,4 @@ if __name__ == '__main__':
     profiler.enable()
     run()
     profiler.disable()
-    profiler.print_stats(sort='cumtime')
+    profiler.print_stats(sort='time')
