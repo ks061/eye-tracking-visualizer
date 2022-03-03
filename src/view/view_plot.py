@@ -9,7 +9,6 @@ HIGHLY MODULAR PROGRAM.
 
 # External imports
 from PyQt5 import QtWidgets, QtWebEngineWidgets
-import time
 
 class ViewPlot(object):
     """
@@ -20,7 +19,8 @@ class ViewPlot(object):
 
     plot_button = None
     placeholder = None
-    min_samples_slider = None
+    eps_input = None
+    min_samples_input = None
 
     # initialized in class
     browser = None
@@ -29,14 +29,16 @@ class ViewPlot(object):
     def __init__(self,
                  plot_button,
                  placeholder,
-                 min_samples_slider):
+                 eps_input,
+                 min_samples_input):
         if ViewPlot.__instance is not None:
             raise Exception("ViewPlot should be treated as a singleton class.")
         else:
             ViewPlot.__instance = self
         self.plot_button = plot_button
         self.placeholder = placeholder
-        self.min_samples_slider = min_samples_slider
+        self.eps_input = eps_input
+        self.min_samples_input = min_samples_input
 
         self.setup()
 
@@ -63,30 +65,17 @@ class ViewPlot(object):
         self.vbox = QtWidgets.QVBoxLayout(self.placeholder)
         self.browser_refresh()
 
-        self.min_samples_slider.setMinimum(2)
-        self.min_samples_slider.setMaximum(10)
-        self.min_samples_slider.setValue(5)
-        self.min_samples_slider.setSingleStep(1)
-
-    def plot(self, min_samples: int) -> None:
+    def plot(self) -> None:
         """
         Creates a visualization based upon the given data,
         stimulus, and other menu selections made by the user
         """
         self.browser_refresh()
-        fig = ModelPlot.get_instance().update_fig(min_samples)
+        fig = ModelPlot.get_instance().update_fig()
         self.browser.resize(900, 700)
         self.browser.show()
-        start = time.time()
         html_fig = fig.to_html(include_plotlyjs='cdn')
-        end = time.time()
-        print("Generating HTML")
-        print(end - start)
-        start = time.time()
         self.browser.setHtml(html_fig)
-        end = time.time()
-        print("Setting HTML")
-        print(end - start)
 
     def browser_refresh(self) -> None:
         self.vbox.removeWidget(self.browser)

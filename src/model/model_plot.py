@@ -7,7 +7,6 @@ IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
 HIGHLY MODULAR PROGRAM.
 """
 
-
 import base64
 import os.path
 import numba
@@ -15,12 +14,12 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from PIL import Image
+from PIL import Image, ImageOps
 from numba.core.errors import NumbaWarning, NumbaDeprecationWarning, NumbaPendingDeprecationWarning
 import warnings
 from sklearn.cluster import DBSCAN
 
-from src.main.config import MAX_FIXATION_PT_SIZE
+from src.main.config import MAX_FIXATION_PT_SIZE, DEFAULT_EPS_VALUE, DEFAULT_MIN_SAMPLES_VALUE, MAKE_IMG_GRAYSCALE
 from src.main.config import STIMULUS_COL_TITLE
 from src.main.config import PARTICIPANT_FILENAME_COL_TITLE
 from src.main.config import PARTICIPANT_NAME_COL_TITLE
@@ -180,13 +179,11 @@ class ModelPlot(object):
         self.set_x(df=df), self.set_y(df=df), self.set_color(df=df)
 
     @numba.jit
-    def update_fig(self, min_samples: int) -> go.Figure:
+    def update_fig(self) -> go.Figure:
         """
         Updates the underlying figure based upon
         user's selections
 
-        :param min_samples: minimum number of samples per cluster
-        :type min_samples: int
         """
         self.fig_params_clear()
 
@@ -248,16 +245,42 @@ class ModelPlot(object):
             )
         # "Cluster":
         if analysis_type_selection == "Cluster":
-            self.perform_optics_clustering(min_samples)
+            self.perform_optics_clustering()
             self.fig = px.scatter(
                 x=self.x,
                 y=self.y,
                 color=self.color
             )
+        self.fig.add_annotation(
+            x=800,
+            y=600,
+            xref="x",
+            yref="y",
+            text="1",
+            showarrow=True,
+            font=dict(
+                family="Courier New, monospace",
+                size=36,
+                color="#ffffff"
+            ),
+            align="center",
+            # arrowhead=2,
+            # arrowsize=1,
+            # arrowwidth=2,
+            # arrowcolor="#636363",
+            # ax=20,
+            # ay=-30,
+            # bordercolor="#c7c7c7",
+            borderwidth=2,
+            borderpad=4,
+            bgcolor="#EE4B2B",
+            opacity=0.5
+        )
 
         img_path_str = RELATIVE_STIMULUS_IMAGE_DIR + "/" + selected_stimulus_filename
 
         img_bmp = Image.open(os.path.abspath(img_path_str))
+        img_bmp = ImageOps.grayscale(img_bmp) if MAKE_IMG_GRAYSCALE else img_bmp
         img_bmp.save(os.path.abspath(img_path_str + ".png"))
         enc_img = base64.b64encode(open(img_path_str + ".png", 'rb').read())
 
@@ -271,7 +294,7 @@ class ModelPlot(object):
                 sizex=self.x_len,
                 sizey=self.y_len,
                 sizing="stretch",
-                opacity=1,
+                opacity=0.4,
                 layer="below"
             )
         )
@@ -427,21 +450,43 @@ class ModelPlot(object):
         # noinspection PyTypeChecker
         self.set_size(size_col=pd.Series(fixation_point_sizes))
 
+    @staticmethod
+    def get_eps_value():
+        try:
+            eps_value = int(ViewPlot.get_instance().eps_input.displayText())
+        except ValueError:
+            eps_value = ""
+        if eps_value == "":
+            eps_value = DEFAULT_EPS_VALUE
+            ViewPlot.get_instance().eps_input.setText(str(eps_value))
+        return eps_value
+
+    @staticmethod
+    def get_min_samples_value():
+        try:
+            min_samples_value = int(ViewPlot.get_instance().min_samples_input.displayText())
+        except ValueError:
+            min_samples_value = ""
+        if min_samples_value == "":
+            min_samples_value = DEFAULT_MIN_SAMPLES_VALUE
+            ViewPlot.get_instance().min_samples_input.setText(str(min_samples_value))
+        return min_samples_value
+
     @numba.jit
-    def perform_optics_clustering(self, min_samples: int) -> None:
+    def perform_optics_clustering(self) -> None:
         """
         Performs clustering on the x and y attributes,
         removing any x, y pairs that have either value
         missing from their respective attributes, and
         sets the color of the points based upon
         the cluster in which OPTICS assigns them to
-        :param min_samples:
         """
 
         xy = pd.concat([self.x, self.y], axis=1)
         xy = xy.dropna()
 
-        labels = DBSCAN(eps=10, min_samples=10, n_jobs=-1).fit(xy).labels_
+        labels = DBSCAN(eps=ModelPlot.get_eps_value(), min_samples=ModelPlot.get_min_samples_value(), n_jobs=-1).fit(
+            xy).labels_
 
         # df=None will be ignored
         self.set_x(x_col=xy.iloc[:, 0].tolist())
@@ -479,4 +524,5 @@ from src.model.model_participant_selection import ModelParticipantSelection
 from src.model.utils import model_utils
 from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection
 from src.view.view_data_type_selection import ViewDataTypeSelection
+from src.view.view_plot import ViewPlot
 from src.view.view_stimulus_selection import ViewStimulusSelection

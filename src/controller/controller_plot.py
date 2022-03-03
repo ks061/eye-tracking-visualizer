@@ -45,12 +45,8 @@ class ControllerPlot(object):
         """
         ControllerParticipantSelection.get_instance().update_model_selected_participants_from_view()
         ModelData.get_instance().update_df()
-        ModelPlot.get_instance().update_fig(
-            min_samples=ViewPlot.get_instance().min_samples_slider.value()
-        )
-        ViewPlot.get_instance().plot(
-            min_samples=ViewPlot.get_instance().min_samples_slider.value()
-        )
+        ModelPlot.get_instance().update_fig()
+        ViewPlot.get_instance().plot()
 
 
 from src.controller.controller_participant_selection import ControllerParticipantSelection

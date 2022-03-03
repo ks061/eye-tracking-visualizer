@@ -62,7 +62,8 @@ class Delegator(QMainWindow):
     # ViewPlot components
     plot_placeholder = None
     plot_button = None
-    min_samples_slider = None
+    eps_input = None
+    min_samples_input = None
 
     def __init__(self):
         super(Delegator, self).__init__()
@@ -139,7 +140,8 @@ class Delegator(QMainWindow):
         ViewPlot(
             plot_button=self.plot_button,
             placeholder=self.plot_placeholder,
-            min_samples_slider=self.min_samples_slider
+            eps_input=self.eps_input,
+            min_samples_input=self.min_samples_input
         )
 
 

@@ -63,6 +63,12 @@ class Controller(object):
         ViewPlot.get_instance().plot_button.clicked.connect(
             lambda: ControllerPlot.get_instance().process_plot_button_click()
         )
+        ViewPlot.get_instance().eps_input.returnPressed.connect(
+            lambda: ControllerPlot.get_instance().process_plot_button_click()
+        )
+        ViewPlot.get_instance().min_samples_input.returnPressed.connect(
+            lambda: ControllerPlot.get_instance().process_plot_button_click()
+        )
 
     @staticmethod
     def setup_static_selection_menus() -> None:
