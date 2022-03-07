@@ -48,6 +48,46 @@ class ControllerPlot(object):
         ModelPlot.get_instance().update_fig()
         ViewPlot.get_instance().plot()
 
+    @staticmethod
+    def process_eps_input_min_entered() -> None:
+        eps_input_min_val = int(float(ViewPlot.get_instance().eps_input_min.text()))
+        eps_input_min_val = 0 if eps_input_min_val < 0 else eps_input_min_val
+        ViewPlot.get_instance().eps_input_min.setText(str(eps_input_min_val))
+        ViewPlot.get_instance().eps_slider.setMinimum(eps_input_min_val)
+
+    @staticmethod
+    def process_eps_input_max_entered() -> None:
+        eps_input_max_val = int(float(ViewPlot.get_instance().eps_input_max.text()))
+        eps_input_max_val = 0 if eps_input_max_val < 0 else eps_input_max_val
+        ViewPlot.get_instance().eps_input_max.setText(str(eps_input_max_val))
+        ViewPlot.get_instance().eps_slider.setMaximum(eps_input_max_val)
+
+    @staticmethod
+    def process_min_samples_input_min_entered() -> None:
+        min_samples_input_min_val = int(float(ViewPlot.get_instance().min_samples_input_min.text()))
+        min_samples_input_min_val = 0 if min_samples_input_min_val < 0 else min_samples_input_min_val
+        ViewPlot.get_instance().min_samples_input_min.setText(str(min_samples_input_min_val))
+        ViewPlot.get_instance().min_samples_slider.setMinimum(min_samples_input_min_val)
+
+    @staticmethod
+    def process_min_samples_input_max_entered() -> None:
+        min_samples_input_max_val = int(float(ViewPlot.get_instance().min_samples_input_max.text()))
+        min_samples_input_max_val = 0 if min_samples_input_max_val < 0 else min_samples_input_max_val
+        ViewPlot.get_instance().min_samples_input_max.setText(str(min_samples_input_max_val))
+        ViewPlot.get_instance().min_samples_slider.setMaximum(min_samples_input_max_val)
+
+    @staticmethod
+    def process_eps_slider_moved() -> None:
+        ViewPlot.get_instance().eps_curr_value.setText(
+            str(ViewPlot.get_instance().eps_slider.value())
+        )
+
+    @staticmethod
+    def process_min_samples_slider_moved() -> None:
+        ViewPlot.get_instance().min_samples_curr_value.setText(
+            str(ViewPlot.get_instance().min_samples_slider.value())
+        )
+
 
 from src.controller.controller_participant_selection import ControllerParticipantSelection
 from src.model.model_data import ModelData

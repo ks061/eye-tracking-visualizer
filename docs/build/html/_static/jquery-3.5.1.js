@@ -2760,7 +2760,7 @@ function matcherFromGroupMatchers( elementMatchers, setMatchers ) {
 						}
 					}
 
-					// Discard index placeholder values to get only actual matches
+					// Discard index plot_placeholder values to get only actual matches
 					setMatched = condense( setMatched );
 				}
 

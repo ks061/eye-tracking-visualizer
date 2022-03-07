@@ -9,6 +9,8 @@ HIGHLY MODULAR PROGRAM.
 
 # External imports
 from PyQt5 import QtWidgets, QtWebEngineWidgets
+from PyQt5.QtWidgets import QWidget
+
 
 class ViewPlot(object):
     """
@@ -18,9 +20,14 @@ class ViewPlot(object):
     __instance = None
 
     plot_button = None
-    placeholder = None
-    eps_input = None
-    min_samples_input = None
+    plot_placeholder = None
+    eps_input_min = None
+    eps_input_max = None
+    eps_slider = None
+    eps_curr_value = None
+    min_samples_input_ma = None,
+    min_samples_slider = None
+    min_samples_curr_value = None
 
     # initialized in class
     browser = None
@@ -28,17 +35,29 @@ class ViewPlot(object):
 
     def __init__(self,
                  plot_button,
-                 placeholder,
-                 eps_input,
-                 min_samples_input):
+                 plot_placeholder,
+                 eps_input_min,
+                 eps_input_max,
+                 eps_slider,
+                 eps_curr_value,
+                 min_samples_input_min,
+                 min_samples_input_max,
+                 min_samples_slider,
+                 min_samples_curr_value):
         if ViewPlot.__instance is not None:
             raise Exception("ViewPlot should be treated as a singleton class.")
         else:
             ViewPlot.__instance = self
         self.plot_button = plot_button
-        self.placeholder = placeholder
-        self.eps_input = eps_input
-        self.min_samples_input = min_samples_input
+        self.plot_placeholder = plot_placeholder
+        self.eps_input_min = eps_input_min
+        self.eps_input_max = eps_input_max
+        self.eps_slider = eps_slider
+        self.eps_curr_value = eps_curr_value
+        self.min_samples_input_min = min_samples_input_min
+        self.min_samples_input_max = min_samples_input_max
+        self.min_samples_slider = min_samples_slider
+        self.min_samples_curr_value = min_samples_curr_value
 
         self.setup()
 
@@ -62,7 +81,7 @@ class ViewPlot(object):
         widget and removes the old layout if
         needed
         """
-        self.vbox = QtWidgets.QVBoxLayout(self.placeholder)
+        self.vbox = QtWidgets.QVBoxLayout(self.plot_placeholder)
         self.browser_refresh()
 
     def plot(self) -> None:
@@ -79,7 +98,7 @@ class ViewPlot(object):
 
     def browser_refresh(self) -> None:
         self.vbox.removeWidget(self.browser)
-        self.browser = QtWebEngineWidgets.QWebEngineView(self.placeholder)
+        self.browser = QtWebEngineWidgets.QWebEngineView(self.plot_placeholder)
         self.vbox.insertWidget(0, self.browser)
 
 

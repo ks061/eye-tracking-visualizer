@@ -453,23 +453,35 @@ class ModelPlot(object):
     @staticmethod
     def get_eps_value():
         try:
-            eps_value = int(ViewPlot.get_instance().eps_input.displayText())
+            eps_value = int(ViewPlot.get_instance().eps_curr_value.text())
         except ValueError:
             eps_value = ""
         if eps_value == "":
-            eps_value = DEFAULT_EPS_VALUE
-            ViewPlot.get_instance().eps_input.setText(str(eps_value))
+            ViewPlot.get_instance().eps_input_min.setText(str(int(DEFAULT_EPS_VALUE - DEFAULT_EPS_VALUE*.5)))
+            ViewPlot.get_instance().eps_input_min.returnPressed.emit()
+            ViewPlot.get_instance().eps_input_max.setText(str(int(DEFAULT_EPS_VALUE + DEFAULT_EPS_VALUE*.5)))
+            ViewPlot.get_instance().eps_input_max.returnPressed.emit()
+            ViewPlot.get_instance().eps_slider.sliderMoved.emit(int(DEFAULT_EPS_VALUE))
+            eps_value = int(ViewPlot.get_instance().eps_curr_value.text())
         return eps_value
 
     @staticmethod
     def get_min_samples_value():
         try:
-            min_samples_value = int(ViewPlot.get_instance().min_samples_input.displayText())
+            min_samples_value = int(ViewPlot.get_instance().min_samples_curr_value.text())
         except ValueError:
             min_samples_value = ""
         if min_samples_value == "":
-            min_samples_value = DEFAULT_MIN_SAMPLES_VALUE
-            ViewPlot.get_instance().min_samples_input.setText(str(min_samples_value))
+            ViewPlot.get_instance().min_samples_input_min.setText(
+                str(int(DEFAULT_MIN_SAMPLES_VALUE - DEFAULT_MIN_SAMPLES_VALUE*.5))
+            )
+            ViewPlot.get_instance().min_samples_input_min.returnPressed.emit()
+            ViewPlot.get_instance().min_samples_input_max.setText(
+                str(int(DEFAULT_MIN_SAMPLES_VALUE + DEFAULT_MIN_SAMPLES_VALUE*.5))
+            )
+            ViewPlot.get_instance().min_samples_input_max.returnPressed.emit()
+            ViewPlot.get_instance().min_samples_slider.sliderMoved.emit(int(DEFAULT_MIN_SAMPLES_VALUE))
+            min_samples_value = int(ViewPlot.get_instance().min_samples_curr_value.text())
         return min_samples_value
 
     @numba.jit
