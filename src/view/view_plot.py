@@ -8,8 +8,8 @@ HIGHLY MODULAR PROGRAM.
 """
 
 # External imports
+import plotly.graph_objects as go
 from PyQt5 import QtWidgets, QtWebEngineWidgets
-from PyQt5.QtWidgets import QWidget
 
 
 class ViewPlot(object):
@@ -90,10 +90,10 @@ class ViewPlot(object):
         stimulus, and other menu selections made by the user
         """
         self.browser_refresh()
-        fig = ModelPlot.get_instance().update_fig()
+        figure_widget = ModelPlot.get_instance().update_fig()
         self.browser.resize(900, 700)
         self.browser.show()
-        html_fig = fig.to_html(include_plotlyjs='cdn')
+        html_fig = figure_widget.to_html(include_plotlyjs='cdn')
         self.browser.setHtml(html_fig)
 
     def browser_refresh(self) -> None:

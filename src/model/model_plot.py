@@ -179,7 +179,7 @@ class ModelPlot(object):
         self.set_x(df=df), self.set_y(df=df), self.set_color(df=df)
 
     @numba.jit
-    def update_fig(self) -> go.Figure:
+    def update_fig(self) -> go.FigureWidget:
         """
         Updates the underlying figure based upon
         user's selections
@@ -251,6 +251,7 @@ class ModelPlot(object):
                 y=self.y,
                 color=self.color
             )
+
         self.fig.add_annotation(
             x=800,
             y=600,
@@ -313,8 +314,9 @@ class ModelPlot(object):
             scaleratio=1,
             autorange="reversed"
         )
+        self.figure_widget = go.FigureWidget(self.fig)
 
-        return self.fig
+        return self.figure_widget
 
     @numba.jit
     def set_fixation_params(self,

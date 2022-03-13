@@ -22,7 +22,8 @@ class ModelData(object):
 
     df = None
 
-    def clear(self) -> None: self.df = None
+    def clear(self) -> None:
+        self.df = None
 
     def __init__(self):
         """
@@ -64,7 +65,6 @@ class ModelData(object):
             for participant_filename in ModelParticipantSelection.get_instance().import_all_participants()
         )
         return self.df
-
 
 
 from src.model.model_participant_selection import ModelParticipantSelection

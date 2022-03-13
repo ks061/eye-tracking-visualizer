@@ -14,6 +14,7 @@ import pandas as pd
 from src.main.config import EXCLUDE_STIMULI_LIST
 from src.main.config import STIMULUS_COL_TITLE
 
+
 class ModelStimulusSelection(object):
     """
     Model for the stimulus selected
