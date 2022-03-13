@@ -14,6 +14,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import sklearn
 from PIL import Image, ImageOps
 from numba.core.errors import NumbaWarning, NumbaDeprecationWarning, NumbaPendingDeprecationWarning
 import warnings
@@ -99,7 +100,6 @@ class ModelPlot(object):
         """
         if x_col is not None:
             self.x = x_col
-            return
         elif df is not None:
             data_type_selection = ViewDataTypeSelection.get_instance().get_selected()
             x_col_name = None
@@ -127,7 +127,6 @@ class ModelPlot(object):
         """
         if y_col is not None:
             self.y = y_col
-            return
         elif df is not None:
             data_type_selection = ViewDataTypeSelection.get_instance().get_selected()
             y_col_name = None
@@ -153,13 +152,14 @@ class ModelPlot(object):
             directly as the color column for this model
         :type color_col: list
         """
-        if color_col is None and df is None:
-            raise Exception("Parameters df and color_col cannot both be None.")
-
-        if color_col is None:
+        if color_col is not None:
+            self.color = pd.Categorical(color_col)
+        elif df is not None:
             color_col_name = PARTICIPANT_NAME_COL_TITLE
             color_col = df[color_col_name].copy(deep=True)
-        self.color = pd.Categorical(color_col)
+            self.color = pd.Categorical(color_col)
+        else:
+            raise Exception("Parameters df and color_col cannot both be None.")
 
     def set_size(self, size_col: list = None) -> None:
         """
@@ -253,37 +253,7 @@ class ModelPlot(object):
                 y=self.y,
                 color=self.color
             )
-            for i in range(len(self.fig.data)):
-                if self.fig.data[i].legendgroup == '-1':
-                    self.fig.data[i].visible = 'legendonly'
-                print(self.fig.data[i])
-
-
-        self.fig.add_annotation(
-            x=800,
-            y=600,
-            xref="x",
-            yref="y",
-            text="1",
-            showarrow=True,
-            font=dict(
-                family="Courier New, monospace",
-                size=36,
-                color="#ffffff"
-            ),
-            align="center",
-            # arrowhead=2,
-            # arrowsize=1,
-            # arrowwidth=2,
-            # arrowcolor="#636363",
-            # ax=20,
-            # ay=-30,
-            # bordercolor="#c7c7c7",
-            borderwidth=2,
-            borderpad=4,
-            bgcolor="#EE4B2B",
-            opacity=0.5
-        )
+            self.add_cluster_labels()
 
         img_path_str = RELATIVE_STIMULUS_IMAGE_DIR + "/" + selected_stimulus_filename
 
@@ -321,6 +291,11 @@ class ModelPlot(object):
             scaleratio=1,
             autorange="reversed"
         )
+
+        if analysis_type_selection == "Cluster":
+            for i in range(len(self.fig.data)):
+                if self.fig.data[i].legendgroup == '-1':
+                    self.fig.data[i].update(visible='legendonly')
 
         self.figure_widget = go.FigureWidget(self.fig)
 
@@ -467,9 +442,9 @@ class ModelPlot(object):
         except ValueError:
             eps_value = ""
         if eps_value == "":
-            ViewPlot.get_instance().eps_input_min.setText(str(int(DEFAULT_EPS_VALUE - DEFAULT_EPS_VALUE*.5)))
+            ViewPlot.get_instance().eps_input_min.setText(str(int(DEFAULT_EPS_VALUE - DEFAULT_EPS_VALUE * .5)))
             ViewPlot.get_instance().eps_input_min.returnPressed.emit()
-            ViewPlot.get_instance().eps_input_max.setText(str(int(DEFAULT_EPS_VALUE + DEFAULT_EPS_VALUE*.5)))
+            ViewPlot.get_instance().eps_input_max.setText(str(int(DEFAULT_EPS_VALUE + DEFAULT_EPS_VALUE * .5)))
             ViewPlot.get_instance().eps_input_max.returnPressed.emit()
             ViewPlot.get_instance().eps_slider.sliderMoved.emit(int(DEFAULT_EPS_VALUE))
             eps_value = int(ViewPlot.get_instance().eps_curr_value.text())
@@ -483,11 +458,11 @@ class ModelPlot(object):
             min_samples_value = ""
         if min_samples_value == "":
             ViewPlot.get_instance().min_samples_input_min.setText(
-                str(int(DEFAULT_MIN_SAMPLES_VALUE - DEFAULT_MIN_SAMPLES_VALUE*.5))
+                str(int(DEFAULT_MIN_SAMPLES_VALUE - DEFAULT_MIN_SAMPLES_VALUE * .5))
             )
             ViewPlot.get_instance().min_samples_input_min.returnPressed.emit()
             ViewPlot.get_instance().min_samples_input_max.setText(
-                str(int(DEFAULT_MIN_SAMPLES_VALUE + DEFAULT_MIN_SAMPLES_VALUE*.5))
+                str(int(DEFAULT_MIN_SAMPLES_VALUE + DEFAULT_MIN_SAMPLES_VALUE * .5))
             )
             ViewPlot.get_instance().min_samples_input_max.returnPressed.emit()
             ViewPlot.get_instance().min_samples_slider.sliderMoved.emit(int(DEFAULT_MIN_SAMPLES_VALUE))
@@ -507,13 +482,39 @@ class ModelPlot(object):
         xy = pd.concat([self.x, self.y], axis=1)
         xy = xy.dropna()
 
-        labels = DBSCAN(eps=ModelPlot.get_eps_value(), min_samples=ModelPlot.get_min_samples_value(), n_jobs=-1).fit(
-            xy).labels_
+        optics_clustering = DBSCAN(eps=ModelPlot.get_eps_value(), min_samples=ModelPlot.get_min_samples_value(),
+                                   n_jobs=-1).fit(xy)
+        labels = optics_clustering.labels_
 
         # df=None will be ignored
         self.set_x(x_col=xy.iloc[:, 0].tolist())
         self.set_y(y_col=xy.iloc[:, 1].tolist())
         self.set_color(color_col=labels)
+
+    @numba.jit
+    def add_cluster_labels(self):
+        data = {'x': self.x, 'y': self.y, 'color': self.color}
+        df = pd.DataFrame(data=data)
+        cluster_centroids = df.groupby('color')[['x', 'y']].mean()
+        for index, centroid in cluster_centroids.iterrows():
+            print(index)
+            if index != -1:
+                self.fig.add_annotation(
+                    x=centroid['x'],
+                    y=centroid['y'],
+                    xref="x",
+                    yref="y",
+                    text=str(index),
+                    font=dict(
+                        family="Courier New, monospace",
+                        size=28,
+                        color="#ffffff"
+                    ),
+                    bgcolor="#EE4B2B",
+                    opacity=0.5,
+                    xanchor='center',
+                    showarrow=False
+                )
 
     def extract_and_set_stimulus_params(self,
                                         selected_stimulus_filename: str,
