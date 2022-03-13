@@ -39,6 +39,7 @@ class ModelPlot(object):
     """
     __instance = None
 
+    figure_widget = None
     fig = None
     x = None
     y = None
@@ -53,6 +54,7 @@ class ModelPlot(object):
 
     def clear(self) -> None:
         self.fig = None
+        self.figure_widget = None
 
     def __init__(self):
         if ModelPlot.__instance is not None:
@@ -251,6 +253,11 @@ class ModelPlot(object):
                 y=self.y,
                 color=self.color
             )
+            for i in range(len(self.fig.data)):
+                if self.fig.data[i].legendgroup == '-1':
+                    self.fig.data[i].visible = 'legendonly'
+                print(self.fig.data[i])
+
 
         self.fig.add_annotation(
             x=800,
@@ -314,6 +321,7 @@ class ModelPlot(object):
             scaleratio=1,
             autorange="reversed"
         )
+
         self.figure_widget = go.FigureWidget(self.fig)
 
         return self.figure_widget
