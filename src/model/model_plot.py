@@ -9,22 +9,22 @@ HIGHLY MODULAR PROGRAM.
 
 import base64
 import os.path
+import warnings
+
 import numba
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import sklearn
 from PIL import Image, ImageOps
 from numba.core.errors import NumbaWarning, NumbaDeprecationWarning, NumbaPendingDeprecationWarning
-import warnings
 from sklearn.cluster import DBSCAN
 
 from src.main.config import MAX_FIXATION_PT_SIZE, DEFAULT_EPS_VALUE, DEFAULT_MIN_SAMPLES_VALUE, MAKE_IMG_GRAYSCALE
-from src.main.config import STIMULUS_COL_TITLE
 from src.main.config import PARTICIPANT_FILENAME_COL_TITLE
 from src.main.config import PARTICIPANT_NAME_COL_TITLE
 from src.main.config import RELATIVE_STIMULUS_IMAGE_DIR
+from src.main.config import STIMULUS_COL_TITLE
 from src.main.config import STIMULUS_X_DISPLACEMENT_COL_TITLE
 from src.main.config import STIMULUS_Y_DISPLACEMENT_COL_TITLE
 from src.main.config import TIMESTAMP_COL_TITLE
@@ -40,12 +40,16 @@ class ModelPlot(object):
     """
     __instance = None
 
+    filtered_df = None
     figure_widget = None
     fig = None
     x = None
     y = None
     color = None
     size = None
+    fixation_participants = None
+    cluster_centroids = None
+    cluster_sequences = None
 
     stimulus_image = None
     x_len = None
@@ -189,33 +193,33 @@ class ModelPlot(object):
         """
         self.fig_params_clear()
 
-        df = ModelData.get_instance().df
+        self.filtered_df = ModelData.get_instance().df
         selected_stimulus_filename = ViewStimulusSelection.get_instance().get_selected()
 
-        df = df[df[STIMULUS_COL_TITLE] == selected_stimulus_filename]
-        df = df[df[PARTICIPANT_FILENAME_COL_TITLE].isin(
+        self.filtered_df = self.filtered_df[self.filtered_df[STIMULUS_COL_TITLE] == selected_stimulus_filename]
+        self.filtered_df = self.filtered_df[self.filtered_df[PARTICIPANT_FILENAME_COL_TITLE].isin(
             ModelParticipantSelection.get_instance().get_selected_participants()
         )]
 
         self.extract_and_set_stimulus_params(
-            selected_stimulus_filename=selected_stimulus_filename, df=df
+            selected_stimulus_filename=selected_stimulus_filename, df=self.filtered_df
         )
 
         data_type_selection = ViewDataTypeSelection.get_instance().get_selected()
         analysis_type_selection = ViewAnalysisTypeSelection.get_instance().get_selected()
 
         if data_type_selection == "Fixation Data":
-            df = model_utils.remove_incomplete_observations(
-                df,
-                [TIMESTAMP_COL_TITLE, X_FIXATION_COL_TITLE, Y_FIXATION_COL_TITLE]
+            self.filtered_df = model_utils.remove_incomplete_observations(
+                self.filtered_df,
+                [TIMESTAMP_COL_TITLE, X_FIXATION_COL_TITLE, Y_FIXATION_COL_TITLE, PARTICIPANT_FILENAME_COL_TITLE]
             )
-            self.set_fixation_params(df=df)
+            self.set_fixation_params(df=self.filtered_df)
         else:
-            df = model_utils.remove_incomplete_observations(
-                df,
-                [TIMESTAMP_COL_TITLE, X_GAZE_COL_TITLE, Y_GAZE_COL_TITLE]
+            self.filtered_df = model_utils.remove_incomplete_observations(
+                self.filtered_df,
+                [TIMESTAMP_COL_TITLE, X_GAZE_COL_TITLE, Y_GAZE_COL_TITLE, PARTICIPANT_FILENAME_COL_TITLE]
             )
-            self.set_gaze_params(df=df)
+            self.set_gaze_params(df=self.filtered_df)
 
         if analysis_type_selection == "Scatter Plot":
             self.fig = px.scatter(
@@ -254,6 +258,8 @@ class ModelPlot(object):
                 color=self.color
             )
             self.add_cluster_labels()
+            self.find_cluster_sequences(data_type_selection)
+            self.add_arrow_annotations_if_one_participant()
 
         img_path_str = RELATIVE_STIMULUS_IMAGE_DIR + "/" + selected_stimulus_filename
 
@@ -434,6 +440,7 @@ class ModelPlot(object):
         self.set_color(df=df, color_col=pd.Series(pd.Categorical(fixation_participant_identifiers)))
         # noinspection PyTypeChecker
         self.set_size(size_col=pd.Series(fixation_point_sizes))
+        self.fixation_participants = fixation_participant_identifiers
 
     @staticmethod
     def get_eps_value():
@@ -482,7 +489,8 @@ class ModelPlot(object):
         xy = pd.concat([self.x, self.y], axis=1)
         xy = xy.dropna()
 
-        optics_clustering = DBSCAN(eps=ModelPlot.get_eps_value(), min_samples=ModelPlot.get_min_samples_value(),
+        optics_clustering = DBSCAN(eps=ModelPlot.get_eps_value(),
+                                   min_samples=ModelPlot.get_min_samples_value(),
                                    n_jobs=-1).fit(xy)
         labels = optics_clustering.labels_
 
@@ -493,11 +501,10 @@ class ModelPlot(object):
 
     @numba.jit
     def add_cluster_labels(self):
-        data = {'x': self.x, 'y': self.y, 'color': self.color}
-        df = pd.DataFrame(data=data)
-        cluster_centroids = df.groupby('color')[['x', 'y']].mean()
-        for index, centroid in cluster_centroids.iterrows():
-            print(index)
+        cluster_data = {'x': self.x, 'y': self.y, 'color': self.color}
+        cluster_df = pd.DataFrame(data=cluster_data)
+        self.cluster_centroids = cluster_df.groupby('color')[['x', 'y']].mean()
+        for index, centroid in self.cluster_centroids.iterrows():
             if index != -1:
                 self.fig.add_annotation(
                     x=centroid['x'],
@@ -515,6 +522,75 @@ class ModelPlot(object):
                     xanchor='center',
                     showarrow=False
                 )
+
+    @numba.jit
+    def find_cluster_sequences(self, data_type_selection: str):
+        self.cluster_sequences = {}
+
+        cluster_data = {'x': self.x, 'y': self.y, 'color': self.color}
+        cluster_df = pd.DataFrame(data=cluster_data)
+
+        df_all: pd.DataFrame
+        if data_type_selection == "Fixation Data":
+            df_all = pd.DataFrame(
+                {
+                    'x': self.x,
+                    'y': self.y,
+                    'participant': self.fixation_participants
+                }
+            )
+        else:
+            df_all = pd.DataFrame(
+                {
+                    'x': self.filtered_df[X_GAZE_COL_TITLE],
+                    'y': self.filtered_df[Y_GAZE_COL_TITLE],
+                    'participant': self.filtered_df['participant_filename']
+                }
+            )
+
+        participants = df_all['participant'].unique()
+        cluster_seq = []
+        for participant in participants:
+            df_participant = df_all[df_all['participant'] == participant]
+            for index, point in df_participant.iterrows():
+                point_label = int(
+                    cluster_df[(cluster_df['x'] == point['x']) & (cluster_df['y'] == point['y'])].iloc[0]['color']
+                )
+                if point_label == -1:
+                    continue
+                elif len(cluster_seq) == 0:
+                    cluster_seq.append(point_label)
+                elif cluster_seq[-1] != point_label:
+                    cluster_seq.append(point_label)
+            self.cluster_sequences[participant] = cluster_seq
+            # print("cluster sequence of " + str(participant))
+            # print(cluster_seq)
+            cluster_seq = []
+
+    def add_arrow_annotations_if_one_participant(self) -> None:
+        '''
+        Adopted from https://stackoverflow.com/questions/58095322/draw-multiple-arrows-using-plotly-python
+        '''
+        if len(self.cluster_sequences) != 1: return
+
+        participant = list(self.cluster_sequences.keys())[0]
+        seq = self.cluster_sequences[participant]
+        for i in range(len(seq)):
+            if i > 0:
+                self.fig.add_annotation(
+                    x=self.cluster_centroids['x'].loc[seq[i]],
+                    y=self.cluster_centroids['y'].loc[seq[i]],
+                    xref="x", yref="y",
+                    text="",
+                    showarrow=True,
+                    axref="x", ayref='y',
+                    ax=self.cluster_centroids['x'].loc[seq[i - 1]],
+                    ay=self.cluster_centroids['y'].loc[seq[i - 1]],
+                    arrowhead=3,
+                    arrowwidth=1.5,
+                    arrowcolor='#EE4B2B'
+                )
+
 
     def extract_and_set_stimulus_params(self,
                                         selected_stimulus_filename: str,
