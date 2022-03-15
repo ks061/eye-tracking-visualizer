@@ -20,6 +20,7 @@ from PIL import Image, ImageOps
 from numba.core.errors import NumbaWarning, NumbaDeprecationWarning, NumbaPendingDeprecationWarning
 from sklearn.cluster import DBSCAN
 
+from src.controller.controller_plot import ControllerPlot
 from src.main.config import MAX_FIXATION_PT_SIZE, DEFAULT_EPS_VALUE, DEFAULT_MIN_SAMPLES_VALUE, MAKE_IMG_GRAYSCALE
 from src.main.config import PARTICIPANT_FILENAME_COL_TITLE
 from src.main.config import PARTICIPANT_NAME_COL_TITLE
@@ -449,11 +450,14 @@ class ModelPlot(object):
         except ValueError:
             eps_value = ""
         if eps_value == "":
-            ViewPlot.get_instance().eps_input_min.setText(str(int(DEFAULT_EPS_VALUE - DEFAULT_EPS_VALUE * .5)))
-            ViewPlot.get_instance().eps_input_min.returnPressed.emit()
-            ViewPlot.get_instance().eps_input_max.setText(str(int(DEFAULT_EPS_VALUE + DEFAULT_EPS_VALUE * .5)))
-            ViewPlot.get_instance().eps_input_max.returnPressed.emit()
-            ViewPlot.get_instance().eps_slider.sliderMoved.emit(int(DEFAULT_EPS_VALUE))
+            ViewPlot.get_instance().eps_input_min.setValue(int(DEFAULT_EPS_VALUE - DEFAULT_EPS_VALUE * .5))
+            ControllerPlot.get_instance().process_eps_input_min_entered()
+            ViewPlot.get_instance().eps_input_max.setValue(int(DEFAULT_EPS_VALUE + DEFAULT_EPS_VALUE * .5))
+            ControllerPlot.get_instance().process_eps_input_max_entered()
+
+            ViewPlot.get_instance().eps_slider.setValue(DEFAULT_EPS_VALUE)
+            ControllerPlot.get_instance().process_eps_slider_moved()
+
             eps_value = int(ViewPlot.get_instance().eps_curr_value.text())
         return eps_value
 
@@ -464,15 +468,18 @@ class ModelPlot(object):
         except ValueError:
             min_samples_value = ""
         if min_samples_value == "":
-            ViewPlot.get_instance().min_samples_input_min.setText(
-                str(int(DEFAULT_MIN_SAMPLES_VALUE - DEFAULT_MIN_SAMPLES_VALUE * .5))
+            ViewPlot.get_instance().min_samples_input_min.setValue(
+                int(DEFAULT_MIN_SAMPLES_VALUE - DEFAULT_MIN_SAMPLES_VALUE * .5)
             )
-            ViewPlot.get_instance().min_samples_input_min.returnPressed.emit()
-            ViewPlot.get_instance().min_samples_input_max.setText(
-                str(int(DEFAULT_MIN_SAMPLES_VALUE + DEFAULT_MIN_SAMPLES_VALUE * .5))
+            ControllerPlot.get_instance().process_min_samples_input_min_entered()
+            ViewPlot.get_instance().min_samples_input_max.setValue(
+                int(DEFAULT_MIN_SAMPLES_VALUE + DEFAULT_MIN_SAMPLES_VALUE * .5)
             )
-            ViewPlot.get_instance().min_samples_input_max.returnPressed.emit()
-            ViewPlot.get_instance().min_samples_slider.sliderMoved.emit(int(DEFAULT_MIN_SAMPLES_VALUE))
+            ControllerPlot.get_instance().process_min_samples_input_max_entered()
+
+            ViewPlot.get_instance().min_samples_slider.setValue(DEFAULT_MIN_SAMPLES_VALUE)
+            ControllerPlot.get_instance().process_min_samples_slider_moved()
+
             min_samples_value = int(ViewPlot.get_instance().min_samples_curr_value.text())
         return min_samples_value
 
@@ -590,7 +597,6 @@ class ModelPlot(object):
                     arrowwidth=1.5,
                     arrowcolor='#EE4B2B'
                 )
-
 
     def extract_and_set_stimulus_params(self,
                                         selected_stimulus_filename: str,
