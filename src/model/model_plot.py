@@ -8,6 +8,7 @@ HIGHLY MODULAR PROGRAM.
 """
 
 import base64
+from collections import defaultdict
 import os.path
 import warnings
 
@@ -49,8 +50,14 @@ class ModelPlot(object):
     color = None
     size = None
     fixation_participants = None
+    num_fixations = None
+    num_fixations_in_cluster = None
     cluster_centroids = None
     cluster_sequences = None
+    ord_assoc_rule_count = None
+    cluster_id_count = None
+    support_vals = None
+    confidence_vals = None
 
     stimulus_image = None
     x_len = None
@@ -261,6 +268,14 @@ class ModelPlot(object):
             self.add_cluster_labels()
             self.find_cluster_sequences(data_type_selection)
             self.add_arrow_annotations_if_one_participant()
+            self.fig.add_trace(go.Indicator(
+                domain = {'x': [0.07, 0.15], 'y': [0.9, 0.95]},
+                value = round((self.num_fixations_in_cluster/self.num_fixations)*100, 2),
+                number = {"suffix": "%", "font": {"size": 10, "color": "black"}},
+                mode = "gauge+number",
+                gauge = {"axis": {"range": [None, 100], "showticklabels": False}},
+                title = {'text': "Fixations in Cluster", "font": {"size": 10, "color": "black"}}
+            ))
 
         img_path_str = RELATIVE_STIMULUS_IMAGE_DIR + "/" + selected_stimulus_filename
 
@@ -303,6 +318,10 @@ class ModelPlot(object):
             for i in range(len(self.fig.data)):
                 if self.fig.data[i].legendgroup == '-1':
                     self.fig.data[i].update(visible='legendonly')
+            self.ordinal_association_rule_mining()
+            self.compute_support_vals()
+            self.compute_confidence_vals()
+            self.print_assoc_mining_data()
 
         self.figure_widget = go.FigureWidget(self.fig)
 
@@ -500,6 +519,8 @@ class ModelPlot(object):
                                    min_samples=ModelPlot.get_min_samples_value(),
                                    n_jobs=-1).fit(xy)
         labels = optics_clustering.labels_
+        self.num_fixations = labels.size
+        self.num_fixations_in_cluster = np.count_nonzero(labels != -1)
 
         # df=None will be ignored
         self.set_x(x_col=xy.iloc[:, 0].tolist())
@@ -570,9 +591,49 @@ class ModelPlot(object):
                 elif cluster_seq[-1] != point_label:
                     cluster_seq.append(point_label)
             self.cluster_sequences[participant] = cluster_seq
-            # print("cluster sequence of " + str(participant))
-            # print(cluster_seq)
             cluster_seq = []
+
+    def print_assoc_mining_data(self) -> None:
+        """
+        Helper function adopted from
+        https://stackoverflow.com/questions/20181899/how-to-make-each-key-value-of-a-dictionary-print-on-a-new-line
+        :return: None
+        """
+        dict_names: list[str] = ['ord_assoc_rule_count', 'cluster_id_count', 'support_vals', 'confidence_vals']
+        for d_name in dict_names:
+            print("**" + d_name + "**")
+            print("{" + "\n".join("{!r}: {!r},".format(k, v) for k, v in getattr(self, d_name).items()) + "}")
+
+    @numba.jit
+    def ordinal_association_rule_mining(self):
+        self.ord_assoc_rule_count = defaultdict(int)
+        self.cluster_id_count = defaultdict(int)
+        for sequence in self.cluster_sequences.values():
+            assoc_rules_for_seq = []
+            cluster_ids = []
+            for index_first in range(len(sequence)):
+                for index_last in range(index_first + 1, len(sequence), 1):
+                    if (index_first, index_last) not in assoc_rules_for_seq:
+                        assoc_rules_for_seq.append((sequence[index_first], sequence[index_last]))
+            for assoc_rule in assoc_rules_for_seq:
+                self.ord_assoc_rule_count[assoc_rule] += 1
+            for cluster_id in sequence:
+                if cluster_id not in cluster_ids:
+                    cluster_ids.append(cluster_id)
+            for cluster_id in cluster_ids:
+                self.cluster_id_count[cluster_id] += 1
+
+    @numba.jit
+    def compute_support_vals(self):
+        self.support_vals = defaultdict(int)
+        for assoc_rule, count in self.ord_assoc_rule_count.items():
+            self.support_vals[assoc_rule] = count / len(self.ord_assoc_rule_count)
+
+    @numba.jit
+    def compute_confidence_vals(self):
+        self.confidence_vals = defaultdict(int)
+        for assoc_rule, count in self.ord_assoc_rule_count.items():
+            self.confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[0]]
 
     def add_arrow_annotations_if_one_participant(self) -> None:
         '''
