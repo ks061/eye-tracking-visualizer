@@ -504,7 +504,7 @@
               <widget class="QSpinBox" name="eps_input_min">
                <property name="maximumSize">
                 <size>
-                 <width>75</width>
+                 <width>50</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -518,7 +518,7 @@
                <item>
                 <widget class="QLabel" name="eps_curr_label">
                  <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;curr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;current&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -526,12 +526,12 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="eps_curr_value">
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                <widget class="QSpinBox" name="eps_curr_input">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
                  </property>
                 </widget>
                </item>
@@ -570,7 +570,7 @@
               <widget class="QSpinBox" name="eps_input_max">
                <property name="maximumSize">
                 <size>
-                 <width>75</width>
+                 <width>50</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -662,7 +662,7 @@
               <widget class="QSpinBox" name="min_samples_input_min">
                <property name="maximumSize">
                 <size>
-                 <width>75</width>
+                 <width>50</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -682,7 +682,7 @@
                <item>
                 <widget class="QLabel" name="min_samples_curr_label">
                  <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;curr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;current&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -690,14 +690,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="min_samples_curr_value">
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
+                <widget class="QSpinBox" name="min_samples_curr_input"/>
                </item>
                <item>
                 <spacer name="verticalSpacer_2">
@@ -734,7 +727,7 @@
               <widget class="QSpinBox" name="min_samples_input_max">
                <property name="maximumSize">
                 <size>
-                 <width>75</width>
+                 <width>50</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -758,25 +751,6 @@
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_6">
-             <item>
-              <widget class="QPushButton" name="assoc_filter_button">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>70</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Filter</string>
-               </property>
-              </widget>
-             </item>
              <item>
               <widget class="QLabel" name="assoc_rule_thresholds_label">
                <property name="enabled">
@@ -857,6 +831,12 @@
                    <height>24</height>
                   </size>
                  </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -913,6 +893,12 @@
                    <height>24</height>
                   </size>
                  </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -967,6 +953,12 @@
                   <size>
                    <width>0</width>
                    <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
                   </size>
                  </property>
                 </widget>

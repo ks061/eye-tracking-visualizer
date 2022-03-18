@@ -44,7 +44,6 @@ class ModelPlot(object):
     __instance = None
 
     filtered_df = None
-    figure_widget = None
     fig = None
     x = None
     y = None
@@ -60,6 +59,7 @@ class ModelPlot(object):
     support_vals = None
     forward_confidence_vals = None
     backward_confidence_vals = None
+    sig_cluster_assoc_rule_arrows = None
 
     stimulus_image = None
     x_len = None
@@ -260,7 +260,7 @@ class ModelPlot(object):
             )
         # "Cluster":
         if analysis_type_selection == "Cluster":
-            self.perform_optics_clustering()
+            self.perform_dbscan_clustering()
             self.fig = px.scatter(
                 x=self.x,
                 y=self.y,
@@ -268,7 +268,21 @@ class ModelPlot(object):
             )
             self.add_cluster_labels()
             self.find_cluster_sequences(data_type_selection)
-            self.add_arrow_cluster_seq_if_one_participant()
+            self.add_arrow_cluster_seq_if_one_participant()  # runs if one participant
+            self.ordinal_association_rule_mining()  # find num sequences each cluster and each association rule is in
+            self.compute_support_vals()
+            self.compute_confidence_vals()  # both forward and backward confidence vals
+            self.add_arrows_sig_cluster_assoc_rules()  # runs if more than one participant
+            # self.print_assoc_mining_data()
+            self.fig.add_trace(go.Indicator(  # % Fixations in Cluster indicator
+                domain={'x': [0.07, 0.15], 'y': [0.9, 0.95]},
+                value=round((self.num_fixations_in_cluster / self.num_fixations) * 100, 2),
+                number={"suffix": "%", "font": {"size": 10, "color": "black"}},
+                mode="gauge+number",
+                gauge={"axis": {"range": [None, 100], "showticklabels": False}},
+                title={'text': "Fixations in Cluster", "font": {"size": 10, "color": "black"}}
+            ))
+            # print(self.fig)
 
         img_path_str = RELATIVE_STIMULUS_IMAGE_DIR + "/" + selected_stimulus_filename
 
@@ -308,20 +322,6 @@ class ModelPlot(object):
         )
 
         if analysis_type_selection == "Cluster":
-            self.ordinal_association_rule_mining()
-            self.compute_support_vals()
-            self.compute_confidence_vals()
-            self.add_arrows_sig_cluster_path_assoc_rules()
-            # self.print_assoc_mining_data()
-            self.fig.add_trace(go.Indicator(
-                domain={'x': [0.07, 0.15], 'y': [0.9, 0.95]},
-                value=round((self.num_fixations_in_cluster / self.num_fixations) * 100, 2),
-                number={"suffix": "%", "font": {"size": 10, "color": "black"}},
-                mode="gauge+number",
-                gauge={"axis": {"range": [None, 100], "showticklabels": False}},
-                title={'text': "Fixations in Cluster", "font": {"size": 10, "color": "black"}}
-            ))
-            print(self.fig)
             for i in range(len(self.fig.data)):  # ensure outliers are deselected by default
                 try:  # if inspecting a cluster of points within the figure object
                     if self.fig.data[i]['legendgroup'] == '-1':
@@ -329,9 +329,7 @@ class ModelPlot(object):
                 except _plotly_utils.exceptions.PlotlyKeyError:  # like if trying to access plotly.graph_objs.Indicator
                     continue
 
-        self.figure_widget = go.FigureWidget(self.fig)
-
-        return self.figure_widget
+        return self.fig
 
     @numba.jit
     def set_fixation_params(self,
@@ -469,47 +467,47 @@ class ModelPlot(object):
         self.fixation_participants = fixation_participant_identifiers
 
     @staticmethod
-    def get_eps_value():
+    def get_eps_value() -> int:
         try:
-            eps_value = int(ViewPlot.get_instance().eps_curr_value.text())
+            eps_value = ViewPlot.get_instance().eps_curr_input.value()
         except ValueError:
-            eps_value = ""
-        if eps_value == "":
+            eps_value = 0
+        if eps_value == 0:
             ViewPlot.get_instance().eps_input_min.setValue(int(DEFAULT_EPS_VALUE - DEFAULT_EPS_VALUE * .5))
-            ControllerPlot.get_instance().process_eps_input_min_entered()
+            ViewPlot.get_instance().eps_curr_input.setValue(int(DEFAULT_EPS_VALUE))
             ViewPlot.get_instance().eps_input_max.setValue(int(DEFAULT_EPS_VALUE + DEFAULT_EPS_VALUE * .5))
+
+            ControllerPlot.get_instance().process_eps_input_min_entered()
+            ControllerPlot.get_instance().process_eps_input_curr_entered()
             ControllerPlot.get_instance().process_eps_input_max_entered()
 
-            ViewPlot.get_instance().eps_slider.setValue(DEFAULT_EPS_VALUE)
-            ControllerPlot.get_instance().process_eps_slider_moved()
-
-            eps_value = int(ViewPlot.get_instance().eps_curr_value.text())
+            eps_value = ViewPlot.get_instance().eps_curr_input.value()
         return eps_value
 
     @staticmethod
-    def get_min_samples_value():
+    def get_min_samples_value() -> int:
         try:
-            min_samples_value = int(ViewPlot.get_instance().min_samples_curr_value.text())
+            min_samples_value = ViewPlot.get_instance().min_samples_curr_input.value()
         except ValueError:
-            min_samples_value = ""
-        if min_samples_value == "":
+            min_samples_value = 0
+        if min_samples_value == 0:
             ViewPlot.get_instance().min_samples_input_min.setValue(
                 int(DEFAULT_MIN_SAMPLES_VALUE - DEFAULT_MIN_SAMPLES_VALUE * .5)
             )
-            ControllerPlot.get_instance().process_min_samples_input_min_entered()
+            ViewPlot.get_instance().min_samples_curr_input.setValue(int(DEFAULT_MIN_SAMPLES_VALUE))
             ViewPlot.get_instance().min_samples_input_max.setValue(
                 int(DEFAULT_MIN_SAMPLES_VALUE + DEFAULT_MIN_SAMPLES_VALUE * .5)
             )
+
+            ControllerPlot.get_instance().process_min_samples_input_min_entered()
+            ControllerPlot.get_instance().process_min_samples_input_curr_entered()
             ControllerPlot.get_instance().process_min_samples_input_max_entered()
 
-            ViewPlot.get_instance().min_samples_slider.setValue(DEFAULT_MIN_SAMPLES_VALUE)
-            ControllerPlot.get_instance().process_min_samples_slider_moved()
-
-            min_samples_value = int(ViewPlot.get_instance().min_samples_curr_value.text())
+            min_samples_value = ViewPlot.get_instance().min_samples_curr_input.value()
         return min_samples_value
 
     @numba.jit
-    def perform_optics_clustering(self) -> None:
+    def perform_dbscan_clustering(self) -> None:
         """
         Performs clustering on the x and y attributes,
         removing any x, y pairs that have either value
@@ -534,7 +532,7 @@ class ModelPlot(object):
         self.set_color(color_col=labels)
 
     @numba.jit
-    def add_cluster_labels(self):
+    def add_cluster_labels(self) -> None:
         cluster_data = {'x': self.x, 'y': self.y, 'color': self.color}
         cluster_df = pd.DataFrame(data=cluster_data)
         self.cluster_centroids = cluster_df.groupby('color')[['x', 'y']].mean()
@@ -558,7 +556,7 @@ class ModelPlot(object):
                 )
 
     @numba.jit
-    def find_cluster_sequences(self, data_type_selection: str):
+    def find_cluster_sequences(self, data_type_selection: str) -> None:
         self.cluster_sequences = {}
 
         cluster_data = {'x': self.x, 'y': self.y, 'color': self.color}
@@ -599,93 +597,6 @@ class ModelPlot(object):
             self.cluster_sequences[participant] = cluster_seq
             cluster_seq = []
 
-    def print_assoc_mining_data(self) -> None:
-        """
-        Helper function adopted from
-        https://stackoverflow.com/questions/20181899/how-to-make-each-key-value-of-a-dictionary-print-on-a-new-line
-        :return: None
-        """
-        dict_names: list[str] = [
-            'ord_assoc_rule_count',
-            'cluster_id_count',
-            'support_vals',
-            'forward_confidence_vals',
-            'backward_confidence_vals'
-        ]
-        for d_name in dict_names:
-            print("**" + d_name + "**")
-            print("{" + "\n".join("{!r}: {!r},".format(k, v) for k, v in getattr(self, d_name).items()) + "}")
-
-    @numba.jit
-    def ordinal_association_rule_mining(self):
-        self.ord_assoc_rule_count = defaultdict(int)
-        self.cluster_id_count = defaultdict(int)
-        for sequence in self.cluster_sequences.values():
-            assoc_rules_for_seq = []
-            cluster_ids = []
-            for index_first in range(len(sequence)):
-                for index_last in range(index_first + 1, len(sequence), 1):
-                    if (index_first, index_last) not in assoc_rules_for_seq:
-                        assoc_rules_for_seq.append((sequence[index_first], sequence[index_last]))
-            for assoc_rule in assoc_rules_for_seq:
-                self.ord_assoc_rule_count[assoc_rule] += 1
-            for cluster_id in sequence:
-                if cluster_id not in cluster_ids:
-                    cluster_ids.append(cluster_id)
-            for cluster_id in cluster_ids:
-                self.cluster_id_count[cluster_id] += 1
-
-    @numba.jit
-    def compute_support_vals(self):
-        self.support_vals = defaultdict(int)
-        for assoc_rule, count in self.ord_assoc_rule_count.items():
-            self.support_vals[assoc_rule] = count / len(self.ord_assoc_rule_count)
-
-    @numba.jit
-    def compute_confidence_vals(self):
-        self.forward_confidence_vals = defaultdict(int)
-        for assoc_rule, count in self.ord_assoc_rule_count.items():
-            self.forward_confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[0]]
-        self.backward_confidence_vals = defaultdict(int)
-        for assoc_rule, count in self.ord_assoc_rule_count.items():
-            self.backward_confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[1]]
-
-    def add_arrows_sig_cluster_path_assoc_rules(self):
-        '''
-        Adapted https://stackoverflow.com/questions/58095322/draw-multiple-arrows-using-plotly-python
-        '''
-        if len(self.cluster_sequences) == 1:
-            return
-
-        assoc_rules = self.ord_assoc_rule_count.keys()
-        if ViewPlot.get_instance().forward_confidence_input.value() == 0:
-            ViewPlot.get_instance().forward_confidence_input.setValue(50)
-        if ViewPlot.get_instance().backward_confidence_input.value() == 0:
-            ViewPlot.get_instance().backward_confidence_input.setValue(50)
-        for assoc_rule in assoc_rules:
-            if self.support_vals[assoc_rule] < (ViewPlot.get_instance().support_input.value() / 100):  # b/c input is
-                # a percentage
-                continue
-            if self.forward_confidence_vals[assoc_rule] < (
-                    ViewPlot.get_instance().forward_confidence_input.value() / 100):
-                continue
-            if self.backward_confidence_vals[assoc_rule] < (
-                    ViewPlot.get_instance().backward_confidence_input.value() / 100):
-                continue
-            self.fig.add_annotation(
-                x=self.cluster_centroids['x'].loc[assoc_rule[1]],
-                y=self.cluster_centroids['y'].loc[assoc_rule[1]],
-                xref="x", yref="y",
-                text="",
-                showarrow=True,
-                axref="x", ayref='y',
-                ax=self.cluster_centroids['x'].loc[assoc_rule[0]],
-                ay=self.cluster_centroids['y'].loc[assoc_rule[0]],
-                arrowhead=3,
-                arrowwidth=1.5,
-                arrowcolor='#000000'
-            )
-
     def add_arrow_cluster_seq_if_one_participant(self) -> None:
         '''
         Adopted from https://stackoverflow.com/questions/58095322/draw-multiple-arrows-using-plotly-python
@@ -710,6 +621,138 @@ class ModelPlot(object):
                     arrowwidth=1.5,
                     arrowcolor='#EE4B2B'
                 )
+
+    def print_assoc_mining_data(self) -> None:
+        """
+        Helper function adopted from
+        https://stackoverflow.com/questions/20181899/how-to-make-each-key-value-of-a-dictionary-print-on-a-new-line
+        :return: None
+        """
+        dict_names: list[str] = [
+            'ord_assoc_rule_count',
+            'cluster_id_count',
+            'support_vals',
+            'forward_confidence_vals',
+            'backward_confidence_vals'
+        ]
+        for d_name in dict_names:
+            print("**" + d_name + "**")
+            print("{" + "\n".join("{!r}: {!r},".format(k, v) for k, v in getattr(self, d_name).items()) + "}")
+
+    @numba.jit
+    def ordinal_association_rule_mining(self) -> None:
+        self.ord_assoc_rule_count = defaultdict(int)
+        self.cluster_id_count = defaultdict(int)
+        for sequence in self.cluster_sequences.values():
+            assoc_rules_for_seq = []
+            cluster_ids = []
+            for index_first in range(len(sequence)):
+                for index_last in range(index_first + 1, len(sequence), 1):
+                    if (index_first, index_last) not in assoc_rules_for_seq:
+                        assoc_rules_for_seq.append((sequence[index_first], sequence[index_last]))
+            for assoc_rule in assoc_rules_for_seq:
+                self.ord_assoc_rule_count[assoc_rule] += 1
+            for cluster_id in sequence:
+                if cluster_id not in cluster_ids:
+                    cluster_ids.append(cluster_id)
+            for cluster_id in cluster_ids:
+                self.cluster_id_count[cluster_id] += 1
+
+    @numba.jit
+    def compute_support_vals(self) -> None:
+        self.support_vals = defaultdict(int)
+        for assoc_rule, count in self.ord_assoc_rule_count.items():
+            self.support_vals[assoc_rule] = count / len(self.ord_assoc_rule_count)
+
+    @numba.jit
+    def compute_confidence_vals(self) -> None:
+        self.forward_confidence_vals = defaultdict(int)
+        for assoc_rule, count in self.ord_assoc_rule_count.items():
+            self.forward_confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[0]]
+        self.backward_confidence_vals = defaultdict(int)
+        for assoc_rule, count in self.ord_assoc_rule_count.items():
+            self.backward_confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[1]]
+
+    @numba.jit
+    def add_arrows_sig_cluster_assoc_rules(self) -> None:
+        '''
+        Adapted https://stackoverflow.com/questions/58095322/draw-multiple-arrows-using-plotly-python
+        '''
+        if len(self.cluster_sequences) == 1:
+            return
+
+        self.sig_cluster_assoc_rule_arrows = {}
+        assoc_rules = self.ord_assoc_rule_count.keys()
+        if ViewPlot.get_instance().forward_confidence_input.value() == 0:
+            ViewPlot.get_instance().forward_confidence_input.setValue(50)
+        if ViewPlot.get_instance().backward_confidence_input.value() == 0:
+            ViewPlot.get_instance().backward_confidence_input.setValue(50)
+        for assoc_rule in assoc_rules:
+            visible = True  # only show annotation if meets all metrics below
+            # div by 100 b/c inputs are percentages
+            if self.support_vals[assoc_rule] < (ViewPlot.get_instance().support_input.value() / 100):
+                visible = False
+            if self.forward_confidence_vals[assoc_rule] < (
+                    ViewPlot.get_instance().forward_confidence_input.value() / 100):
+                visible = False
+            if self.backward_confidence_vals[assoc_rule] < (
+                    ViewPlot.get_instance().backward_confidence_input.value() / 100):
+                visible = False
+            x = self.cluster_centroids['x'].loc[assoc_rule[1]]
+            y = self.cluster_centroids['y'].loc[assoc_rule[1]]
+            ax = self.cluster_centroids['x'].loc[assoc_rule[0]]
+            ay = self.cluster_centroids['y'].loc[assoc_rule[0]]
+            self.fig.add_annotation(
+                x=x,
+                y=y,
+                xref="x", yref="y",
+                text="",
+                showarrow=True,
+                axref="x", ayref='y',
+                ax=ax,
+                ay=ay,
+                arrowhead=3,
+                arrowwidth=1.5,
+                arrowcolor='#000000',
+                visible=visible
+            )
+            self.sig_cluster_assoc_rule_arrows[assoc_rule] = {"x": x, "y": y, "ax": ax, "ay": ay, "visible": visible}
+
+    def filter_sig_cluster_assoc_rule_arrows(self) -> None:
+        assoc_rules = self.ord_assoc_rule_count.keys()
+        annotations = self.fig['layout']['annotations']
+        for assoc_rule in assoc_rules:
+            should_be_visible = True
+            if self.support_vals[assoc_rule] < (ViewPlot.get_instance().support_input.value() / 100):
+                should_be_visible = False
+            if self.forward_confidence_vals[assoc_rule] < (
+                    ViewPlot.get_instance().forward_confidence_input.value() / 100):
+                should_be_visible = False
+            if self.backward_confidence_vals[assoc_rule] < (
+                    ViewPlot.get_instance().backward_confidence_input.value() / 100):
+                should_be_visible = False
+            if should_be_visible == self.sig_cluster_assoc_rule_arrows[assoc_rule]["visible"]:
+                continue
+            for i in range(len(annotations)):
+                annotation = annotations[i]
+                if "x" not in annotation.keys():
+                    continue
+                elif annotation["x"] != self.sig_cluster_assoc_rule_arrows[assoc_rule]["x"]:
+                    continue
+                elif "y" not in annotation.keys():
+                    continue
+                elif annotation["y"] != self.sig_cluster_assoc_rule_arrows[assoc_rule]["y"]:
+                    continue
+                elif "ax" not in annotation.keys():
+                    continue
+                elif annotation["ax"] != self.sig_cluster_assoc_rule_arrows[assoc_rule]["ax"]:
+                    continue
+                elif "ay" not in annotation.keys():
+                    continue
+                elif annotation["ay"] != self.sig_cluster_assoc_rule_arrows[assoc_rule]["ay"]:
+                    continue
+                else:
+                    annotations[i]["visible"] = should_be_visible
 
     def extract_and_set_stimulus_params(self,
                                         selected_stimulus_filename: str,

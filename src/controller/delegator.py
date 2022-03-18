@@ -65,15 +65,14 @@ class Delegator(QMainWindow):
     eps_input_min = None
     eps_input_max = None
     eps_slider = None
-    eps_curr_value = None
+    eps_curr_input = None
     min_samples_input_min = None
     min_samples_input_max = None
     min_samples_slider = None
-    min_samples_curr_value = None
+    min_samples_curr_input = None
     support_input = None
     forward_confidence_input = None
     backward_confidence_input = None
-    assoc_filter_button = None
 
     def __init__(self):
         super(Delegator, self).__init__()
@@ -146,6 +145,7 @@ class Delegator(QMainWindow):
         ViewAnalysisTypeSelection(
             menu=self.analysis_type_menu
         )
+
         # Encapsulating the plot to be displayed in the UI
         ViewPlot(
             plot_button=self.plot_button,
@@ -153,17 +153,15 @@ class Delegator(QMainWindow):
             eps_input_min=self.eps_input_min,
             eps_input_max=self.eps_input_max,
             eps_slider=self.eps_slider,
-            eps_curr_value=self.eps_curr_value,
+            eps_curr_input=self.eps_curr_input,
             min_samples_input_min=self.min_samples_input_min,
             min_samples_input_max=self.min_samples_input_max,
             min_samples_slider=self.min_samples_slider,
-            min_samples_curr_value=self.min_samples_curr_value,
+            min_samples_curr_input=self.min_samples_curr_input,
             support_input=self.support_input,
             forward_confidence_input=self.forward_confidence_input,
-            backward_confidence_input=self.backward_confidence_input,
-            assoc_filter_button=self.assoc_filter_button
+            backward_confidence_input=self.backward_confidence_input
         )
-
 
 from src.controller.controller import Controller
 from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection

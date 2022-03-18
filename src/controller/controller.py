@@ -66,11 +66,17 @@ class Controller(object):
         ViewPlot.get_instance().eps_input_min.valueChanged.connect(
             lambda: ControllerPlot.get_instance().process_eps_input_min_entered()
         )
+        ViewPlot.get_instance().eps_curr_input.valueChanged.connect(
+            lambda: ControllerPlot.get_instance().process_eps_input_curr_entered()
+        )
         ViewPlot.get_instance().eps_input_max.valueChanged.connect(
             lambda: ControllerPlot.get_instance().process_eps_input_max_entered()
         )
         ViewPlot.get_instance().min_samples_input_min.valueChanged.connect(
             lambda: ControllerPlot.get_instance().process_min_samples_input_min_entered()
+        )
+        ViewPlot.get_instance().min_samples_curr_input.valueChanged.connect(
+            lambda: ControllerPlot.get_instance().process_min_samples_input_curr_entered()
         )
         ViewPlot.get_instance().min_samples_input_max.valueChanged.connect(
             lambda: ControllerPlot.get_instance().process_min_samples_input_max_entered()
@@ -80,12 +86,6 @@ class Controller(object):
         )
         ViewPlot.get_instance().min_samples_slider.sliderReleased.connect(
             lambda: ControllerPlot.get_instance().process_min_samples_slider_moved()
-        )
-        ViewPlot.get_instance().eps_slider.sliderReleased.connect(
-            lambda: ControllerPlot.get_instance().process_plot_button_click()
-        )
-        ViewPlot.get_instance().min_samples_slider.sliderReleased.connect(
-            lambda: ControllerPlot.get_instance().process_plot_button_click()
         )
 
     @staticmethod
