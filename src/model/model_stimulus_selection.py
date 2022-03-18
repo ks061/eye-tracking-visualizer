@@ -62,8 +62,8 @@ class ModelStimulusSelection(object):
             elif not imgutils.img_exists(stimulus):
                 stimuli_names = np.delete(stimuli_names, np.argwhere(stimulus))
 
-        self.stimuli_names = stimuli_names
-        return stimuli_names
+        self.stimuli_names = sorted(stimuli_names)
+        return self.stimuli_names
 
 
 import src.model.utils.img_utils as imgutils

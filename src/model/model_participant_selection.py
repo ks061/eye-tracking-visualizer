@@ -61,6 +61,7 @@ class ModelParticipantSelection(object):
         saved_wd = os.getcwd()
         os.chdir(RELATIVE_DATA_DIR)
         self.all_participants = glob.glob('*.{}'.format('tsv'))
+        self.all_participants = sorted(self.all_participants)
         os.chdir(saved_wd)
         return self.all_participants
 

@@ -12,6 +12,7 @@ from collections import defaultdict
 import os.path
 import warnings
 
+import _plotly_utils
 import numba
 import numpy as np
 import pandas as pd
@@ -57,7 +58,8 @@ class ModelPlot(object):
     ord_assoc_rule_count = None
     cluster_id_count = None
     support_vals = None
-    confidence_vals = None
+    forward_confidence_vals = None
+    backward_confidence_vals = None
 
     stimulus_image = None
     x_len = None
@@ -192,7 +194,6 @@ class ModelPlot(object):
     def set_gaze_params(self, df: pd.DataFrame) -> None:
         self.set_x(df=df), self.set_y(df=df), self.set_color(df=df)
 
-    @numba.jit
     def update_fig(self) -> go.FigureWidget:
         """
         Updates the underlying figure based upon
@@ -267,15 +268,7 @@ class ModelPlot(object):
             )
             self.add_cluster_labels()
             self.find_cluster_sequences(data_type_selection)
-            self.add_arrow_annotations_if_one_participant()
-            self.fig.add_trace(go.Indicator(
-                domain = {'x': [0.07, 0.15], 'y': [0.9, 0.95]},
-                value = round((self.num_fixations_in_cluster/self.num_fixations)*100, 2),
-                number = {"suffix": "%", "font": {"size": 10, "color": "black"}},
-                mode = "gauge+number",
-                gauge = {"axis": {"range": [None, 100], "showticklabels": False}},
-                title = {'text': "Fixations in Cluster", "font": {"size": 10, "color": "black"}}
-            ))
+            self.add_arrow_cluster_seq_if_one_participant()
 
         img_path_str = RELATIVE_STIMULUS_IMAGE_DIR + "/" + selected_stimulus_filename
 
@@ -315,13 +308,26 @@ class ModelPlot(object):
         )
 
         if analysis_type_selection == "Cluster":
-            for i in range(len(self.fig.data)):
-                if self.fig.data[i].legendgroup == '-1':
-                    self.fig.data[i].update(visible='legendonly')
             self.ordinal_association_rule_mining()
             self.compute_support_vals()
             self.compute_confidence_vals()
-            self.print_assoc_mining_data()
+            self.add_arrows_sig_cluster_path_assoc_rules()
+            # self.print_assoc_mining_data()
+            self.fig.add_trace(go.Indicator(
+                domain={'x': [0.07, 0.15], 'y': [0.9, 0.95]},
+                value=round((self.num_fixations_in_cluster / self.num_fixations) * 100, 2),
+                number={"suffix": "%", "font": {"size": 10, "color": "black"}},
+                mode="gauge+number",
+                gauge={"axis": {"range": [None, 100], "showticklabels": False}},
+                title={'text': "Fixations in Cluster", "font": {"size": 10, "color": "black"}}
+            ))
+            print(self.fig)
+            for i in range(len(self.fig.data)):  # ensure outliers are deselected by default
+                try:  # if inspecting a cluster of points within the figure object
+                    if self.fig.data[i]['legendgroup'] == '-1':
+                        self.fig.data[i]["visible"] = 'legendonly'
+                except _plotly_utils.exceptions.PlotlyKeyError:  # like if trying to access plotly.graph_objs.Indicator
+                    continue
 
         self.figure_widget = go.FigureWidget(self.fig)
 
@@ -599,7 +605,13 @@ class ModelPlot(object):
         https://stackoverflow.com/questions/20181899/how-to-make-each-key-value-of-a-dictionary-print-on-a-new-line
         :return: None
         """
-        dict_names: list[str] = ['ord_assoc_rule_count', 'cluster_id_count', 'support_vals', 'confidence_vals']
+        dict_names: list[str] = [
+            'ord_assoc_rule_count',
+            'cluster_id_count',
+            'support_vals',
+            'forward_confidence_vals',
+            'backward_confidence_vals'
+        ]
         for d_name in dict_names:
             print("**" + d_name + "**")
             print("{" + "\n".join("{!r}: {!r},".format(k, v) for k, v in getattr(self, d_name).items()) + "}")
@@ -631,15 +643,55 @@ class ModelPlot(object):
 
     @numba.jit
     def compute_confidence_vals(self):
-        self.confidence_vals = defaultdict(int)
+        self.forward_confidence_vals = defaultdict(int)
         for assoc_rule, count in self.ord_assoc_rule_count.items():
-            self.confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[0]]
+            self.forward_confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[0]]
+        self.backward_confidence_vals = defaultdict(int)
+        for assoc_rule, count in self.ord_assoc_rule_count.items():
+            self.backward_confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[1]]
 
-    def add_arrow_annotations_if_one_participant(self) -> None:
+    def add_arrows_sig_cluster_path_assoc_rules(self):
+        '''
+        Adapted https://stackoverflow.com/questions/58095322/draw-multiple-arrows-using-plotly-python
+        '''
+        if len(self.cluster_sequences) == 1:
+            return
+
+        assoc_rules = self.ord_assoc_rule_count.keys()
+        if ViewPlot.get_instance().forward_confidence_input.value() == 0:
+            ViewPlot.get_instance().forward_confidence_input.setValue(50)
+        if ViewPlot.get_instance().backward_confidence_input.value() == 0:
+            ViewPlot.get_instance().backward_confidence_input.setValue(50)
+        for assoc_rule in assoc_rules:
+            if self.support_vals[assoc_rule] < (ViewPlot.get_instance().support_input.value() / 100):  # b/c input is
+                # a percentage
+                continue
+            if self.forward_confidence_vals[assoc_rule] < (
+                    ViewPlot.get_instance().forward_confidence_input.value() / 100):
+                continue
+            if self.backward_confidence_vals[assoc_rule] < (
+                    ViewPlot.get_instance().backward_confidence_input.value() / 100):
+                continue
+            self.fig.add_annotation(
+                x=self.cluster_centroids['x'].loc[assoc_rule[1]],
+                y=self.cluster_centroids['y'].loc[assoc_rule[1]],
+                xref="x", yref="y",
+                text="",
+                showarrow=True,
+                axref="x", ayref='y',
+                ax=self.cluster_centroids['x'].loc[assoc_rule[0]],
+                ay=self.cluster_centroids['y'].loc[assoc_rule[0]],
+                arrowhead=3,
+                arrowwidth=1.5,
+                arrowcolor='#000000'
+            )
+
+    def add_arrow_cluster_seq_if_one_participant(self) -> None:
         '''
         Adopted from https://stackoverflow.com/questions/58095322/draw-multiple-arrows-using-plotly-python
         '''
-        if len(self.cluster_sequences) != 1: return
+        if len(self.cluster_sequences) != 1:
+            return
 
         participant = list(self.cluster_sequences.keys())[0]
         seq = self.cluster_sequences[participant]

@@ -45,7 +45,7 @@ class ControllerPlot(object):
         """
         ControllerParticipantSelection.get_instance().update_model_selected_participants_from_view()
         ModelData.get_instance().update_df()
-        ModelPlot.get_instance().update_fig()
+        # ModelPlot.get_instance().update_fig() # already updated in ViewPlot.get_instance().plot()
         ViewPlot.get_instance().plot()
 
     @staticmethod

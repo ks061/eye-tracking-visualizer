@@ -70,6 +70,10 @@ class Delegator(QMainWindow):
     min_samples_input_max = None
     min_samples_slider = None
     min_samples_curr_value = None
+    support_input = None
+    forward_confidence_input = None
+    backward_confidence_input = None
+    assoc_filter_button = None
 
     def __init__(self):
         super(Delegator, self).__init__()
@@ -153,7 +157,11 @@ class Delegator(QMainWindow):
             min_samples_input_min=self.min_samples_input_min,
             min_samples_input_max=self.min_samples_input_max,
             min_samples_slider=self.min_samples_slider,
-            min_samples_curr_value=self.min_samples_curr_value
+            min_samples_curr_value=self.min_samples_curr_value,
+            support_input=self.support_input,
+            forward_confidence_input=self.forward_confidence_input,
+            backward_confidence_input=self.backward_confidence_input,
+            assoc_filter_button=self.assoc_filter_button
         )
 
 

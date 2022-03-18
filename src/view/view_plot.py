@@ -28,6 +28,10 @@ class ViewPlot(object):
     min_samples_input_ma = None,
     min_samples_slider = None
     min_samples_curr_value = None
+    support_input = None
+    forward_confidence_input = None
+    backward_confidence_input = None
+    assoc_filter_button = None
 
     # initialized in class
     browser = None
@@ -43,7 +47,11 @@ class ViewPlot(object):
                  min_samples_input_min,
                  min_samples_input_max,
                  min_samples_slider,
-                 min_samples_curr_value):
+                 min_samples_curr_value,
+                 support_input,
+                 forward_confidence_input,
+                 backward_confidence_input,
+                 assoc_filter_button):
         if ViewPlot.__instance is not None:
             raise Exception("ViewPlot should be treated as a singleton class.")
         else:
@@ -58,6 +66,10 @@ class ViewPlot(object):
         self.min_samples_input_max = min_samples_input_max
         self.min_samples_slider = min_samples_slider
         self.min_samples_curr_value = min_samples_curr_value
+        self.support_input = support_input
+        self.forward_confidence_input = forward_confidence_input
+        self.backward_confidence_input = backward_confidence_input
+        self.assoc_filter_button = assoc_filter_button
 
         self.setup()
 
