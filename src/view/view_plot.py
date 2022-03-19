@@ -8,6 +8,8 @@ HIGHLY MODULAR PROGRAM.
 """
 
 # External imports
+import time
+
 import plotly.graph_objects as go
 from PyQt5 import QtWidgets, QtWebEngineWidgets
 
@@ -130,7 +132,7 @@ class ViewPlot(object):
             return False
         if self.saved_eps_val != ModelPlot.get_eps_value():
             return False
-        if self.saved_min_samples_val != ModelPlot.get_eps_value():
+        if self.saved_min_samples_val != ModelPlot.get_min_samples_value():
             return False
         return True
 
@@ -150,12 +152,19 @@ class ViewPlot(object):
         """
         self.browser_refresh()
         if not self.are_same_plot_selections():
+            # start_time = time.time()  # profiling plotting
             fig = ModelPlot.get_instance().update_fig()
+            # print(time.time() - start_time)
         elif not self.are_same_assoc_rule_threshold_selections():
+            # start_time = time.time()  # profiling filtration and displaying on
+            # significant association rules
             ModelPlot.get_instance().filter_sig_cluster_assoc_rule_arrows()
             fig = ModelPlot.get_instance().fig
+            # print(time.time() - start_time)
         else:
+            # start_time = time.time()
             fig = ModelPlot.get_instance().fig
+            # print(time.time() - start_time)
         self.figure_widget = go.FigureWidget(fig)
         self.browser.resize(900, 700)
         self.browser.show()

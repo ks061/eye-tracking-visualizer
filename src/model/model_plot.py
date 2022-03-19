@@ -16,6 +16,7 @@ import _plotly_utils
 import numba
 import numpy as np
 import pandas as pd
+import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image, ImageOps
@@ -737,26 +738,25 @@ class ModelPlot(object):
                 should_be_visible = False
             if should_be_visible == self.sig_cluster_assoc_rule_arrows[assoc_rule]["visible"]:
                 continue
-            for i in range(len(annotations)):
-                annotation = annotations[i]
-                if "x" not in annotation.keys():
+            for annotation in annotations:
+                if not hasattr(annotation, "x"):
                     continue
-                elif annotation["x"] != self.sig_cluster_assoc_rule_arrows[assoc_rule]["x"]:
+                elif annotation.x != self.sig_cluster_assoc_rule_arrows[assoc_rule]["x"]:
                     continue
-                elif "y" not in annotation.keys():
+                elif not hasattr(annotation, "y"):
                     continue
-                elif annotation["y"] != self.sig_cluster_assoc_rule_arrows[assoc_rule]["y"]:
+                elif annotation.y != self.sig_cluster_assoc_rule_arrows[assoc_rule]["y"]:
                     continue
-                elif "ax" not in annotation.keys():
+                elif not hasattr(annotation, "ax"):
                     continue
-                elif annotation["ax"] != self.sig_cluster_assoc_rule_arrows[assoc_rule]["ax"]:
+                elif annotation.ax != self.sig_cluster_assoc_rule_arrows[assoc_rule]["ax"]:
                     continue
-                elif "ay" not in annotation.keys():
+                elif not hasattr(annotation, "ay"):
                     continue
-                elif annotation["ay"] != self.sig_cluster_assoc_rule_arrows[assoc_rule]["ay"]:
+                elif annotation.ay != self.sig_cluster_assoc_rule_arrows[assoc_rule]["ay"]:
                     continue
                 else:
-                    annotations[i]["visible"] = should_be_visible
+                    annotation.visible = should_be_visible
 
     def extract_and_set_stimulus_params(self,
                                         selected_stimulus_filename: str,

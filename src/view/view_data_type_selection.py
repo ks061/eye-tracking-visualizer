@@ -54,7 +54,7 @@ class ViewDataTypeSelection(object):
         """
         Setup data type selected menu
         """
-        data_types = ["Gaze Data", "Fixation Data"]
+        data_types = ["Fixation Data", "Gaze Data"]
         for data_type in data_types:
             if self.menu.findText(data_type) == -1:
                 self.menu.addItem(data_type)

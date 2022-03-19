@@ -54,7 +54,7 @@ class ViewAnalysisTypeSelection(object):
         """
         Sets up the analysis type selected menu
         """
-        analysis_types = ["Scatter Plot", "Line Plot", "Heat Map", "Cluster"]
+        analysis_types = ["Cluster", "Scatter Plot", "Line Plot", "Heat Map"]
         for analysis_type in analysis_types:
             if self.menu.findText(analysis_type) == -1:
                 self.menu.addItem(analysis_type)
