@@ -696,31 +696,34 @@ class ModelPlot(object):
             # div by 100 b/c inputs are percentages
             if self.support_vals[assoc_rule] < (ViewPlot.get_instance().support_input.value() / 100):
                 visible = False
-            if self.forward_confidence_vals[assoc_rule] < (
+            elif self.forward_confidence_vals[assoc_rule] < (
                     ViewPlot.get_instance().forward_confidence_input.value() / 100):
                 visible = False
-            if self.backward_confidence_vals[assoc_rule] < (
+            elif self.backward_confidence_vals[assoc_rule] < (
                     ViewPlot.get_instance().backward_confidence_input.value() / 100):
                 visible = False
             x = self.cluster_centroids['x'].loc[assoc_rule[1]]
             y = self.cluster_centroids['y'].loc[assoc_rule[1]]
             ax = self.cluster_centroids['x'].loc[assoc_rule[0]]
             ay = self.cluster_centroids['y'].loc[assoc_rule[0]]
-            self.fig.add_annotation(
-                x=x,
-                y=y,
-                xref="x", yref="y",
-                text="",
-                showarrow=True,
-                axref="x", ayref='y',
-                ax=ax,
-                ay=ay,
-                arrowhead=3,
-                arrowwidth=1.5,
-                arrowcolor='#000000',
-                visible=visible
-            )
-            self.sig_cluster_assoc_rule_arrows[assoc_rule] = {"x": x, "y": y, "ax": ax, "ay": ay, "visible": visible}
+            do_add = visible
+            if do_add:
+                self.fig.add_annotation(
+                    x=x,
+                    y=y,
+                    xref="x", yref="y",
+                    text="",
+                    showarrow=True,
+                    axref="x", ayref='y',
+                    ax=ax,
+                    ay=ay,
+                    arrowhead=3,
+                    arrowwidth=1.5,
+                    arrowcolor='#000000',
+                    visible=visible
+                )
+            self.sig_cluster_assoc_rule_arrows[assoc_rule] = {"x": x, "y": y, "ax": ax, "ay": ay, "visible": visible,
+                                                              "added": do_add}
 
     @numba.jit
     def filter_sig_cluster_assoc_rule_arrows(self) -> None:
@@ -730,12 +733,30 @@ class ModelPlot(object):
             should_be_visible = True
             if self.support_vals[assoc_rule] < (ViewPlot.get_instance().support_input.value() / 100):
                 should_be_visible = False
-            if self.forward_confidence_vals[assoc_rule] < (
+            elif self.forward_confidence_vals[assoc_rule] < (
                     ViewPlot.get_instance().forward_confidence_input.value() / 100):
                 should_be_visible = False
-            if self.backward_confidence_vals[assoc_rule] < (
+            elif self.backward_confidence_vals[assoc_rule] < (
                     ViewPlot.get_instance().backward_confidence_input.value() / 100):
                 should_be_visible = False
+            if should_be_visible and not self.sig_cluster_assoc_rule_arrows[assoc_rule]["added"]:
+                self.fig.add_annotation(
+                    x=x,
+                    y=y,
+                    xref="x", yref="y",
+                    text="",
+                    showarrow=True,
+                    axref="x", ayref='y',
+                    ax=ax,
+                    ay=ay,
+                    arrowhead=3,
+                    arrowwidth=1.5,
+                    arrowcolor='#000000',
+                    visible=should_be_visible
+                )
+                self.sig_cluster_assoc_rule_arrows[assoc_rule]["added"] = True
+                self.sig_cluster_assoc_rule_arrows[assoc_rule]["visible"] = should_be_visible
+                continue
             if should_be_visible == self.sig_cluster_assoc_rule_arrows[assoc_rule]["visible"]:
                 continue
             for annotation in annotations:
@@ -757,6 +778,8 @@ class ModelPlot(object):
                     continue
                 else:
                     annotation.visible = should_be_visible
+                    self.sig_cluster_assoc_rule_arrows[assoc_rule]["visible"] = should_be_visible
+
 
     def extract_and_set_stimulus_params(self,
                                         selected_stimulus_filename: str,
