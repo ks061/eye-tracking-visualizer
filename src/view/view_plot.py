@@ -47,6 +47,9 @@ class ViewPlot(object):
     saved_analysis_type_selection: str = None
     saved_eps_val: int = None
     saved_min_samples_val: int = None
+    saved_support_threshold: int = None
+    saved_forward_confidence_threshold: int = None
+    saved_backward_confidence_threshold: int = None
 
     def __init__(self,
                  plot_button,
@@ -112,6 +115,9 @@ class ViewPlot(object):
         self.saved_analysis_type_selection = ViewAnalysisTypeSelection.get_instance().get_selected()
         self.saved_eps_val = ModelPlot.get_eps_value()
         self.saved_min_samples_val = ModelPlot.get_min_samples_value()
+        self.saved_support_threshold = ViewPlot.get_instance().support_input.value()
+        self.saved_forward_confidence_threshold = ViewPlot.get_instance().forward_confidence_input.value()
+        self.saved_backward_confidence_threshold = ViewPlot.get_instance().backward_confidence_input.value()
 
     def are_same_plot_selections(self) -> bool:
         if self.saved_stimulus_selection != ViewStimulusSelection.get_instance().menu.currentText():
@@ -128,6 +134,15 @@ class ViewPlot(object):
             return False
         return True
 
+    def are_same_assoc_rule_threshold_selections(self) -> bool:
+        if self.saved_support_threshold != ViewPlot.get_instance().support_input.value():
+            return False
+        if self.saved_forward_confidence_threshold != ViewPlot.get_instance().forward_confidence_input.value():
+            return False
+        if self.saved_backward_confidence_threshold != ViewPlot.get_instance().backward_confidence_input.value():
+            return False
+        return True
+
     def plot(self) -> None:
         """
         Creates a visualization based upon the given data,
@@ -136,8 +151,10 @@ class ViewPlot(object):
         self.browser_refresh()
         if not self.are_same_plot_selections():
             fig = ModelPlot.get_instance().update_fig()
-        else:
+        elif not self.are_same_assoc_rule_threshold_selections():
             ModelPlot.get_instance().filter_sig_cluster_assoc_rule_arrows()
+            fig = ModelPlot.get_instance().fig
+        else:
             fig = ModelPlot.get_instance().fig
         self.figure_widget = go.FigureWidget(fig)
         self.browser.resize(900, 700)

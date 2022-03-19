@@ -23,7 +23,8 @@ from numba.core.errors import NumbaWarning, NumbaDeprecationWarning, NumbaPendin
 from sklearn.cluster import DBSCAN
 
 from src.controller.controller_plot import ControllerPlot
-from src.main.config import MAX_FIXATION_PT_SIZE, DEFAULT_EPS_VALUE, DEFAULT_MIN_SAMPLES_VALUE, MAKE_IMG_GRAYSCALE
+from src.main.config import MAX_FIXATION_PT_SIZE, DEFAULT_EPS_VALUE, DEFAULT_MIN_SAMPLES_VALUE, MAKE_IMG_GRAYSCALE, \
+    DEFAULT_SUPPORT_THRESHOLD, DEFAULT_FORWARD_CONFIDENCE_THRESHOLD, DEFAULT_BACKWARD_CONFIDENCE_THRESHOLD
 from src.main.config import PARTICIPANT_FILENAME_COL_TITLE
 from src.main.config import PARTICIPANT_NAME_COL_TITLE
 from src.main.config import RELATIVE_STIMULUS_IMAGE_DIR
@@ -683,10 +684,12 @@ class ModelPlot(object):
 
         self.sig_cluster_assoc_rule_arrows = {}
         assoc_rules = self.ord_assoc_rule_count.keys()
+        if ViewPlot.get_instance().support_input.value() == 0:
+            ViewPlot.get_instance().support_input.setValue(DEFAULT_SUPPORT_THRESHOLD)
         if ViewPlot.get_instance().forward_confidence_input.value() == 0:
-            ViewPlot.get_instance().forward_confidence_input.setValue(50)
+            ViewPlot.get_instance().forward_confidence_input.setValue(DEFAULT_FORWARD_CONFIDENCE_THRESHOLD)
         if ViewPlot.get_instance().backward_confidence_input.value() == 0:
-            ViewPlot.get_instance().backward_confidence_input.setValue(50)
+            ViewPlot.get_instance().backward_confidence_input.setValue(DEFAULT_BACKWARD_CONFIDENCE_THRESHOLD)
         for assoc_rule in assoc_rules:
             visible = True  # only show annotation if meets all metrics below
             # div by 100 b/c inputs are percentages
@@ -718,6 +721,7 @@ class ModelPlot(object):
             )
             self.sig_cluster_assoc_rule_arrows[assoc_rule] = {"x": x, "y": y, "ax": ax, "ay": ay, "visible": visible}
 
+    @numba.jit
     def filter_sig_cluster_assoc_rule_arrows(self) -> None:
         assoc_rules = self.ord_assoc_rule_count.keys()
         annotations = self.fig['layout']['annotations']

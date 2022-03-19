@@ -47,7 +47,7 @@ class ModelData(object):
             ModelData()
         return ModelData.__instance
 
-    def update_df(self) -> pd.DataFrame:
+    def load_df(self) -> pd.DataFrame:
         """
         Imports all the eye-tracking data
         (of the selected participants) available

@@ -98,7 +98,7 @@ class Controller(object):
 
     @staticmethod
     def load_data() -> None:
-        ModelData.get_instance().update_df()
+        ModelData.get_instance().load_df()
 
     @staticmethod
     def load_stimuli_menu() -> None:
