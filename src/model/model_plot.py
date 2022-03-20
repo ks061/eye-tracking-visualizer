@@ -8,15 +8,14 @@ HIGHLY MODULAR PROGRAM.
 """
 
 import base64
-from collections import defaultdict
 import os.path
 import warnings
+from collections import defaultdict
 
 import _plotly_utils
 import numba
 import numpy as np
 import pandas as pd
-import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image, ImageOps
@@ -51,7 +50,7 @@ class ModelPlot(object):
     y = None
     color = None
     size = None
-    fixation_participants = None
+    fixation_participant_identifiers = None
     num_fixations = None
     num_fixations_in_cluster = None
     cluster_centroids = None
@@ -333,7 +332,6 @@ class ModelPlot(object):
 
         return self.fig
 
-    @numba.jit
     def set_fixation_params(self,
                             df: pd.DataFrame,
                             max_point_size: int = MAX_FIXATION_PT_SIZE) -> None:
@@ -348,11 +346,23 @@ class ModelPlot(object):
         :param max_point_size: size of the longest fixation point in the plot
         :type max_point_size: int
         """
-        fixation_x_coords = []
-        fixation_y_coords = []
-        fixation_durations = []
-        fixation_point_sizes = []
-        fixation_participant_identifiers = []
+        # data being analyzed
+        timestamps = df[TIMESTAMP_COL_TITLE].to_numpy()
+        x_coord_fixation_points = df[X_FIXATION_COL_TITLE].to_numpy()
+        y_coord_fixation_points = df[Y_FIXATION_COL_TITLE].to_numpy()
+        participant_identifiers = df[PARTICIPANT_NAME_COL_TITLE].to_numpy()
+
+        fixation_x_coords = np.empty(shape=x_coord_fixation_points.size, dtype=np.float)
+        fixation_x_coords_curr_index = 0
+        fixation_y_coords = np.empty(shape=y_coord_fixation_points.size, dtype=np.float)
+        fixation_y_coords_curr_index = 0
+        fixation_durations = np.empty(shape=timestamps.size, dtype=np.float)
+        fixation_durations_curr_index = 0
+        fixation_point_sizes = np.empty(shape=timestamps.size, dtype=np.float)
+        # fixation_point_sizes_curr_index not needed; taken care of at end
+        # when fixation durations are mapped to fixation point sizes
+        fixation_participant_identifiers = np.empty(shape=participant_identifiers.size, dtype=object)
+        fixation_participant_identifiers_curr_index = 0
 
         # always rolling variables
         prev_participant_identifier = ''
@@ -379,30 +389,25 @@ class ModelPlot(object):
         # noinspection PyUnusedLocal
         is_curr_y_coord_nan = False
 
-        # data being analyzed
-        timestamps = df[TIMESTAMP_COL_TITLE].values.tolist()
-        x_coord_fixation_points = df[X_FIXATION_COL_TITLE].values.tolist()
-        y_coord_fixation_points = df[Y_FIXATION_COL_TITLE].values.tolist()
-        participant_identifiers = df[PARTICIPANT_NAME_COL_TITLE].values.tolist()
-
-        for index in range(len(df.index)):
+        for fixation_index in range(len(df.index)):
             # assessing if fixation is currently being iterated through
             if is_analyzing_fixation:
                 # defining conditions for continuing to iterate through fixation
                 # that is being analyzed
                 is_curr_x_coord_same_as_prev_x_coord = \
-                    x_coord_fixation_points[index] == curr_fixation_x_coord
+                    x_coord_fixation_points[fixation_index] == curr_fixation_x_coord
                 is_curr_y_coord_same_as_prev_y_coord = \
-                    y_coord_fixation_points[index] == curr_fixation_y_coord
+                    y_coord_fixation_points[fixation_index] == curr_fixation_y_coord
                 is_curr_participant_identifier_same_as_prev_participant_identifier = \
-                    participant_identifiers[index] == prev_participant_identifier
+                    participant_identifiers[fixation_index] == prev_participant_identifier
                 if (is_curr_x_coord_same_as_prev_x_coord and
                         is_curr_y_coord_same_as_prev_y_coord and
                         is_curr_participant_identifier_same_as_prev_participant_identifier):
-                    curr_fixation_duration += timestamps[index] - prev_fixation_timestamp
+                    curr_fixation_duration += timestamps[fixation_index] - prev_fixation_timestamp
                 else:  # finished analyzing current fixation
                     # add size of fixation to resulting list
-                    fixation_durations.append(curr_fixation_duration)
+                    fixation_durations[fixation_durations_curr_index] = curr_fixation_duration
+                    fixation_durations_curr_index += 1
                     # reset variables related to
                     # analysis of the current fixation
                     curr_fixation_duration = 0
@@ -414,49 +419,60 @@ class ModelPlot(object):
                 # the fixation coordinates in the current row
                 # are not nan, then start a new iterative fixation
                 # size calculation
-                is_curr_x_coord_nan = np.isnan(float(x_coord_fixation_points[index]))
-                is_curr_y_coord_nan = np.isnan(float(x_coord_fixation_points[index]))
+                is_curr_x_coord_nan = np.isnan(float(x_coord_fixation_points[fixation_index]))
+                is_curr_y_coord_nan = np.isnan(float(y_coord_fixation_points[fixation_index]))
                 if (not is_curr_x_coord_nan and
                         not is_curr_y_coord_nan):
                     is_analyzing_fixation = True
-                    curr_fixation_x_coord = float(x_coord_fixation_points[index])
-                    curr_fixation_y_coord = float(y_coord_fixation_points[index])
-                    curr_fixation_participant_identifier = participant_identifiers[index]
+                    curr_fixation_x_coord = float(x_coord_fixation_points[fixation_index])
+                    curr_fixation_y_coord = float(y_coord_fixation_points[fixation_index])
+                    curr_fixation_participant_identifier = participant_identifiers[fixation_index]
 
-                    fixation_x_coords.append(curr_fixation_x_coord)
-                    fixation_y_coords.append(curr_fixation_y_coord)
-                    fixation_participant_identifiers.append(curr_fixation_participant_identifier)
+                    fixation_x_coords[fixation_x_coords_curr_index] = curr_fixation_x_coord
+                    fixation_x_coords_curr_index += 1
+                    fixation_y_coords[fixation_y_coords_curr_index] = curr_fixation_y_coord
+                    fixation_y_coords_curr_index += 1
+                    fixation_participant_identifiers[fixation_participant_identifiers_curr_index] = \
+                        curr_fixation_participant_identifier
+                    fixation_participant_identifiers_curr_index += 1
 
-            prev_fixation_timestamp = timestamps[index]
-            prev_participant_identifier = participant_identifiers[index]
+            prev_fixation_timestamp = timestamps[fixation_index]
+            prev_participant_identifier = participant_identifiers[fixation_index]
 
         if is_analyzing_fixation:
-            fixation_durations.append(curr_fixation_duration)
+            fixation_durations[fixation_durations_curr_index] = curr_fixation_duration
+            fixation_durations_curr_index += 1
 
         # scaling for maximum size
-        max_fixation_duration = max(fixation_durations)
-        for i in range(len(fixation_durations)):
-            fixation_point_sizes.append(
-                (float(fixation_durations[i]) / float(max_fixation_duration)) * max_point_size
-            )
+        max_fixation_duration = np.amax(fixation_durations)
+        for i in range(fixation_durations.size):
+            fixation_point_sizes[i] = (float(fixation_durations[i]) / float(max_fixation_duration)) * max_point_size
 
         xy = pd.concat(
             [
                 pd.DataFrame(fixation_x_coords),
                 pd.DataFrame(fixation_y_coords)
             ],
-            axis=1
+            axis=1,
+            copy=False
         )
         xy.dropna(inplace=True)
 
-        fixation_x_coords = xy.iloc[:, 0].tolist()
-        fixation_y_coords = xy.iloc[:, 1].tolist()
+        fixation_x_coords = xy.iloc[:, 0].to_numpy()
+        fixation_y_coords = xy.iloc[:, 1].to_numpy()
 
-        for i in range(len(fixation_x_coords)):
+        for i in range(fixation_x_coords.size):
             fixation_x_coords[i] += self.x_shift
 
-        for j in range(len(fixation_y_coords)):
+        for j in range(fixation_y_coords.size):
             fixation_y_coords[j] += self.y_shift
+
+        fixation_x_coords = fixation_x_coords[:(fixation_x_coords_curr_index+1)]
+        fixation_y_coords = fixation_y_coords[:(fixation_y_coords_curr_index+1)]
+        fixation_participant_identifiers = fixation_participant_identifiers[
+                                           :(fixation_participant_identifiers_curr_index+1)
+                                           ]
+        fixation_point_sizes = fixation_point_sizes[:(fixation_durations_curr_index+1)]
 
         # noinspection PyTypeChecker
         self.set_x(df=df, x_col=pd.Series(fixation_x_coords))
@@ -466,7 +482,7 @@ class ModelPlot(object):
         self.set_color(df=df, color_col=pd.Series(pd.Categorical(fixation_participant_identifiers)))
         # noinspection PyTypeChecker
         self.set_size(size_col=pd.Series(fixation_point_sizes))
-        self.fixation_participants = fixation_participant_identifiers
+        self.fixation_participant_identifiers = pd.Series(fixation_participant_identifiers)
 
     @staticmethod
     def get_eps_value() -> int:
@@ -508,7 +524,6 @@ class ModelPlot(object):
             min_samples_value = ViewPlot.get_instance().min_samples_curr_input.value()
         return min_samples_value
 
-    @numba.jit
     def perform_dbscan_clustering(self) -> None:
         """
         Performs clustering on the x and y attributes,
@@ -533,7 +548,6 @@ class ModelPlot(object):
         self.set_y(y_col=xy.iloc[:, 1].tolist())
         self.set_color(color_col=labels)
 
-    @numba.jit
     def add_cluster_labels(self) -> None:
         cluster_data = {'x': self.x, 'y': self.y, 'color': self.color}
         cluster_df = pd.DataFrame(data=cluster_data)
@@ -557,33 +571,26 @@ class ModelPlot(object):
                     showarrow=False
                 )
 
-    @numba.jit
     def find_cluster_sequences(self, data_type_selection: str) -> None:
-        self.cluster_sequences = {}
+        self.cluster_sequences = defaultdict(list)
 
-        cluster_data = {'x': self.x, 'y': self.y, 'color': self.color}
-        cluster_df = pd.DataFrame(data=cluster_data)
+        cluster_df = pd.DataFrame(data={'x': self.x, 'y': self.y, 'color': self.color})
 
-        df_all: pd.DataFrame
+        df_all: pd.DataFrame = None
         if data_type_selection == "Fixation Data":
-            df_all = pd.DataFrame(
-                {
-                    'x': self.x,
-                    'y': self.y,
-                    'participant': self.fixation_participants
-                }
-            )
+            df_all = pd.DataFrame({
+                'x': self.x,
+                'y': self.y,
+                'participant': self.fixation_participant_identifiers
+            })
         else:
-            df_all = pd.DataFrame(
-                {
-                    'x': self.filtered_df[X_GAZE_COL_TITLE],
-                    'y': self.filtered_df[Y_GAZE_COL_TITLE],
-                    'participant': self.filtered_df['participant_filename']
-                }
-            )
+            df_all = pd.DataFrame({
+                'x': self.filtered_df[X_GAZE_COL_TITLE],
+                'y': self.filtered_df[Y_GAZE_COL_TITLE],
+                'participant': self.filtered_df['participant_filename']
+            })
 
         participants = df_all['participant'].unique()
-        cluster_seq = []
         for participant in participants:
             df_participant = df_all[df_all['participant'] == participant]
             for index, point in df_participant.iterrows():
@@ -592,12 +599,11 @@ class ModelPlot(object):
                 )
                 if point_label == -1:
                     continue
-                elif len(cluster_seq) == 0:
-                    cluster_seq.append(point_label)
-                elif cluster_seq[-1] != point_label:
-                    cluster_seq.append(point_label)
-            self.cluster_sequences[participant] = cluster_seq
-            cluster_seq = []
+                elif len(self.cluster_sequences[participant]) == 0:  # self.cluster_sequences[participant]
+                    # is the cluster sequence of a given participant
+                    self.cluster_sequences[participant].append(point_label)
+                elif self.cluster_sequences[participant][-1] != point_label:
+                    self.cluster_sequences[participant].append(point_label)
 
     def add_arrow_cluster_seq_if_one_participant(self) -> None:
         '''
@@ -641,10 +647,10 @@ class ModelPlot(object):
             print("**" + d_name + "**")
             print("{" + "\n".join("{!r}: {!r},".format(k, v) for k, v in getattr(self, d_name).items()) + "}")
 
-    @numba.jit
     def ordinal_association_rule_mining(self) -> None:
         self.ord_assoc_rule_count = defaultdict(int)
         self.cluster_id_count = defaultdict(int)
+        # print(self.cluster_sequences.values())
         for sequence in self.cluster_sequences.values():
             assoc_rules_for_seq = []
             cluster_ids = []
@@ -660,13 +666,11 @@ class ModelPlot(object):
             for cluster_id in cluster_ids:
                 self.cluster_id_count[cluster_id] += 1
 
-    @numba.jit
     def compute_support_vals(self) -> None:
         self.support_vals = defaultdict(int)
         for assoc_rule, count in self.ord_assoc_rule_count.items():
             self.support_vals[assoc_rule] = count / len(self.ord_assoc_rule_count)
 
-    @numba.jit
     def compute_confidence_vals(self) -> None:
         self.forward_confidence_vals = defaultdict(int)
         for assoc_rule, count in self.ord_assoc_rule_count.items():
@@ -675,7 +679,6 @@ class ModelPlot(object):
         for assoc_rule, count in self.ord_assoc_rule_count.items():
             self.backward_confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[1]]
 
-    @numba.jit
     def add_arrows_sig_cluster_assoc_rules(self) -> None:
         '''
         Adapted https://stackoverflow.com/questions/58095322/draw-multiple-arrows-using-plotly-python
@@ -725,7 +728,6 @@ class ModelPlot(object):
             self.sig_cluster_assoc_rule_arrows[assoc_rule] = {"x": x, "y": y, "ax": ax, "ay": ay, "visible": visible,
                                                               "added": do_add}
 
-    @numba.jit
     def filter_sig_cluster_assoc_rule_arrows(self) -> None:
         assoc_rules = self.ord_assoc_rule_count.keys()
         annotations = self.fig['layout']['annotations']
@@ -740,6 +742,10 @@ class ModelPlot(object):
                     ViewPlot.get_instance().backward_confidence_input.value() / 100):
                 should_be_visible = False
             if should_be_visible and not self.sig_cluster_assoc_rule_arrows[assoc_rule]["added"]:
+                x = self.cluster_centroids['x'].loc[assoc_rule[1]]
+                y = self.cluster_centroids['y'].loc[assoc_rule[1]]
+                ax = self.cluster_centroids['x'].loc[assoc_rule[0]]
+                ay = self.cluster_centroids['y'].loc[assoc_rule[0]]
                 self.fig.add_annotation(
                     x=x,
                     y=y,
