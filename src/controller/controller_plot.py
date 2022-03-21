@@ -6,6 +6,7 @@ INTENTIONAL DESIGN CHOICE. IT HELPS AVOID CIRCULAR IMPORT ISSUES.
 IT IS ALSO OKAY TO AVOID THEM IN THIS MANNER BECAUSE THIS IS A
 HIGHLY MODULAR PROGRAM.
 """
+from src.view.view_monte_carlo_cluster_p_values import ViewMonteCarloClusterPValues
 
 
 class ControllerPlot(object):
@@ -125,8 +126,11 @@ class ControllerPlot(object):
             ViewPlot.get_instance().min_samples_slider.value()
         )
 
+    @staticmethod
+    def process_run_monte_carlo_button_clicked() -> None:
+        ModelPlot.get_instance().run_monte_carlo_stimulation()
+        ViewMonteCarloClusterPValues.get_instance().show()
 
 from src.controller.controller_participant_selection import ControllerParticipantSelection
-from src.model.model_data import ModelData
 from src.model.model_plot import ModelPlot
 from src.view.view_plot import ViewPlot

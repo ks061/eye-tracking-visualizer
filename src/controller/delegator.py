@@ -73,6 +73,10 @@ class Delegator(QMainWindow):
     support_input = None
     forward_confidence_input = None
     backward_confidence_input = None
+    num_trials_monte_carlo_input = None
+    run_monte_carlo_button = None
+    monte_carlo_progress_bar = None
+    time_left_monte_carlo = None
 
     def __init__(self):
         super(Delegator, self).__init__()
@@ -160,8 +164,13 @@ class Delegator(QMainWindow):
             min_samples_curr_input=self.min_samples_curr_input,
             support_input=self.support_input,
             forward_confidence_input=self.forward_confidence_input,
-            backward_confidence_input=self.backward_confidence_input
+            backward_confidence_input=self.backward_confidence_input,
+            num_trials_monte_carlo_input=self.num_trials_monte_carlo_input,
+            run_monte_carlo_button=self.run_monte_carlo_button,
+            monte_carlo_progress_bar=self.monte_carlo_progress_bar,
+            time_left_monte_carlo=self.time_left_monte_carlo
         )
+
 
 from src.controller.controller import Controller
 from src.view.view_analysis_type_selection import ViewAnalysisTypeSelection

@@ -87,6 +87,9 @@ class Controller(object):
         ViewPlot.get_instance().min_samples_slider.sliderReleased.connect(
             lambda: ControllerPlot.get_instance().process_min_samples_slider_moved()
         )
+        ViewPlot.get_instance().run_monte_carlo_button.clicked.connect(
+            lambda: ControllerPlot.get_instance().process_run_monte_carlo_button_clicked()
+        )
 
     @staticmethod
     def setup_static_selection_menus() -> None:

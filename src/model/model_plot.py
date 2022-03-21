@@ -9,11 +9,11 @@ HIGHLY MODULAR PROGRAM.
 
 import base64
 import os.path
+import time
 import warnings
 from collections import defaultdict
 
 import _plotly_utils
-import numba
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -22,9 +22,9 @@ from PIL import Image, ImageOps
 from numba.core.errors import NumbaWarning, NumbaDeprecationWarning, NumbaPendingDeprecationWarning
 from sklearn.cluster import DBSCAN
 
-from src.controller.controller_plot import ControllerPlot
 from src.main.config import MAX_FIXATION_PT_SIZE, DEFAULT_EPS_VALUE, DEFAULT_MIN_SAMPLES_VALUE, MAKE_IMG_GRAYSCALE, \
-    DEFAULT_SUPPORT_THRESHOLD, DEFAULT_FORWARD_CONFIDENCE_THRESHOLD, DEFAULT_BACKWARD_CONFIDENCE_THRESHOLD
+    DEFAULT_SUPPORT_THRESHOLD, DEFAULT_FORWARD_CONFIDENCE_THRESHOLD, DEFAULT_BACKWARD_CONFIDENCE_THRESHOLD, \
+    DEFAULT_NUM_MONTE_CARLO_TRIALS
 from src.main.config import PARTICIPANT_FILENAME_COL_TITLE
 from src.main.config import PARTICIPANT_NAME_COL_TITLE
 from src.main.config import RELATIVE_STIMULUS_IMAGE_DIR
@@ -61,6 +61,7 @@ class ModelPlot(object):
     forward_confidence_vals = None
     backward_confidence_vals = None
     sig_cluster_assoc_rule_arrows = None
+    assoc_rule_p_values = None
 
     stimulus_image = None
     x_len = None
@@ -283,6 +284,7 @@ class ModelPlot(object):
                 gauge={"axis": {"range": [None, 100], "showticklabels": False}},
                 title={'text': "Fixations in Cluster", "font": {"size": 10, "color": "black"}}
             ))
+            # self.run_monte_carlo_stimulation()
             # print(self.fig)
 
         img_path_str = RELATIVE_STIMULUS_IMAGE_DIR + "/" + selected_stimulus_filename
@@ -467,12 +469,12 @@ class ModelPlot(object):
         for j in range(fixation_y_coords.size):
             fixation_y_coords[j] += self.y_shift
 
-        fixation_x_coords = fixation_x_coords[:(fixation_x_coords_curr_index+1)]
-        fixation_y_coords = fixation_y_coords[:(fixation_y_coords_curr_index+1)]
+        fixation_x_coords = fixation_x_coords[:(fixation_x_coords_curr_index + 1)]
+        fixation_y_coords = fixation_y_coords[:(fixation_y_coords_curr_index + 1)]
         fixation_participant_identifiers = fixation_participant_identifiers[
-                                           :(fixation_participant_identifiers_curr_index+1)
+                                           :(fixation_participant_identifiers_curr_index + 1)
                                            ]
-        fixation_point_sizes = fixation_point_sizes[:(fixation_durations_curr_index+1)]
+        fixation_point_sizes = fixation_point_sizes[:(fixation_durations_curr_index + 1)]
 
         # noinspection PyTypeChecker
         self.set_x(df=df, x_col=pd.Series(fixation_x_coords))
@@ -495,9 +497,9 @@ class ModelPlot(object):
             ViewPlot.get_instance().eps_curr_input.setValue(int(DEFAULT_EPS_VALUE))
             ViewPlot.get_instance().eps_input_max.setValue(int(DEFAULT_EPS_VALUE + DEFAULT_EPS_VALUE * .5))
 
-            ControllerPlot.get_instance().process_eps_input_min_entered()
-            ControllerPlot.get_instance().process_eps_input_curr_entered()
-            ControllerPlot.get_instance().process_eps_input_max_entered()
+            src.controller.controller_plot.ControllerPlot.get_instance().process_eps_input_min_entered()
+            src.controller.controller_plot.ControllerPlot.get_instance().process_eps_input_curr_entered()
+            src.controller.controller_plot.ControllerPlot.get_instance().process_eps_input_max_entered()
 
             eps_value = ViewPlot.get_instance().eps_curr_input.value()
         return eps_value
@@ -517,9 +519,9 @@ class ModelPlot(object):
                 int(DEFAULT_MIN_SAMPLES_VALUE + DEFAULT_MIN_SAMPLES_VALUE * .5)
             )
 
-            ControllerPlot.get_instance().process_min_samples_input_min_entered()
-            ControllerPlot.get_instance().process_min_samples_input_curr_entered()
-            ControllerPlot.get_instance().process_min_samples_input_max_entered()
+            src.controller.controller_plot.ControllerPlot.get_instance().process_min_samples_input_min_entered()
+            src.controller.controller_plot.ControllerPlot.get_instance().process_min_samples_input_curr_entered()
+            src.controller.controller_plot.ControllerPlot.get_instance().process_min_samples_input_max_entered()
 
             min_samples_value = ViewPlot.get_instance().min_samples_curr_input.value()
         return min_samples_value
@@ -647,6 +649,86 @@ class ModelPlot(object):
             print("**" + d_name + "**")
             print("{" + "\n".join("{!r}: {!r},".format(k, v) for k, v in getattr(self, d_name).items()) + "}")
 
+    def run_monte_carlo_stimulation(self) -> None:
+        num_monte_carlo_trials = DEFAULT_NUM_MONTE_CARLO_TRIALS
+        if ViewPlot.get_instance().num_trials_monte_carlo_input.value() != 0:
+            num_monte_carlo_trials = ViewPlot.get_instance().num_trials_monte_carlo_input.value()
+        else:
+            ViewPlot.get_instance().num_trials_monte_carlo_input.setValue(DEFAULT_NUM_MONTE_CARLO_TRIALS)
+
+        self.assoc_rule_p_values = defaultdict(float)
+        num_trials_where_assoc_rule_support_value_met = defaultdict(
+            int)  # the number of trials in which the support value of
+        # association rule in a trial is at least the same, if not greater than, that calculated in the actual data.
+        # used to calculate the p values for each association rule (count / DEFAULT_NUM_MONTE_CARLO_TRIALS)
+
+        # initializing randomness
+        cluster_ids = self.color.unique().to_numpy(dtype=int)
+        cluster_id_freq = self.color.value_counts() / self.color.size
+        # np.random.choice parameters
+        a = cluster_ids
+        # size will be number of cluster_ids to generate for a particular sample cluster sequence
+        p = [cluster_id_freq[cluster_id] for cluster_id in cluster_ids]
+
+        num_participants = len(self.cluster_sequences.values())
+        participant_seq_lengths = np.array(
+            [len(cluster_sequence) for cluster_sequence in self.cluster_sequences.values()],
+            dtype=int)
+
+        trial_sequence_set = np.empty(shape=num_participants, dtype=object)
+        total_time: int
+        seconds_left: int
+        ViewPlot.get_instance().monte_carlo_progress_bar.setMinimum(0)
+        ViewPlot.get_instance().monte_carlo_progress_bar.setMaximum(num_monte_carlo_trials)
+        for trial_num in range(num_monte_carlo_trials):
+            if trial_num == 0:
+                start_time = time.time()
+            if trial_num == 100:
+                total_time = round(
+                    (time.time() - start_time) * (num_monte_carlo_trials/100)
+                )
+            if trial_num % 100 == 0 and trial_num != 0:
+                # adopted from https://stackoverflow.com/questions/775049/how-do-i-convert-seconds-to-hours-minutes
+                # -and-seconds
+                ViewPlot.get_instance().monte_carlo_progress_bar.setValue(trial_num)
+                seconds_left = round(
+                    total_time*(1-(trial_num/num_monte_carlo_trials))
+                )
+                m, s = divmod(seconds_left, 60)
+                h, m = divmod(m, 60)
+                ViewPlot.get_instance().time_left_monte_carlo.setText('ET: {:d}:{:02d}:{:02d} (h:m:s)'.format(h, m, s))
+            for i in range(trial_sequence_set.size):
+                trial_sequence_set[i] = np.random.choice(a=a, size=participant_seq_lengths[i], p=p)
+            trial_ord_assoc_rule_count = defaultdict(int)
+            trial_cluster_id_count = defaultdict(int)
+            for sequence in trial_sequence_set:
+                assoc_rules_for_seq = []
+                cluster_ids = []
+                for index_first in range(len(sequence)):
+                    if sequence[index_first] == -1:
+                        continue
+                    for index_last in range(index_first + 1, len(sequence), 1):
+                        if sequence[index_last] == -1:
+                            continue
+                        if (index_first, index_last) not in assoc_rules_for_seq:
+                            assoc_rules_for_seq.append((sequence[index_first], sequence[index_last]))
+                for assoc_rule in assoc_rules_for_seq:
+                    trial_ord_assoc_rule_count[assoc_rule] += 1
+                for cluster_id in sequence:
+                    if cluster_id not in cluster_ids:
+                        cluster_ids.append(cluster_id)
+                for cluster_id in cluster_ids:
+                    trial_cluster_id_count[cluster_id] += 1
+            for assoc_rule, count in trial_ord_assoc_rule_count.items():
+                trial_assoc_rule_support_val = count / num_monte_carlo_trials
+                if trial_assoc_rule_support_val >= self.support_vals[assoc_rule]:
+                    num_trials_where_assoc_rule_support_value_met[assoc_rule] += 1
+
+        for assoc_rule, count in num_trials_where_assoc_rule_support_value_met.items():
+            self.assoc_rule_p_values[assoc_rule] = count / num_monte_carlo_trials
+        ViewPlot.get_instance().time_left_monte_carlo.setText("")
+        ViewPlot.get_instance().monte_carlo_progress_bar.setValue(0)
+
     def ordinal_association_rule_mining(self) -> None:
         self.ord_assoc_rule_count = defaultdict(int)
         self.cluster_id_count = defaultdict(int)
@@ -655,7 +737,11 @@ class ModelPlot(object):
             assoc_rules_for_seq = []
             cluster_ids = []
             for index_first in range(len(sequence)):
+                if sequence[index_first] == -1:
+                    continue
                 for index_last in range(index_first + 1, len(sequence), 1):
+                    if sequence[index_last] == -1:
+                        continue
                     if (index_first, index_last) not in assoc_rules_for_seq:
                         assoc_rules_for_seq.append((sequence[index_first], sequence[index_last]))
             for assoc_rule in assoc_rules_for_seq:
@@ -667,15 +753,15 @@ class ModelPlot(object):
                 self.cluster_id_count[cluster_id] += 1
 
     def compute_support_vals(self) -> None:
-        self.support_vals = defaultdict(int)
+        self.support_vals = defaultdict(float)
         for assoc_rule, count in self.ord_assoc_rule_count.items():
             self.support_vals[assoc_rule] = count / len(self.ord_assoc_rule_count)
 
     def compute_confidence_vals(self) -> None:
-        self.forward_confidence_vals = defaultdict(int)
+        self.forward_confidence_vals = defaultdict(float)
         for assoc_rule, count in self.ord_assoc_rule_count.items():
             self.forward_confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[0]]
-        self.backward_confidence_vals = defaultdict(int)
+        self.backward_confidence_vals = defaultdict(float)
         for assoc_rule, count in self.ord_assoc_rule_count.items():
             self.backward_confidence_vals[assoc_rule] = count / self.cluster_id_count[assoc_rule[1]]
 
@@ -786,7 +872,6 @@ class ModelPlot(object):
                     annotation.visible = should_be_visible
                     self.sig_cluster_assoc_rule_arrows[assoc_rule]["visible"] = should_be_visible
 
-
     def extract_and_set_stimulus_params(self,
                                         selected_stimulus_filename: str,
                                         df: pd.DataFrame) -> None:
@@ -812,6 +897,7 @@ class ModelPlot(object):
             self.y_shift = 0
 
 
+import src.controller.controller_plot
 import src.model.utils.img_utils as imgutils
 from src.model.model_data import ModelData
 from src.model.model_participant_selection import ModelParticipantSelection

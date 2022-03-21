@@ -36,6 +36,10 @@ class ViewPlot(object):
     support_input = None
     forward_confidence_input = None
     backward_confidence_input = None
+    num_trials_monte_carlo_input = None
+    run_monte_carlo_button = None
+    monte_carlo_progress_bar = None
+    time_left_monte_carlo = None
 
     # initialized in class
     browser = None
@@ -66,7 +70,11 @@ class ViewPlot(object):
                  min_samples_curr_input,
                  support_input,
                  forward_confidence_input,
-                 backward_confidence_input):
+                 backward_confidence_input,
+                 num_trials_monte_carlo_input,
+                 run_monte_carlo_button,
+                 monte_carlo_progress_bar,
+                 time_left_monte_carlo):
         if ViewPlot.__instance is not None:
             raise Exception("ViewPlot should be treated as a singleton class.")
         else:
@@ -84,6 +92,10 @@ class ViewPlot(object):
         self.support_input = support_input
         self.forward_confidence_input = forward_confidence_input
         self.backward_confidence_input = backward_confidence_input
+        self.num_trials_monte_carlo_input = num_trials_monte_carlo_input
+        self.run_monte_carlo_button = run_monte_carlo_button
+        self.monte_carlo_progress_bar = monte_carlo_progress_bar
+        self.time_left_monte_carlo = time_left_monte_carlo
 
         self.setup()
 

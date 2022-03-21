@@ -72,6 +72,10 @@ DEFAULT_FORWARD_CONFIDENCE_THRESHOLD = 50
 
 DEFAULT_BACKWARD_CONFIDENCE_THRESHOLD = 50
 
+DEFAULT_NUM_MONTE_CARLO_TRIALS = 10000
+
+NUM_DIGITS_ROUND_P_VALUE = 3  # 3 decimal places
+
 ########################
 # Image Configurations #
 ########################
